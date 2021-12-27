@@ -6,13 +6,11 @@ export = async (client: Client, message: Eris.Message<Eris.GuildTextableChannel>
   // cache limit
   if (message.channel.messages.limit !== Config.cache.limit) message.channel.messages.limit = Config.cache.limit;
 
-  let messages = [...message.channel.messages.values()].filter(m => m.timestamp >= (Date.now() - 60000));
+  let messages = [...message.channel.messages.values()].filter(m => m.timestamp >= (Date.now() - Config.cooldown.timerange));
   let limit = Config.cooldown.limit.exceed;
 
-  // console.log(`cache_${(message.channel as Eris.TextChannel).name}: ${messages.length}`);
-
   // Applies
-  if (messages.length >= limit && message.channel.rateLimitPerUser /*!db.get(`generalSlow.${message.channel.id}`)*/) {
+  if (messages.length >= limit && !client.cache.get(`slowmode.${message.channel.id}`)) {
     client.cache.set(`slowmode.${message.channel.id}`, true);
     client.editChannel(message.channel.id, { rateLimitPerUser: 5 }, "High Traffic");
 

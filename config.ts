@@ -32,7 +32,8 @@ export default {
       ]
     },
 
-    timeout: 35000
+    timeout: 35000,
+    timerange: 60000
   },
   cache: {
     limit: 40

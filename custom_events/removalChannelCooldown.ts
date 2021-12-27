@@ -1,7 +1,6 @@
 import Eris from "eris";
 import Client from "../handler/Client";
 import Config from "../config";
-import cache from "node-cache";
 
 export = async (client: Client) => {
   if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");
@@ -10,8 +9,8 @@ export = async (client: Client) => {
     for (const channelID of Config.channel.watchChannelModeration) {
       if (!client.cache.get(`slowmode.${channelID}`)) return;
 
-      if (client.getChannel(channelID) instanceof Eris.TextChannel) {
-        let messages = [...(client.getChannel(channelID) as Eris.TextChannel).messages.values()].filter(m => m.timestamp > (Date.now() - 60000));
+      if (client.getChannel(channelID) instanceof Eris.GuildChannel) {
+        let messages = [...(client.getChannel(channelID) as Eris.GuildTextableChannel).messages.values()].filter(m => m.timestamp > (Date.now() - Config.cooldown.timerange));
         let limit = Config.cooldown.limit.cooling;
 
         // removal
