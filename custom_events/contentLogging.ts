@@ -47,7 +47,9 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
       embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
     };
-  };
+  }
+
+  else return;
 
   // work in progress.
   // if (message.embeds) {
