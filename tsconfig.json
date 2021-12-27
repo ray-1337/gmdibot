@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNEXT",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": false,
+    "inlineSourceMap": false,
+    "removeComments": true,
+    "noImplicitAny": false
+  }
+}
