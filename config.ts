@@ -16,24 +16,27 @@ export default {
   },
   cooldown: {
     limit: {
-      exceed: 30, // 25,
-      cooling: 20 // 15
+      exceed: 25,
+      cooling: 15
     },
 
     message: {
       exceed: [
         "Saatnya slowmode!",
-        "Ribut banget..."
+        "Ribut banget...",
+        "Kenapa mengrusuh banget."
       ],
 
       cooling: [
         "Oke, udah gak ribut, saatnya matiin slowmode-nya~",
-        "Hore, udah sedikit kalem!"
+        "Hore, udah sedikit kalem!",
+        "Slowmode-nya udah dimatikan. Maaf ya!"
       ]
     },
 
-    timeout: 35000,
-    timerange: 60000
+    intervalCheckingTimeout: 35000,
+    timerange: 60000,
+    timeout: 5
   },
   cache: {
     limit: 40
