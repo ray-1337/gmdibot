@@ -8,5 +8,7 @@ interface WarningLastedOptions {
   due?: number | Date;
   full?: number | Date;
   memberID?: string;
-  previousRoleList?: string[]
+  previousRoleList?: string[],
+  level: number,
+  warningLogID?: string
 }
