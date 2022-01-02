@@ -8,13 +8,13 @@ import fs from "fs";
 const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
-  if (message.author.bot) return;
+  if (!message || message.author.bot) return;
 
   const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
   .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
   .addField("User Information", stripIndents`
   **Channel:** ${message.channel.mention}
-  **Caption:** ${util.truncate(message.content, 64) || "[none#]"}
+  **Caption:** ${util.truncate(message.content, 64) || "[Tidak Ada]"}
   **User ID:** ${message.author.id}`);
 
   let defaultHashLength: number = 9;
