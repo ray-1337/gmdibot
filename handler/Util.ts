@@ -1,6 +1,4 @@
 import crypto from "crypto";
-import fs from "fs";
-import https from "https";
 
 export default class Util {
   generateHash: (length: number) => string;
@@ -13,10 +11,9 @@ export default class Util {
     this.countString = function countString(string: string) {
       let freq = {};
 
-      for (var i = 0; i < string.length; i++) {
-        var char = string.charAt(i);
-        if (freq[char]) freq[char]++;
-        else freq[char] = 1;
+      for (let i = 0; i < string.length; i++) {
+        let char = string.charAt(i);
+        freq[char] ? freq[char]++ : freq[char] = 1;
       };
 
       return Object.keys(freq).length >= 1 ? freq : null;
@@ -67,7 +64,8 @@ export default class Util {
           ext = "gif";
           break;
 
-        default: break;
+        default:
+          return null;
       };
 
       return ext || null;
