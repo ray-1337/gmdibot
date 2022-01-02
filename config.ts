@@ -11,6 +11,22 @@ export default {
   endpoint: {
     contentLogging: "https://gmdi-content-logging.13373333.one/"
   },
+  warning: {
+    role: {
+      1: "265808137100066817",
+      2: "265808551107231745",
+      3: "438664627962904576"
+    },
+    channel: {
+      warning: "331444579146661889" // "459221138267176971"
+    },
+    session: {
+      III: {
+        minRange: 30,
+        maxRange: 90
+      }
+    }
+  },
   role: {
     staff: ["230305455975432193", "217296828339585026", "434936406960242709", "198442983668973568"]
   },
