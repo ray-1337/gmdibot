@@ -7,7 +7,7 @@ export = async (client: Eris.Client) => {
   let memberChoosing = {
     type: Eris.Constants.ApplicationCommandOptionTypes.USER,
     name: "member",
-    description: "Existing server member",
+    description: "Member yang ada di server",
     required: true,
   };
 
@@ -26,8 +26,22 @@ export = async (client: Eris.Client) => {
   let provideReason = {
     type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
     name: "reason",
-    description: "Warning reason",
+    description: "Alasan kenapa membernya di-warn",
     required: true
+  };
+
+  let warnTimeout = {
+    type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
+    name: "timeout",
+    description: "Lama warning bertahan. Contoh: \"1 jam 24 menit\" / Skip for no timeout.",
+    required: false
+  };
+
+  let proofByURL = {
+    type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
+    name: "evidence",
+    description: "Bukti. Harus berupa URL/Link website.",
+    required: false
   };
 
   client.bulkEditGuildCommands(Config.guildID, [
@@ -41,7 +55,7 @@ export = async (client: Eris.Client) => {
         {
           type: Eris.Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
           name: "add",
-          description: "Add warn to user",
+          description: "Add warning role to user",
           options: [
             // member
             memberChoosing,
@@ -50,17 +64,29 @@ export = async (client: Eris.Client) => {
             warningLevels,
 
             // reason
-            provideReason
+            provideReason,
     
             // how long will it stays?
-            /** @soon Manual removal policy. */
-            // {
-            //   type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
-            //   name: "timeout",
-            //   description: "How long will it stays? Skip this (ENTER) for no timeout.",
-            //   required: false
-            // },
+            warnTimeout,
+
+            // proof
+            proofByURL
           ]
+        }
+      ]
+    },
+
+    {
+      name: "eval",
+      type: Eris.Constants.ApplicationCommandTypes.CHAT_INPUT,
+      description: "Evaluate JavaScript code. (ray#1337 only)",
+      defaultPermission: false,
+      options: [
+        {
+          type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
+          name: "code",
+          description: "JavaScript code.",
+          required: true
         }
       ]
     }
