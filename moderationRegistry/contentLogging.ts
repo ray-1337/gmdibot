@@ -4,7 +4,8 @@ import centra from "centra";
 import {stripIndents} from "common-tags";
 import config from "../config";
 import fs from "fs";
-let util = new Util();
+
+const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
   if (message.author.bot) return;
@@ -13,7 +14,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
   .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
   .addField("User Information", stripIndents`
   **Channel:** ${message.channel.mention}
-  **Caption:** ${util.truncate(message.content, 64) || "*None.*"}
+  **Caption:** ${util.truncate(message.content, 64) || "[none#]"}
   **User ID:** ${message.author.id}`);
 
   let defaultHashLength: number = 9;
@@ -23,7 +24,10 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
   if (message.attachments && message.attachments.length >= 1) {
     if (message.attachments.length === 1) {
-      let generatedFileName = `${message.author.id}.${util.generateHash(defaultHashLength)}.${util.contentTypeDecide(message.attachments[0].content_type!)}`;
+      let extension = util.contentTypeDecide(message.attachments[0].content_type!);
+      if (extension == null) return;
+
+      let generatedFileName = `${message.author.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 
       embed.addField("Backup Endpoint", mainEndpoint + generatedFileName);
       
@@ -36,7 +40,10 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
     else if (message.attachments.length > 1) {
       for (let content of message.attachments) {
-        let generatedFileName = `${message.author.id}.${util.generateHash(defaultHashLength)}.${util.contentTypeDecide(content.content_type!)}`;
+        let extension = util.contentTypeDecide(message.attachments[0].content_type!);
+        if (extension == null) continue;
+
+        let generatedFileName = `${message.author.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 
         centra(content.proxy_url, "GET").send()
         .then(res => fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, res.body))

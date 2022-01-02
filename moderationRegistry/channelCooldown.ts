@@ -12,7 +12,7 @@ export = async (client: Client, message: Eris.Message<Eris.GuildTextableChannel>
   // Applies
   if (messages.length >= limit && !client.cache.get(`slowmode.${message.channel.id}`)) {
     client.cache.set(`slowmode.${message.channel.id}`, true);
-    client.editChannel(message.channel.id, { rateLimitPerUser: 5 }, "High Traffic");
+    client.editChannel(message.channel.id, { rateLimitPerUser: Config.cooldown.timeout }, "High Traffic").catch(() => {});
 
     client.createMessage(Config.channel.modlog, {
       embeds: [

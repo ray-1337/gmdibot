@@ -30,5 +30,5 @@ export = async (client: Client) => {
         };
       };
     };
-  }, Config.cooldown.timeout);
+  }, Config.cooldown.intervalCheckingTimeout);
 };
