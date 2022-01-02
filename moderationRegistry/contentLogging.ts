@@ -8,7 +8,8 @@ import fs from "fs";
 const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
-  if (!message || message.author.bot) return;
+  console.log(message);
+  if (!message || (message.member?.user.bot || message.author.bot)) return;
 
   const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
   .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
