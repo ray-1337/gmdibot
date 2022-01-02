@@ -5,4 +5,7 @@ export = async (client: Eris.Client) => {
   console.log("Ready.");
 
   client.emit("removalChannelCooldown", client);
+
+  // edit guild command
+  client.emit("slashCommandProceed", client);
 };
