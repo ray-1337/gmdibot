@@ -10,5 +10,8 @@
     "inlineSourceMap": false,
     "removeComments": true,
     "noImplicitAny": false
-  }
+  },
+
+  "files": ["GMDI.d.ts"],
+  "include": ["."]
 }
