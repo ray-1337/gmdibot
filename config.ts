@@ -2,6 +2,7 @@ const command = process.argv.slice(2);
 
 export default {
   guildID: "190826809896468480",
+  botOwner: "331265944363991042",
   channel: {
     general: "190826809896468480",
     modlog: "900578330858905601",
@@ -18,7 +19,7 @@ export default {
       3: "438664627962904576"
     },
     channel: {
-      warning: "331444579146661889" // "459221138267176971"
+      warning: "459221138267176971" // "331444579146661889"
     },
     session: {
       III: {
