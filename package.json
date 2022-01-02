@@ -20,5 +20,33 @@
     "node-cache": "^5.1.2",
     "pluris": "ray-1337/pluris"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.1.1",
+  "author": {
+    "name" : "Hizkia Ray",
+    "email" : "personal@13373333.one",
+    "url" : "https://13373333.one/"
+  },
+  "funding": [
+    {
+      "type" : "individual",
+      "url" : "https://trakteer.id/ray1337"
+    },
+    {
+      "type" : "paypal",
+      "url" : "https://paypal.me/ray0001"
+    }
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url" : "https://github.com/ray-1337/gmdi-private-bot/issues",
+    "email" : "personal@13373333.one"
+  },
+  "homepage": "https://github.com/ray-1337/gmdi-private-bot#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ray-1337/gmdi-private-bot.git"
+  }
 }
