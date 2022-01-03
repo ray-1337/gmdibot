@@ -8,7 +8,7 @@ import fs from "fs";
 const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
-  console.log(message);
+  // console.log(message);
   if (!message || (message.member?.user.bot || message.author.bot)) return;
 
   const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
