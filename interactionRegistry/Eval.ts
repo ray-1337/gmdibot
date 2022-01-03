@@ -3,11 +3,11 @@ import Config from "../config";
 import centra from "centra";
 import nodeUtil from "util";
 
-export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
+export = async (_: Eris.Client, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
 
   if (interaction.member?.id !== Config.botOwner) {
-    return interaction.createMessage("Only the developer can access this.");
+    return interaction.createMessage("Only the developer (331265944363991042) can access this.");
   };
 
   if (!interaction || !interaction.data || !interaction.data.options) {
