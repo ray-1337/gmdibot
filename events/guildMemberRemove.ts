@@ -8,19 +8,20 @@ export = async (client, guild: Eris.Guild, member: Eris.Member) => {
 
   db.set(`replaceWelcomeMessageUser.${member.user.id}`, {
     activateWhenComingBack: true,
-    leavingSince: Date.now()
+    leavingSince: Date.now(),
+    memberID: member.id || member.user.id
   });
 
   // Embed
-  let embeds = new Eris.RichEmbed().setColor(0xC82427).setTimestamp()
+  let embeds = new Eris.RichEmbed().setColor(0xC82427).setTimestamp();
 
   if (Math.floor(Date.now() - member.joinedAt!) < ms("1m")) {
     embeds.setTitle(`Dadah...`).setDescription(`Yah, **${member.user.username}#${member.user.discriminator}** langsung keluar...`);
   }
 
   else {
-    embeds.setTitle(`Farewell.`).setDescription(`**${member.user.username}#${member.user.discriminator}** telah keluar dari server. Dadah~`);
-  }
+    embeds.setTitle(`Farewell.`).setDescription(`**${member.user.username}#${member.user.discriminator}** keluar dari server. Take care ;)`);
+  };
   
   return client.createMessage(config.channel.general, {embeds: [embeds]});
 };
