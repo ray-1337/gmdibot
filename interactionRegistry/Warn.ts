@@ -129,11 +129,14 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
           return interaction.createMessage(`This warning level cannot be presented with timeout. Warn III timeout must be randomized from 30 to 90 days.`);
         };
 
-        client.editGuildMember(Config.guildID, member.value, {roles: [Config.warning.role[level.value]]})
-        .catch((error) => {
+        try {
+          await client.editGuildMember(Config.guildID, member.value, {roles: [Config.warning.role[level.value]]});
+        } catch (error) {
+          if (!(error instanceof Eris.DiscordRESTError)) return;
           console.error(error);
-          return interaction.createMessage(`**Encountered error when assigning someone's role:** \n${error.code || 0} / ${error.message}`);
-        });
+          interaction.createMessage(`**Encountered error when assigning someone's role:** \n${error.code || 0} / ${error.message}`);
+          return;
+        };
 
         // reminder and stuff.
         let due = util.getRandomInt(Config.warning.session.III.minRange, Config.warning.session.III.maxRange);
@@ -206,27 +209,31 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
           memberValidateRolesNewArr.push(role);
         };
 
-        client.editGuildMember(Config.guildID, member.value, {
-          roles: [...memberValidateRolesNewArr, Config.warning.role[level.value]]
-        })
-        .catch((error) => {
+        try {
+          await client.editGuildMember(Config.guildID, member.value, {
+            roles: [...memberValidateRolesNewArr, Config.warning.role[level.value]]
+          });
+        } catch (error) {
+          if (!(error instanceof Eris.DiscordRESTError)) return;
           console.error(error);
           return interaction.createMessage(`**Encountered error when assigning someone's role:** \n${error.code || 0} / ${error.message}`);
-        });
+        };
       }
 
       else {
         return interaction.createMessage(`Unable to parse warning levels.`);
       };
 
-      client.createMessage(Config.warning.channel.warning, {embeds: [embed]}, fileContent)
-      .then(x => {
-        if (timeout && level.value < 3) db.set(`warningLasted.${member.value}.warningLogID`, x.id);
-      })
-      .catch((error) => {
+      try {
+        await client.createMessage(Config.warning.channel.warning, {embeds: [embed]}, fileContent)
+        .then((x) => {
+          if (timeout && level.value < 3) db.set(`warningLasted.${member.value}.warningLogID`, x.id);
+        });
+      } catch (error) {
+        if (!(error instanceof Eris.DiscordRESTError)) return;
         console.error(error);
         return interaction.createMessage(`**Encountered error when posting a warning log:** \n${error.code || 0} / ${error.message}`);
-      });
+      };
 
       return interaction.createMessage(`Successfully set warning to **${memberValidation.username}#${memberValidation.discriminator}** with level **${warningLevelExplained}**.`);
 
