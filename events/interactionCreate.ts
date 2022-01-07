@@ -1,4 +1,6 @@
 import Eris from "eris";
+
+// commands
 import WarnCommute from "../interactionRegistry/Warn";
 import EvalCommute from "../interactionRegistry/Eval";
 
