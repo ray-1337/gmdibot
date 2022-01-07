@@ -35,7 +35,13 @@ export = async (client: Eris.Client, message: Eris.Message) => {
       if (!videoRegexMimeType.test(message.attachments[0].content_type!)) embed.setImage(message.attachments[0].proxy_url);
 
       centra(message.attachments[0].proxy_url, "GET").send()
-      .then(res => fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, Buffer.from(res.body)))
+      .then(res => {
+        let stream = fs.createWriteStream(`/home/ray/gmdi-server/content/${generatedFileName}`);
+        stream.once('open', () => {
+          stream.write(Buffer.from(res.body));
+          stream.end();
+        });
+      })
       .catch(console.error);
     }
 
@@ -47,7 +53,14 @@ export = async (client: Eris.Client, message: Eris.Message) => {
         let generatedFileName = `${message.author.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 
         centra(content.proxy_url, "GET").send()
-        .then(res => fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, Buffer.from(res.body)))
+        .then(res => {
+          // fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, Buffer.from(res.body))
+          let stream = fs.createWriteStream(`/home/ray/gmdi-server/content/${generatedFileName}`);
+          stream.once('open', () => {
+            stream.write(Buffer.from(res.body));
+            stream.end();
+          });
+        })
         .catch(console.error);
 
         listDeletedContent.push(mainEndpoint + generatedFileName);
