@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import mime from "mime-db";
 
 export default class Util {
   generateHash: (length: number) => string;
@@ -28,47 +29,9 @@ export default class Util {
     };
 
     this.contentTypeDecide = function contentTypeDecide(content_type: string) {
-      let type = content_type?.toLowerCase(), ext;
+      let type = content_type?.toLowerCase(), mimeExtension = mime[type].extensions;
 
-      switch (type) {
-        case "image/jpeg":
-          ext = "jpeg";
-          break;
-        
-        case "image/jpg":
-          ext = "jpg";
-          break;
-        
-        case "image/webp":
-          ext = "webp";
-          break;
-
-        case "image/vnd.mozilla.apng":
-        case "image/png":
-          ext = "png";
-          break;
-        
-        case "video/mp4":
-          ext = "mp4";
-          break;
-
-        case "video/quicktime":
-          ext = "mov";
-          break;
-
-        case "video/webm":
-          ext = "webm";
-          break;
-
-        case "image/gif":
-          ext = "gif";
-          break;
-
-        default:
-          return null;
-      };
-
-      return ext || null;
+      return mimeExtension ? mimeExtension[0] : null;
     };
 
     this.getRandomInt = function getRandomInt(min: number, max: number) {
