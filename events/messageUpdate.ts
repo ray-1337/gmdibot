@@ -1,12 +1,20 @@
 import Eris from "eris";
-import config from "../config";
+import Config from "../config";
+import GMDIBot from "../handler/Client";
 
-export = async (client: Eris.Client, message: Eris.Message, oldMessage: Eris.OldMessage) => {
+import ModificationCountNecessity from "../countingFactory/ModificationCountNecessity";
+
+export = async (client: Eris.Client & GMDIBot, message: Eris.Message, oldMessage: Eris.OldMessage) => {
   // ignore
   if (message.author === client.user || message.author?.bot) return;
 
   // one word story
-  if (config.channel.onewordstory.includes(message.channel.id)) {
-    return client.emit("oneWordStory", message);
+  if (Config.channel.onewordstory.includes(message.channel.id)) {
+    client.emit("oneWordStory", message);
+  };
+
+  // counting system
+  if (message.channel.id === Config.counting.channelID) {
+    ModificationCountNecessity(client, message, oldMessage);
   };
 };
