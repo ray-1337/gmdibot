@@ -2,9 +2,10 @@ import { scheduleJob } from "node-schedule";
 import Eris from "eris";
 import db from "quick.db";
 import Config from "../config";
+import GMDIBot from "../handler/Client";
 import ms from "ms";
 
-export default async function (client: Eris.Client) {
+export default async function (client: GMDIBot) {
   scheduleJob('* 1 * * *', async function() {
     let warnings: [string, WarningLastedOptions][] = Object.entries(db.get("warningLasted"));
 
@@ -88,5 +89,9 @@ export default async function (client: Eris.Client) {
         continue;
       };
     };
+  });
+
+  scheduleJob('30 * * * *', function() {
+    client.counter.userError.clear();
   });
 };
