@@ -1,5 +1,4 @@
 # GMDIBot: Counting
-This counting system was inspired by JonathanGD idea.
 Sebuah game berhitung yang terinspirasi oleh JonathanGD.
 
 # Cara Kerja Sistem Counting
