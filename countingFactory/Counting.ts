@@ -28,6 +28,9 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
 
   // the dedicated user resets
   if (Config.counting.dedicated.some(x => x === message.author.id)) {
+    // important/urgent messages
+    if (/^(\[C1\])/gi.test(message.content)) return;
+    
     prepping();
     return countingChannel.createMessage({
       content: "Counter akan direset dari nol lagi.",
