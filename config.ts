@@ -9,9 +9,11 @@ export default {
     onewordstory: ["581048023950426142", "581045521507155969"],
     watchChannelModeration: command[0] === "--dev" ? ["459637978269220864"] : ["190826809896468480", "460816462941126666", "460420164551442432"]
   },
+
   endpoint: {
     contentLogging: "https://gmdi-content-logging.13373333.one/"
   },
+
   warning: {
     role: {
       1: "265808137100066817",
@@ -28,9 +30,11 @@ export default {
       }
     }
   },
+
   role: {
     staff: ["230305455975432193", "217296828339585026", "434936406960242709", "198442983668973568"]
   },
+
   cooldown: {
     limit: {
       exceed: 25,
@@ -55,7 +59,15 @@ export default {
     timerange: 60000,
     timeout: 5
   },
+
   cache: {
     limit: 40
+  },
+
+  counting: {
+    channelID: "929657424745484288",
+    dedicated: ["331265944363991042"],
+    limitError: 3,
+    messageCacheLimit: 5
   }
 };
