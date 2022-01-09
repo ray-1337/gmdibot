@@ -3,7 +3,7 @@ import Config from "../config";
 import centra from "centra";
 import nodeUtil from "util";
 
-export = async (_: Eris.Client, interaction: Eris.CommandInteraction) => {
+export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
 
   if (interaction.member?.id !== Config.botOwner) {
