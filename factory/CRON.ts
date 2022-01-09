@@ -11,9 +11,12 @@ export default async function (client: Eris.Client) {
     for (const [id, val] of warnings) {
       if (val.due) {
         let userID = id || val.memberID;
+        let shouldPost: boolean = false;
         switch (val.level) {
           case 1: {
             client.removeGuildMemberRole(Config.guildID, userID, Config.warning.role[1]);
+            
+            shouldPost = true;
             break;
           };
 
@@ -29,6 +32,8 @@ export default async function (client: Eris.Client) {
               })
               .catch(err => console.error(err));
             };
+            
+            shouldPost = true;
             break;
           };
 
@@ -45,6 +50,8 @@ export default async function (client: Eris.Client) {
               })
               .catch(err => console.error(err));
             };
+            
+            shouldPost = true;
             break;
           };
 
@@ -58,6 +65,10 @@ export default async function (client: Eris.Client) {
           db.set(`warningLasted.${userID}.since`, null),
           db.set(`warningLasted.${userID}.full`, null)
         ]);
+
+        if (shouldPost) {
+          client.createMessage(Config.warning.channel.warning, `A user warning has been successfully either decremented or removed from ${client.guilds.get(Config.guildID)?.members.get(userID)?.mention} due to expiration timeout.`);
+        };
 
         continue;
       };
