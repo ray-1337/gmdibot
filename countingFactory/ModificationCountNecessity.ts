@@ -8,6 +8,8 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
 
   let countingChannel = client.getChannel(Config.counting.channelID) as Eris.GuildTextableChannel;
 
+  const messageIDList = db.get("countingMessageIDList");
+
   const prepping = () => {
     db.set("countingState", 0);
     client.counter.state.set("prepping", true);
@@ -21,7 +23,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   // edit
   if (oldMessage !== undefined) {
     if (oldMessage.content) {
-      if (oldMessage.content !== message.content) {
+      if (oldMessage.content !== message.content && messageIDList.some((x: string) => x === message.id)) {
         prepping();
         return countingChannel.createMessage(`User dari ${message.member?.mention || `<@!${message.member?.id}>`} telah *memodifikasi* jejak countingnya. Counter akan direset dari nol lagi.`);
       };
@@ -31,7 +33,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   };
 
   // delete
-  if (message) {
+  if (message && messageIDList.some((x: string) => x === message.id)) {
     prepping();
     return countingChannel.createMessage(`User dari ${message.member?.mention || `<@!${message.member?.id}>`} telah *menghapus* jejak countingnya. Counter akan direset dari nol lagi.`);
   };
