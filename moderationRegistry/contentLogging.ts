@@ -14,9 +14,9 @@ export = async (client: Eris.Client, message: Eris.Message) => {
     const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
       .setAuthor(`${message.member?.user.username}#${message.member?.user.discriminator}`, undefined, message.member?.user.dynamicAvatarURL("png", 128))
       .addField("User Information", stripIndents`
-  **Channel:** ${message.channel.mention}
-  ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}
-  **User ID:** ${message.member?.user.id}`);
+      **Channel:** ${message.channel.mention}
+      ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}
+      **User ID:** ${message.member?.user.id}`);
 
     let defaultHashLength: number = 9;
     let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
