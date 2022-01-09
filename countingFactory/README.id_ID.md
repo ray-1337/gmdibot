@@ -10,12 +10,12 @@ Karena member selanjutnya hanya perlu menambahkan angka yang sudah dihitung sebe
 Ketika member/kandidat juga ikut mengacaukan game berhitungnya, maka counter akan direset dari nol lagi.
 
 # Peraturan
+- Titik mulainya adalah angka 0, bukan 1.
 - Jangan menghapus atau mengubah hitunganmu yang sebelumnya.
 - Jangan menggunakan angka yang sudah dihitung sebelumnya.
 - Setiap member hanya berhitung satu angka saja.
-- Titik mulainya adalah angka 0, bukan 1.
-- Kalau salah hitung, kamu punya __dua dari kesempatan__ lagi untuk berhitung dengan benar.
-- Jika kamu menghabiskan seluruh kesempatanmu untuk berhitung dengan benar, maka counter akan direset dari nol.
-- Jika counternya sedang diatur ulang, kamu punya 30 detik untuk bersiap-siap. Layaknya seperti cooldown/break time.
+- Kalau salah hitung, kamu punya __dua dari tiga kesempatan__ lagi untuk berhitung dengan benar.
+- Kalau kamu menghabiskan seluruh kesempatanmu untuk berhitung dengan benar, maka counter akan direset dari nol.
+- Jika counternya sedang diatur ulang, kamu punya waktu selama 30 detik untuk bersiap-siap. Layaknya seperti cooldown/break time.
 - Untuk kandidat, gunakan **[C1]** di paling awal pesanmu untuk pesan urgent/penting.
 > Melanggar peraturan dapat mengakibatkan counternya direset dari awal/nol lagi.
