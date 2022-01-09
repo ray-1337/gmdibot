@@ -16,4 +16,5 @@ Simple as that.
 - If it's wrong, you have __two out of three__ chances to follow the counter.
 - If you waste your three chances to follow the counter, the counter resets to zero.
 - If the counter is reset, you have 30 seconds for preparation. In other word, cooldown.
+- For candidates, use **[C1]** at the very beginning to exclude your action from counter reset.
 > Disobeying the rules may resets the counter back to zero.
