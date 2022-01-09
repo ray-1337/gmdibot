@@ -4,7 +4,7 @@ This counting system was inspired by JonathanGD idea.
 # How does it work?
 Each user count the number as usual. From zero to infinity and beyond. <br>
 For example, first user count 0, next user count 1, and so on. <br>
-The next user is just increment the previous number.
+The next user is just increment the previous number. <br>
 When the owner/some dedicated member also counting or even chatting in the specified channel, the counter resets to zero. <br>
 Simple as that.
 
