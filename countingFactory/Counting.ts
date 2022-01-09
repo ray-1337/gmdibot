@@ -13,17 +13,14 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   };
 
   // endpoint start
-  if (db.get("countingState") == null) {
-    db.set("countingState", 0);
-  };
+  db.get("countingState") == null ? db.set("countingState", 0) : null;
 
-  function prepping() {
+  const prepping = () => {
     db.set("countingState", 0);
-    client.counter.state.delete("previousUser");
     client.counter.state.set("prepping", true);
     setTimeout(() => {
       client.counter.state.delete("prepping");
-      countingChannel.createMessage("Persiapan sistem counting sudah diatur ulang. Silahkan ulang dari \"0\".");
+      countingChannel.createMessage("Persiapan sistem counting sudah diatur ulang. Silahkan ulang dari \"0\" (nol).");
     }, 30000);
   
     return;
@@ -74,7 +71,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
     };
   };
 
+  db.get("countingMessageIDList") == null ? db.set("countingMessageIDList", [message.id]) : db.push("countingMessageIDList", message.id);
   db.add("countingState", 1);
-  client.counter.state.set("previousUser", message.author.id);
   return;
 };
