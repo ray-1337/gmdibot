@@ -39,15 +39,15 @@ export default {
 
     message: {
       exceed: [
-        "Saatnya slowmode!",
-        "Ribut banget...",
-        "Kenapa mengrusuh banget."
+        "gandeng ajg",
+        "berisik bgt sih lu pada",
+        "berisik bgt sih ajg"
       ],
 
       cooling: [
-        "Oke, udah gak ribut, saatnya matiin slowmode-nya~",
-        "Hore, udah sedikit kalem!",
-        "Slowmode-nya udah dimatikan. Maaf ya!"
+        "ribut mulu daritadi",
+        "nah gitu dong",
+        "nah gini kan enak ga berisik2 amat"
       ]
     },
 
