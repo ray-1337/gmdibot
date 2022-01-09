@@ -1,11 +1,11 @@
-## GMDIBot: Counting
+# GMDIBot: Counting
 This counting system was inspired by JonathanGD idea.
 
-## How does it work?
+# How does it work?
 When the owner/some dedicated member also counting or even chatting in the specified channel, the counter resets to zero. <br>
 Simple as that.
 
-## Rules
+# Rules
 - Do not delete or even modify the previous counting (sort-of message)
 - Do not override the current counting.
 - Only count one time per user.
