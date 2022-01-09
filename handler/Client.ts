@@ -15,10 +15,18 @@ pluris(Eris, {
 
 export default class GMDIBot extends Eris.Client {
   cache = new Cache({deleteOnExpire: true, checkperiod: 30});
+  counter: {
+    state: Map<"prepping" | "previousUser", any>;
+    userError: Map<string, number>;
+  };
 
   constructor(token: string, options: Eris.ClientOptions) {
     super(token, options);
 
     this.cache = this.cache;
+    this.counter = {
+      state: new Map(),
+      userError: new Map()
+    };
   };
 };
