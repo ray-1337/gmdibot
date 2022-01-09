@@ -13,15 +13,17 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
     client.counter.state.set("prepping", true);
     setTimeout(() => {
       client.counter.state.delete("prepping");
-      countingChannel.createMessage("> Persiapan sistem counting sudah direset. Silahkan ulang dari \"0\".");
+      countingChannel.createMessage("Persiapan sistem counting sudah direset. Silahkan ulang dari \"0\" (nol).");
     }, 30000);
+    return;
   };
+
   // edit
   if (oldMessage !== undefined) {
     if (oldMessage.content) {
       if (oldMessage.content !== message.content) {
         prepping();
-        return countingChannel.createMessage(`User dari ${message.member?.mention} telah *memodifikasi* jejak countingnya. Counter akan direset dari nol lagi.`);
+        return countingChannel.createMessage(`User dari ${message.member?.mention || `<@!${message.member?.id}>`} telah *memodifikasi* jejak countingnya. Counter akan direset dari nol lagi.`);
       };
     }
 
@@ -31,6 +33,6 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   // delete
   if (message) {
     prepping();
-    return countingChannel.createMessage(`User dari ${message.member?.mention} telah *menghapus* jejak countingnya. Counter akan direset dari nol lagi.`);
+    return countingChannel.createMessage(`User dari ${message.member?.mention || `<@!${message.member?.id}>`} telah *menghapus* jejak countingnya. Counter akan direset dari nol lagi.`);
   };
 };
