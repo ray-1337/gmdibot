@@ -31,7 +31,7 @@ export default class Util {
     this.contentTypeDecide = function contentTypeDecide(content_type: string) {
       let type = content_type?.toLowerCase(), mimeExtension = mime[type].extensions;
 
-      return mimeExtension ? mimeExtension.filter(x => x === "qt")[0] : null;
+      return mimeExtension ? mimeExtension.filter(x => x !== "qt")[0] : null;
     };
 
     this.getRandomInt = function getRandomInt(min: number, max: number) {
