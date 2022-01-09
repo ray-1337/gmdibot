@@ -15,8 +15,8 @@ export = async (client: Eris.Client, message: Eris.Message) => {
       .setAuthor(`${message.member?.user.username}#${message.member?.user.discriminator}`, undefined, message.member?.user.dynamicAvatarURL("png", 128))
       .addField("User Information", stripIndents`
       **Channel:** ${message.channel.mention}
-      ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}
-      **User ID:** ${message.member?.user.id}`);
+      **User ID:** ${message.member?.user.id}
+      ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}`);
 
     let defaultHashLength: number = 9;
     let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
