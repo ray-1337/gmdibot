@@ -2,6 +2,7 @@ import Eris from "eris";
 import Config from "../config";
 import GMDIBot from "../handler/Client";
 import db from "quick.db";
+import { stripIndents } from "common-tags";
 
 export default async function (client: Eris.Client & GMDIBot, message: Eris.Message) {
   if (message.channel.id !== Config.counting.channelID || client.counter.state.get("prepping") === true || message.author.bot) return;
@@ -29,7 +30,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   // the dedicated user resets
   if (Config.counting.dedicated.some(x => x === message.author.id)) {
     // important/urgent messages
-    if (/^(\[C1\])/gi.test(message.content)) return;
+    if (/(\[C1\])/gi.test(message.content)) return;
     
     prepping();
     return countingChannel.createMessage({
@@ -62,10 +63,14 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
         client.cache.set(`countingMCNPrevention.${message.id}`, true);
         client.cache.ttl(`countingMCNPrevention.${message.id}`, 15000);
 
-        message.delete().catch(() => {});
+        // message.delete().catch(() => {});
+        message.addReaction("❌");
         client.counter.userError.set(message.author.id, userErrorLimit + 1);
         return countingChannel.createMessage({
-          content: `Counting tidak sesuai peraturan (saat ini: **${db.get("countingState").toLocaleString()}**). Counting akan direset dari ${userErrorLimit}/${Config.counting.limitError} kesalahan.`
+          messageReference: {messageID: message.id},
+          content: stripIndents`
+          Counting tidak sesuai peraturan (saat ini: **${db.get("countingState").toLocaleString()}**).
+          Kamu memiliki ${userErrorLimit}/${Config.counting.limitError} kesempatan untuk mengulanginya lagi.`
         });
       } else {
         prepping();
@@ -76,5 +81,6 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
 
   db.get("countingMessageIDList") == null ? db.set("countingMessageIDList", [message.id]) : db.push("countingMessageIDList", message.id);
   db.add("countingState", 1);
+
   return;
 };
