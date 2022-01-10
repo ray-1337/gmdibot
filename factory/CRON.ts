@@ -7,6 +7,8 @@ import ms from "ms";
 
 export default async function (client: GMDIBot) {
   scheduleJob('* 1 * * *', async function() {
+    if (!db.get("warningLasted")) return;
+
     let warnings: [string, WarningLastedOptions][] = Object.entries(db.get("warningLasted"));
 
     for (const [id, val] of warnings) {
@@ -77,7 +79,10 @@ export default async function (client: GMDIBot) {
   });
 
   scheduleJob('* 12 * * *', async function() {
+    if (!db.get("replaceWelcomeMessageUser")) return;
+
     let memberLeaveProposal: [string, FarewellMemberConclusion][] = Object.entries(db.get("replaceWelcomeMessageUser"));
+    
     for (const [id, val] of memberLeaveProposal) {
       if (Math.floor(Date.now() - val.leavingSince) > ms("14d")) {
         try {
