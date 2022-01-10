@@ -17,5 +17,5 @@ Ketika member/kandidat juga ikut mengacaukan game berhitungnya, maka counter aka
 - Kalau salah hitung, kamu punya __dua dari tiga kesempatan__ lagi untuk berhitung dengan benar.
 - Kalau kamu menghabiskan seluruh kesempatanmu untuk berhitung dengan benar, maka counter akan direset dari nol.
 - Jika counternya sedang diatur ulang, kamu punya waktu selama 30 detik untuk bersiap-siap. Layaknya seperti cooldown/break time.
-- Untuk kandidat, gunakan **[C1]** di paling awal pesanmu untuk pesan urgent/penting.
+- Untuk kandidat, taruh **[C1]** di bagian message untuk pesan urgent/penting.
 > Melanggar peraturan dapat mengakibatkan counternya direset dari awal/nol lagi.
