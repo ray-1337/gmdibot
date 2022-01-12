@@ -21,7 +21,8 @@ export default {
       3: "438664627962904576"
     },
     channel: {
-      warning: "331444579146661889" // "459221138267176971" // "331444579146661889"
+      warning: "331444579146661889", // "459221138267176971" // "331444579146661889"
+      logging: "468266481445240853"
     },
     session: {
       III: {
@@ -37,21 +38,23 @@ export default {
 
   cooldown: {
     limit: {
-      exceed: 25,
-      cooling: 15
+      exceed: 28,
+      cooling: 17
     },
 
     message: {
       exceed: [
         "gandeng ajg",
         "berisik bgt sih lu pada",
-        "berisik bgt sih ajg"
+        "berisik bgt sih ajg",
+        "ngerusuh mulu"
       ],
 
       cooling: [
         "ribut mulu daritadi",
         "nah gitu dong",
-        "nah gini kan enak ga berisik2 amat"
+        "nah gini kan enak ga berisik2 amat",
+        "mending"
       ]
     },
 
