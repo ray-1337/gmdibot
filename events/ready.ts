@@ -2,7 +2,7 @@ import GMDIBot from "../handler/Client";
 import CRON from "../factory/CRON";
 
 export = async (client: GMDIBot) => {
-  client.editStatus("idle", {type: 3, name: "Anime"});
+  client.editStatus("idle", {type: 3, name: "Love Live"});
 
   console.log("Ready.");
 
