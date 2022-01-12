@@ -23,14 +23,14 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
     return interaction.createMessage("Missing permissions.");
   };
   
-  let interactionBegins = (interaction.data.options![0] as Eris.InteractionDataOptionsSubCommand);
-  let optionsBehind = (interactionBegins.options as Eris.InteractionDataOptions[]);
+  let interactionBegins = interaction.data.options![0] as Eris.InteractionDataOptionsSubCommand;
+  let optionsBehind = interactionBegins.options as Eris.InteractionDataOptions[];
   let ErisTypes = Eris.Constants.ApplicationCommandOptionTypes;
 
   const embed = new Eris.RichEmbed().setTitle("Warning").setTimestamp();
 
   switch (interactionBegins.name) {
-    case "add":
+    case "add": {
       if (!optionsBehind || optionsBehind.length < 3) {
         return interaction.createMessage("Some content were missing. Please try again.");
       };
@@ -126,7 +126,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
       // Warn III
       if (level.value === 3) {
         if (timeout) {
-          return interaction.createMessage(`This warning level cannot be presented with timeout. Warn III timeout must be randomized from 30 to 90 days.`);
+          return interaction.createMessage(`This warning level cannot be presented with timeout. Warn III timeout must be randomized by itself from 30 to 90 days.`);
         };
 
         try {
@@ -157,6 +157,9 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
         embed
         .addField("Length", `${due} days`, true)
         .addField("Expiration", new Date(Date.now() + conversionToDay).toLocaleString('id-ID', formatTime) + " WIB");
+
+        client.createMessage(Config.warning.channel.logging, `${memberValidation.mention} (${memberValidation.id}) [${due} days]`)
+        .catch(() => {});
       }
 
       // Warn I/II
@@ -236,6 +239,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
       };
 
       return interaction.createMessage(`Successfully set warning to **${memberValidation.username}#${memberValidation.discriminator}** with level **${warningLevelExplained}**.`);
+    };
 
     default:
       break;
