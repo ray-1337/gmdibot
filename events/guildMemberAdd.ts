@@ -1,8 +1,15 @@
 import Eris from "eris";
 import config from "../config";
+import db from "quick.db";
 
 export = async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
-  // ???
+  // still 
+  let userDataWarn = await db.get(`warningLasted.${member.id}`) as WarningLastedOptions;
+  if (userDataWarn) {
+    if (userDataWarn.level) {
+      return client.editGuildMember(config.guildID, member.id, {roles: [config.warning.role[userDataWarn.level]]});
+    };
+  };
 };
