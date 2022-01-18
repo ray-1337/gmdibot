@@ -3,19 +3,17 @@ import Config from "../config";
 import centra from "centra";
 import nodeUtil from "util";
 
-export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
-  await interaction.defer();
-
-  if (interaction.member?.id !== Config.botOwner) {
-    return interaction.createMessage("Only the developer (331265944363991042) can access this.");
+export = async (client: Eris.Client, message: Eris.Message, args: any[]) => {
+  if (message.author.id !== Config.botOwner) {
+    return client.createMessage(message.channel.id, `Only the developer (${Config.botOwner}) can access this.`);
   };
 
-  if (!interaction || !interaction.data || !interaction.data.options) {
-    return interaction.createMessage("Some content were missing. Please try again.");
+  if (args.length < 1) {
+    return client.createMessage(message.channel.id, "Some content were missing. Please try again.");
   };
 
   const embed = new Eris.RichEmbed();
-  let code = (interaction.data.options[0] as Eris.InteractionDataOptionsString).value;
+  let code = args.join(" "); // (interaction.data.options[0] as Eris.InteractionDataOptionsString).value;
 
   try {
     let output = await checkingEvaluation(code);
@@ -41,7 +39,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
     };
   };
 
-  return interaction.createMessage({ embeds: [embed] });
+  return client.createMessage(message.channel.id, { embeds: [embed] });
 
   async function checkingEvaluation(content: any) {
     let res: any;
