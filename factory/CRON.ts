@@ -1,5 +1,4 @@
 import { scheduleJob } from "node-schedule";
-import Eris from "eris";
 import db from "quick.db";
 import Config from "../config";
 import GMDIBot from "../handler/Client";
