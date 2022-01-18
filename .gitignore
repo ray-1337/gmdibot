@@ -13,3 +13,4 @@ app.config.json
 package.lock.json
 .env
 .yarnrc.yml
+/database/*
