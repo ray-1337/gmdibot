@@ -76,19 +76,21 @@ export = async (client: Eris.Client) => {
       ]
     },
 
-    {
-      name: "eval",
-      type: Eris.Constants.ApplicationCommandTypes.CHAT_INPUT,
-      description: "Evaluate JavaScript code. (ray#1337 only)",
-      defaultPermission: false,
-      options: [
-        {
-          type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
-          name: "code",
-          description: "JavaScript code.",
-          required: true
-        }
-      ]
-    }
+    // cant create a new line on slash cmd, fuck.
+    
+    // {
+    //   name: "eval",
+    //   type: Eris.Constants.ApplicationCommandTypes.CHAT_INPUT,
+    //   description: "Evaluate JavaScript code. (ray#1337 only)",
+    //   defaultPermission: false,
+    //   options: [
+    //     {
+    //       type: Eris.Constants.ApplicationCommandOptionTypes.STRING,
+    //       name: "code",
+    //       description: "JavaScript code.",
+    //       required: true
+    //     }
+    //   ]
+    // }
   ]);
 };
