@@ -19,11 +19,17 @@ export default class GMDIBot extends Eris.Client {
     state: Map<"prepping" | "previousUser", any>;
     userError: Map<string, number>;
   };
+  userChat: {
+    cooldown: Map<string, number>;
+  };
 
   constructor(token: string, options: Eris.ClientOptions) {
     super(token, options);
 
     this.cache = this.cache;
+    this.userChat = {
+      cooldown: new Map()
+    };
     this.counter = {
       state: new Map(),
       userError: new Map()
