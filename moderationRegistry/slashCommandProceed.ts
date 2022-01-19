@@ -77,6 +77,13 @@ export = async (client: Eris.Client) => {
     },
 
     // cant create a new line on slash cmd, fuck.
+
+    {
+      name: "point",
+      type: Eris.Constants.ApplicationCommandTypes.CHAT_INPUT,
+      description: "Check your point rate in order to get Active Members role.",
+      defaultPermission: false
+    }
     
     // {
     //   name: "eval",
