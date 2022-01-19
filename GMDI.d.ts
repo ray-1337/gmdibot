@@ -13,3 +13,15 @@ interface WarningLastedOptions {
   level: 1 | 2 | 3; // specific level
   warningLogID: string
 }
+
+interface UserChatInterface {
+  probability: number;
+  sum: {
+    week?: number[];
+    today: number;
+  };
+  warning?: {
+    current: boolean;
+    since: Date | null;
+  }
+}
