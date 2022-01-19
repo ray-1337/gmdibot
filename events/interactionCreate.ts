@@ -2,7 +2,8 @@ import Eris from "eris";
 
 // commands
 import WarnCommute from "../interactionRegistry/Warn";
-import EvalCommute from "../interactionRegistry/Eval";
+import PointCommute from "../interactionRegistry/Point";
+// import EvalCommute from "../interactionRegistry/Eval";
 
 export = async (client: Eris.Client, interaction: Eris.Interaction) => {
   if (interaction instanceof Eris.CommandInteraction) {
@@ -11,8 +12,8 @@ export = async (client: Eris.Client, interaction: Eris.Interaction) => {
         case "warn":
           return WarnCommute(client, interaction);
 
-        case "eval":
-          return EvalCommute(client, interaction);
+        case "point":
+          return PointCommute(client, interaction);
 
         default:
           return interaction.createMessage("Unknown command execution.");
