@@ -1,11 +1,11 @@
 ## Side-Project (GMDI Discord Bot)
 An advanced private Discord Bot, mostly for moderation purposes. <br>
 Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org). <br>
-Database built with [quick.db](https://npmjs.com/package/quick.db) for the sake of brevity.
+Database built with [quick.db](https://npmjs.com/package/quick.db) for the sake of simplicity.
 
 ## Current
 - **TypeScript:** v4.5.4
-- **Node.js:** v16.13.1
+- **Node.js:** v16.13.2
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
