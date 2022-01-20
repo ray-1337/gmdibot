@@ -98,7 +98,7 @@ export default {
     },
 
     meta: {
-      threshold: 50, // percentage
+      threshold: 25, // percentage
       resetAfterInDay: 14
     }
   }
