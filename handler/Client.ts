@@ -20,7 +20,7 @@ export default class GMDIBot extends Eris.Client {
     userError: Map<string, number>;
   };
   userChat: {
-    cooldown: Map<string, number>;
+    cooldown: Map<string, true>;
   };
 
   constructor(token: string, options: Eris.ClientOptions) {

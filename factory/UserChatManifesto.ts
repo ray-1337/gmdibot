@@ -31,6 +31,10 @@ export default async function (client: GMDIBot, message: Eris.Message) {
   
   if (detention.some(x => x == true)) return;
 
+  // cooldown
+  client.userChat.cooldown.set(message.author.id, true);
+  setTimeout(() => client.userChat.cooldown.delete(message.author.id), 6e4);
+
   db.add(`userChatRate.${message.author.id}.sum.day`, 1);
   return;
 };
