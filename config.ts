@@ -99,7 +99,7 @@ export default {
 
     meta: {
       threshold: 25, // percentage
-      resetAfterInDay: 14
+      resetAfterInDay: 28
     }
   }
 };
