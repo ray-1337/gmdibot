@@ -29,6 +29,8 @@ export default class Util {
     };
 
     this.contentTypeDecide = function contentTypeDecide(content_type: string) {
+      if (!content_type) return null;
+      
       let type = content_type?.toLowerCase(), mimeExtension = mime[type].extensions;
 
       return mimeExtension ? mimeExtension.filter(x => x !== "qt")[0] : null;
