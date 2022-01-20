@@ -25,8 +25,10 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
     if (message.attachments && message.attachments.length >= 1) {
       if (message.attachments.length === 1) {
-        let extension = util.contentTypeDecide(message.attachments[0].content_type!);
-        if (extension == null) return;
+        if (!message.attachments[0].content_type) return;
+
+        let extension = util.contentTypeDecide(message.attachments[0].content_type);
+        if (extension == undefined) return;
 
         let generatedFileName = `${message.member?.user.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 
@@ -47,8 +49,10 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
       else if (message.attachments.length > 1) {
         for (let content of message.attachments) {
-          let extension = util.contentTypeDecide(message.attachments[0].content_type!);
-          if (extension == null) continue;
+          if (!message.attachments[0].content_type) continue;
+
+          let extension = util.contentTypeDecide(message.attachments[0].content_type);
+          if (extension == undefined) continue;
 
           let generatedFileName = `${message.member?.user.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 

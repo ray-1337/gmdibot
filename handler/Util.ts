@@ -4,7 +4,7 @@ import mime from "mime-db";
 export default class Util {
   generateHash: (length: number) => string;
   truncate: (string: string, length: number) => string;
-  contentTypeDecide: (content_type: string) => string | null;
+  contentTypeDecide: (content_type: string) => "png" | "jpeg" | "jpg" | "webp" | "webm" | "mp3" | "mp4" | "mov" | undefined;
   getRandomInt: (min: number, max: number) => number;
   countString: (string: string) => {} | null;
 
@@ -29,11 +29,19 @@ export default class Util {
     };
 
     this.contentTypeDecide = function contentTypeDecide(content_type: string) {
-      if (!content_type) return null;
-      
-      let type = content_type?.toLowerCase(), mimeExtension = mime[type].extensions;
+      let type = content_type.toLowerCase(), mimeExtension = mime[type].extensions;
 
-      return mimeExtension ? mimeExtension.filter(x => x !== "qt")[0] : null;
+      switch (content_type) {
+        case "image/png": return "png";
+        case "image/jpeg": return "jpeg";
+        case "image/jpg": return "jpg";
+        case "image/webp": return "webp";
+        case "video/webm": return "webm";
+        case "audio/mpeg": return "mp3";
+        case "video/mpeg": return "mp4";
+        case "video/quicktime": return "mov";
+        default: mimeExtension !== undefined ? mimeExtension[0] : undefined;
+      };
     };
 
     this.getRandomInt = function getRandomInt(min: number, max: number) {
