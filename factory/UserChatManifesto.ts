@@ -2,7 +2,7 @@ import Eris from "eris";
 import db from "quick.db";
 import Config from "../config";
 import GMDIBot from "../handler/Client";
-const asdfjkl = require("asdfjkl").default;
+//const asdfjkl = require("asdfjkl").default;
 
 export default async function (client: GMDIBot, message: Eris.Message) {
   if (message.channel instanceof Eris.PrivateChannel) return;
@@ -23,7 +23,7 @@ export default async function (client: GMDIBot, message: Eris.Message) {
 
   // blacklist
   const detention = [
-    asdfjkl(content) == true, // gibberish
+    //asdfjkl(content) == true, // gibberish
     content.replace(/\W|\d/gi, "").length < 8, // "only words" replacement + less than 8 characters
     message.author.bot == true, // bot
     client.userChat.cooldown.has(message.author.id) // cooldown
