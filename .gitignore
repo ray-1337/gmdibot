@@ -10,7 +10,9 @@ json.sqlite
 yarn.lock
 app.config.json
 .pnp.cjs
+.pnp.loader.mjs
 package.lock.json
 .env
 .yarnrc.yml
 /database/*
+/server/content/*
