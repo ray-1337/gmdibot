@@ -38,7 +38,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
         centra(message.attachments[0].proxy_url, "GET").send()
           .then(res => {
-            let stream = fs.createWriteStream(`/home/ray/gmdi-server/content/${generatedFileName}`);
+            let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
             stream.once('open', () => {
               stream.write(Buffer.from(res.body));
               stream.end();
@@ -59,7 +59,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
           centra(content.proxy_url, "GET").send()
             .then(res => {
               // fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, Buffer.from(res.body))
-              let stream = fs.createWriteStream(`/home/ray/gmdi-server/content/${generatedFileName}`);
+              let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
               stream.once('open', () => {
                 stream.write(Buffer.from(res.body));
                 stream.end();
