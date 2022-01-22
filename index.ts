@@ -1,6 +1,7 @@
-import dotenv from "dotenv";
 import GMDIBot from "./handler/Client";
 import GMDIEvent from "./handler/Event";
+import GMDIServer from "./server/Server";
+import dotenv from "dotenv";
 dotenv.config();
 
 const client = new GMDIBot(`Bot ${process.env.DISCORD_BOT_TOKEN}`, {
@@ -10,5 +11,8 @@ const client = new GMDIBot(`Bot ${process.env.DISCORD_BOT_TOKEN}`, {
   messageLimit: 3
 });
 
-GMDIEvent(client);
-client.connect();
+Promise.all([
+  GMDIEvent(client),
+  client.connect(),
+  GMDIServer
+])
