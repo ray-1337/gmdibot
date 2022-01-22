@@ -9,9 +9,9 @@ export default async (client: Eris.Client & GMDIBot, message: Eris.Message, oldM
   if (message.author === client.user || message.author?.bot) return;
 
   // one word story
-  if (Config.channel.onewordstory.includes(message.channel.id)) {
-    client.emit("oneWordStory", message);
-  };
+  // if (Config.channel.onewordstory.includes(message.channel.id)) {
+  //   client.emit("oneWordStory", message);
+  // };
 
   // counting system
   if (message.channel.id === Config.counting.channelID) {
