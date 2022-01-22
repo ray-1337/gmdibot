@@ -6,7 +6,7 @@ import removalChannelCooldown from "../moderationRegistry/removalChannelCooldown
 import slashCommandProceed from "../moderationRegistry/slashCommandProceed";
 
 export default async (client: GMDIBot) => {
-  client.editStatus("idle", {type: 3, name: "Gayshit Impact"});
+  client.editStatus("idle", {name: "Gayshit Impact"});
 
   console.log("Ready.");
 
