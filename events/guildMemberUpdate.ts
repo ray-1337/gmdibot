@@ -3,7 +3,7 @@ import config from "../config";
 import {stripIndents} from "common-tags";
 import db from "quick.db";
 
-export = async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member, oldMember: Eris.OldMember) => {
+export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member, oldMember: Eris.OldMember) => {
   if (guild.id !== config.guildID || member.bot) return;
 
   // passed Membership Screenings

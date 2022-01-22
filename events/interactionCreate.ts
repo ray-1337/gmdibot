@@ -5,7 +5,7 @@ import WarnCommute from "../interactionRegistry/Warn";
 import PointCommute from "../interactionRegistry/Point";
 // import EvalCommute from "../interactionRegistry/Eval";
 
-export = async (client: Eris.Client, interaction: Eris.Interaction) => {
+export default async (client: Eris.Client, interaction: Eris.Interaction) => {
   if (interaction instanceof Eris.CommandInteraction) {
     if (interaction.data.type === Eris.Constants.ApplicationCommandTypes.CHAT_INPUT) {
       switch (interaction.data.name) {

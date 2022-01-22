@@ -4,7 +4,7 @@ import GMDIBot from "../handler/Client";
 
 import ModificationCountNecessity from "../countingFactory/ModificationCountNecessity";
 
-export = async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
+export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // console.log(message);
   client.emit("contentLogging", message);
 

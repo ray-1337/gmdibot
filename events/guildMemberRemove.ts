@@ -3,7 +3,7 @@ import config from "../config";
 import db from "quick.db";
 import ms from "ms";
 
-export = async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member) => {
+export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
   db.set(`replaceWelcomeMessageUser.${member.user.id}`, {

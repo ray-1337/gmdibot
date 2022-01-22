@@ -4,7 +4,7 @@ import GMDIBot from "../handler/Client";
 
 import ModificationCountNecessity from "../countingFactory/ModificationCountNecessity";
 
-export = async (client: Eris.Client & GMDIBot, message: Eris.Message, oldMessage: Eris.OldMessage) => {
+export default async (client: Eris.Client & GMDIBot, message: Eris.Message, oldMessage: Eris.OldMessage) => {
   // ignore
   if (message.author === client.user || message.author?.bot) return;
 
