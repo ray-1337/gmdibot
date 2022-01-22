@@ -11,12 +11,12 @@ app.get('/', (_, res) => {
 });
 
 app.get('/:filename', (req, res) => {
-  if (!req.params?.filename || !fs.existsSync(`../../gmdi-content-logging/${req.params.filename}`)) {
+  if (!req.params?.filename || !fs.existsSync(`../gmdi-content-logging/${req.params.filename}`)) {
     res.status(404);
     return res.send("unknown content");
   };
 
-  return res.sendFile(`content/${req.params.filename}`);
+  return res.sendFile(`../gmdi-content-logging/${req.params.filename}`);
 });
 
 app.get('/favicon.ico', (_, res) => {
