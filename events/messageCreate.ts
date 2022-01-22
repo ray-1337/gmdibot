@@ -1,14 +1,18 @@
-import Eris from "eris";
+import Eris, { GuildChannel } from "eris";
 import Config from "../config";
 import GMDIBot from "../handler/Client";
 import Counting from "../countingFactory/Counting";
+
+// Moderation Registry
+import ChannelCooldown from "../moderationRegistry/channelCooldown";
+import OWS from "../moderationRegistry/oneWordStory";
 
 // command
 import EvalFactory from "../factory/Eval";
 
 export = async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // ignore
-  if (message.author.bot) return;
+  if (message.author.bot || !(message instanceof GuildChannel)) return;
 
   // counting system
   if (message.channel.id === Config.counting.channelID) {
@@ -16,12 +20,12 @@ export = async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   };
 
   if (Config.channel.watchChannelModeration.some(x => x === message.channel.id)) {
-    client.emit("channelCooldown", message);
+    ChannelCooldown(client, message);
   };
 
   // one word story
   if (Config.channel.onewordstory.some(x => x === message.channel.id)) {
-    client.emit("oneWordStory", message);
+    OWS(client, message);
   };
 
   let args = message.content.slice(Config.prefix.length).trim().split(/ +/g);
