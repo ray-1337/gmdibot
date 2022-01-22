@@ -1,4 +1,4 @@
-import Eris, { GuildChannel } from "eris";
+import Eris from "eris";
 import Config from "../config";
 import GMDIBot from "../handler/Client";
 import Counting from "../countingFactory/Counting";
@@ -12,7 +12,7 @@ import EvalFactory from "../factory/Eval";
 
 export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // ignore
-  if (message.author.bot || !(message instanceof GuildChannel)) return;
+  if (message.author.bot) return;
 
   // counting system
   if (message.channel.id === Config.counting.channelID) {
