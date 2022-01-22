@@ -2,7 +2,7 @@ import Eris from "eris";
 import Client from "../handler/Client";
 import Config from "../config";
 
-export = async (client: Client, message: Eris.Message<Eris.GuildTextableChannel>) => {
+export = async (client: Client, message: Eris.Message<Eris.TextableChannel>) => {
   // cache limit
   if (message.channel.messages.limit !== Config.cache.limit) message.channel.messages.limit = Config.cache.limit;
 
