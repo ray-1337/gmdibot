@@ -10,7 +10,7 @@ import OWS from "../moderationRegistry/oneWordStory";
 // command
 import EvalFactory from "../factory/Eval";
 
-export = async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
+export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // ignore
   if (message.author.bot || !(message instanceof GuildChannel)) return;
 
