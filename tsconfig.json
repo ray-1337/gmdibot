@@ -6,10 +6,12 @@
     "strict": true,
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
+    "declaration": true,
     "inlineSourceMap": false,
     "removeComments": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "isolatedModules": true
   },
 
   "files": ["GMDI.d.ts"],
