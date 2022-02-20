@@ -2,7 +2,7 @@ import Eris from "eris";
 import Util from "../handler/Util";
 import centra from "centra";
 import { stripIndents } from "common-tags";
-import config from "../config";
+import config from "../config/config";
 import fs from "fs";
 
 const util = new Util();

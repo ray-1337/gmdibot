@@ -14,6 +14,6 @@
     "isolatedModules": true
   },
 
-  "files": ["GMDI.d.ts"],
-  "include": ["."]
+  "files": ["./dist/typings/GMDI.d.ts"],
+  "include": ["**/*"]
 }

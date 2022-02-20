@@ -1,5 +1,5 @@
 import Eris from "eris";
-import Config from "../config";
+import Config from "../config/config";
 import Util from "../handler/Util";
 import db from "quick.db";
 import ms from "ms";
@@ -23,7 +23,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
     return interaction.createMessage("Missing permissions.");
   };
   
-  let interactionBegins = interaction.data.options![0] as Eris.InteractionDataOptionsSubCommand;
+  let interactionBegins = interaction.data.options[0] as Eris.InteractionDataOptionsSubCommand;
   let optionsBehind = interactionBegins.options as Eris.InteractionDataOptions[];
   let ErisTypes = Eris.Constants.ApplicationCommandOptionTypes;
 
@@ -233,7 +233,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
           if (timeout && level.value < 3) db.set(`warningLasted.${member.value}.warningLogID`, x.id);
         });
       } catch (error) {
-        if (!(error instanceof Eris.DiscordRESTError)) return;
+        if (!(error instanceof Eris.DiscordRESTError)) return console.error(error);
         console.error(error);
         return interaction.createMessage(`**Encountered error when posting a warning log:** \n${error.code || 0} / ${error.message}`);
       };

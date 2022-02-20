@@ -1,6 +1,6 @@
 import Eris from "eris";
 import Client from "../handler/Client";
-import Config from "../config";
+import Config from "../config/config";
 
 export = async (client: Client) => {
   if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");

@@ -1,5 +1,5 @@
 import Eris from "eris";
-import Config from "../config";
+import Config from "../config/config";
 
 export = async (client: Eris.Client) => {
   if (!client) return;

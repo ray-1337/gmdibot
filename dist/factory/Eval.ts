@@ -1,5 +1,5 @@
 import Eris from "eris";
-import Config from "../config";
+import Config from "../config/config";
 import centra from "centra";
 import nodeUtil from "util";
 

@@ -1,5 +1,5 @@
 import Eris from "eris";
-import config from "../config";
+import config from "../config/config";
 import db from "quick.db";
 import ms from "ms";
 

@@ -1,6 +1,6 @@
 import Eris from "eris";
 import Client from "../handler/Client";
-import Config from "../config";
+import Config from "../config/config";
 
 export = async (client: Client, message: Eris.Message<Eris.TextableChannel>) => {
   // cache limit

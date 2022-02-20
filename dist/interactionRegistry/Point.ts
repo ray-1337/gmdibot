@@ -1,6 +1,6 @@
 import Eris from "eris";
 import db from "quick.db";
-import Config from "../config";
+import Config from "../config/config";
 
 export default async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
