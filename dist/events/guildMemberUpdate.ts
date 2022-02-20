@@ -7,7 +7,7 @@ export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Membe
   if (guild.id !== config.guildID || member.bot) return;
 
   // passed Membership Screenings
-  if (oldMember.pending && !member.pending) {
+  if (oldMember?.pending && !member?.pending) {
     membershipScreenings(client, guild, member);
   };
 };
