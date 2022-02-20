@@ -7,9 +7,7 @@ export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Membe
 
   // still 
   let userDataWarn = await db.get(`warningLasted.${member.id}`) as WarningLastedOptions;
-  if (userDataWarn) {
-    if (userDataWarn.level) {
-      return client.editGuildMember(config.guildID, member.id, {roles: [config.warning.role[userDataWarn.level]]});
-    };
+  if (userDataWarn && userDataWarn.level) {
+    return client.editGuildMember(config.guildID, member.id, {roles: [config.warning.role[userDataWarn.level]]});
   };
 };
