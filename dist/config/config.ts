@@ -56,7 +56,7 @@ export default {
       cooling: [
         "ribut mulu daritadi",
         "nah gitu dong",
-        "nah gini kan enak ga berisik2 amat"
+        "nah gini kan enak ga berisik2 amat",
         "kebiasaan"
       ]
     },
