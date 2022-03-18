@@ -40,23 +40,24 @@ export default {
 
   cooldown: {
     limit: {
-      exceed: 28,
-      cooling: 17
+      exceed: 30,
+      cooling: 20
     },
 
     message: {
       exceed: [
         "gandeng ajg",
-        "berisik bgt sih lu pada",
-        "berisik bgt sih ajg",
-        "ngerusuh mulu"
+        "gw pukul lu ajg",
+        "males banget ribut tolo",
+        "ngerusuh mulu",
+        "dibaikin malah ngelunjak"
       ],
 
       cooling: [
         "ribut mulu daritadi",
         "nah gitu dong",
-        "nah gini kan enak ga berisik2 amat",
-        "mending"
+        "nah gini kan enak ga berisik2 amat"
+        "kebiasaan"
       ]
     },
 
