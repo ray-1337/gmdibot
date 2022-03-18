@@ -1,6 +1,7 @@
 import Eris from "eris";
 import pluris from "pluris";
 import Cache from "node-cache";
+import jsoning from "jsoning";
 
 pluris(Eris, {
   awaitMessages: true,
@@ -14,6 +15,7 @@ pluris(Eris, {
 });
 
 export default class GMDIBot extends Eris.Client {
+  database: jsoning;
   cache = new Cache({deleteOnExpire: true, checkperiod: 30});
   counter: {
     state: Map<"prepping" | "previousUser", any>;
@@ -26,6 +28,7 @@ export default class GMDIBot extends Eris.Client {
   constructor(token: string, options: Eris.ClientOptions) {
     super(token, options);
 
+    this.database = new jsoning(process.cwd() + "/database/db.json");
     this.cache = this.cache;
     this.userChat = {
       cooldown: new Map()
