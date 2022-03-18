@@ -44,7 +44,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
       const embed = new Eris.RichEmbed()
         .setColor(0xffac33)
-        .setTimestamp()
+        .setTimestamp(new Date(message.timestamp))
         .setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, undefined, message.author.dynamicAvatarURL("png", 16))
         .setDescription(stripIndents`
         ${truncate(message.content)}
