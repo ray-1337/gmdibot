@@ -23,7 +23,8 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     const starEmoji = "⭐";
     const limit = 7;
     const channelID = "954291153203769354";
-
+    
+    if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
     if (message.reactions[starEmoji].count >= limit) {
