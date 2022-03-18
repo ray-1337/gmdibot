@@ -1,6 +1,6 @@
 import Eris from "eris";
 import Util from "../handler/Util";
-import centra from "centra";
+import undici from "undici";
 import { stripIndents } from "common-tags";
 import config from "../config/config";
 import fs from "fs";
@@ -35,16 +35,16 @@ export = async (client: Eris.Client, message: Eris.Message) => {
         embed.addField("Backup Endpoint", mainEndpoint + generatedFileName);
 
         if (!videoRegexMimeType.test(message.attachments[0].content_type!)) embed.setImage(message.attachments[0].proxy_url);
-
-        centra(message.attachments[0].proxy_url, "GET").send()
-          .then(res => {
-            let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
-            stream.once('open', () => {
-              stream.write(Buffer.from(res.body));
-              stream.end();
-            });
-          })
-          .catch(console.error);
+        
+        undici.request(message.attachments[0].proxy_url, { method: "GET" })
+        .then(res => {
+          let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
+          stream.once('open', async () => {
+            stream.write(Buffer.from(await res.body.arrayBuffer()));
+            stream.end();
+          });
+        })
+        .catch(console.error);
       }
 
       else if (message.attachments.length > 1) {
@@ -56,16 +56,15 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
           let generatedFileName = `${message.member?.user.id}.${util.generateHash(defaultHashLength)}.${extension}`;
 
-          centra(content.proxy_url, "GET").send()
-            .then(res => {
-              // fs.writeFileSync(`/home/ray/gmdi-server/content/${generatedFileName}`, Buffer.from(res.body))
-              let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
-              stream.once('open', () => {
-                stream.write(Buffer.from(res.body));
-                stream.end();
-              });
-            })
-            .catch(console.error);
+          undici.request(content.proxy_url, { method: "GET" })
+          .then(res => {
+            let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
+            stream.once('open', async () => {
+              stream.write(Buffer.from(await res.body.arrayBuffer()));
+              stream.end();
+            });
+          })
+          .catch(console.error);
 
           listDeletedContent.push(mainEndpoint + generatedFileName);
         };

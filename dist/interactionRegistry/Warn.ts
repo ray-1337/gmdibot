@@ -5,6 +5,7 @@ import ms from "ms";
 import parseDur from "parse-duration";
 import prettyMS from "pretty-ms";
 import GMDIBot from "../handler/Client";
+import undici from "undici";
 
 export = async (client: Eris.Client & GMDIBot, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
@@ -82,7 +83,7 @@ export = async (client: Eris.Client & GMDIBot, interaction: Eris.CommandInteract
           return interaction.createMessage("Failed to parse the URL.");
         };
 
-        let request = await centra(evidence.value, "GET").timeout(10000).send();
+        let request = await undici.request(evidence.value, {bodyTimeout: ms("10s")});
         if (!request || (request.statusCode && request.statusCode >= 400)) {
           return interaction.createMessage("Failed to load evidence content.");
         };
@@ -101,7 +102,7 @@ export = async (client: Eris.Client & GMDIBot, interaction: Eris.CommandInteract
 
         fileContent = {
           name: `warningPart.userID_${memberValidation.id}.${ext}`,
-          file: Buffer.from(request.body)
+          file: Buffer.from(await request.body.arrayBuffer())
         };
       };
 

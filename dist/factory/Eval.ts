@@ -1,6 +1,6 @@
 import Eris from "eris";
 import Config from "../config/config";
-import centra from "centra";
+import undici from "undici";
 import nodeUtil from "util";
 
 export = async (client: Eris.Client, message: Eris.Message, args: any[]) => {
@@ -20,9 +20,9 @@ export = async (client: Eris.Client, message: Eris.Message, args: any[]) => {
     embed.setTitle("Output:").setColor(0x7289DA);
 
     if (output.toString().length >= 1024) {
-      const request = await centra("https://files.blob-project.com/bin", "POST").body({ value: output }, "json").send();
-      const result = JSON.parse(Buffer.from(request.body).toString());
-      embed.setDescription(result.url);
+      const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: output })});
+      const resJSON = await request.body.json();
+      embed.setDescription(resJSON.url);
     } else {
       embed.setDescription("```js\n" + output + "```");
     };
@@ -31,9 +31,9 @@ export = async (client: Eris.Client, message: Eris.Message, args: any[]) => {
     embed.setTitle("Error:").setColor(0xFF0F46);
 
     if (error.toString().length >= 1024) {
-      const request = await centra("https://files.blob-project.com/bin", "POST").body({ value: error }, "json").send();
-      const result = JSON.parse(Buffer.from(request.body).toString());
-      embed.setDescription(result.url);
+      const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: error })});
+      const resJSON = await request.body.json();
+      embed.setDescription(resJSON.url);
     } else {
       embed.setDescription("```js\n" + error + "```");
     };
