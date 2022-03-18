@@ -1,11 +1,11 @@
 import Eris from "eris";
-import db from "quick.db";
 import Config from "../config/config";
+import GMDIBot from "../handler/Client";
 
-export default async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
+export default async (client: Eris.Client & GMDIBot, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
 
-  let userChatDB: UserChatInterface = db.get(`userChatRate.${interaction.user?.id}`);
+  let userChatDB: UserChatInterface = client.database.get(`userChatRate.${interaction.user?.id}`);
   if (!userChatDB) return interaction.createMessage("Not yet generated. Try to stay active.");
 
   return interaction.createMessage({

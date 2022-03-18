@@ -1,4 +1,3 @@
-import db from "quick.db";
 import ms from "ms";
 
 export default async function() {

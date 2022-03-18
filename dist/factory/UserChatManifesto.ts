@@ -1,5 +1,4 @@
 import Eris from "eris";
-import db from "quick.db";
 import Config from "../config/config";
 import GMDIBot from "../handler/Client";
 //const asdfjkl = require("asdfjkl").default;
@@ -35,6 +34,6 @@ export default async function (client: GMDIBot, message: Eris.Message) {
   client.userChat.cooldown.set(message.author.id, true);
   setTimeout(() => client.userChat.cooldown.delete(message.author.id), 6e4);
 
-  db.add(`userChatRate.${message.author.id}.sum.day`, 1);
+  client.database.set(`userChatRate.${message.author.id}.sum.day`, client.database.get(`userChatRate.${message.author.id}.sum.day`) + 1);
   return;
 };

@@ -1,13 +1,12 @@
-import db from "quick.db";
 import GMDIBot from "../../handler/Client";
 import Config from "../../config/config";
 
 export default async function(client: GMDIBot) {
   return;
   
-  if (!db.get("warningLasted")) return;
+  if (!client.database.get("warningLasted")) return;
 
-  let warnings: [string, WarningLastedOptions][] = Object.entries(db.get("warningLasted"));
+  let warnings: [string, WarningLastedOptions][] = Object.entries(client.database.get("warningLasted"));
 
   for (const [id, val] of warnings) {
     if (val.due) {
@@ -62,9 +61,9 @@ export default async function(client: GMDIBot) {
 
       // reset the timeout
       Promise.all([
-        db.set(`warningLasted.${userID}.due`, null),
-        db.set(`warningLasted.${userID}.since`, null),
-        db.set(`warningLasted.${userID}.full`, null)
+        client.database.set(`warningLasted.${userID}.due`, null),
+        client.database.set(`warningLasted.${userID}.since`, null),
+        client.database.set(`warningLasted.${userID}.full`, null)
       ]);
 
       if (shouldPost) {

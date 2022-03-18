@@ -1,10 +1,10 @@
 import Eris from "eris";
 import config from "../config/config";
 import {stripIndents} from "common-tags";
-import db from "quick.db";
+import GMDIBot from "../handler/Client";
 
-export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member) => {
-  let returnMember: FarewellMemberConclusion = await db.get(`replaceWelcomeMessageUser.${member.user.id}`);
+export default async (client: Eris.Client & GMDIBot, guild: Eris.Guild, member: Eris.Member) => {
+  let returnMember: FarewellMemberConclusion = await client.database.get(`replaceWelcomeMessageUser.${member.user.id}`);
 
   let returnMemberMessage = returnMember ? 
   `Selamat datang kembali di Discord server, **${guild.name}**.` :

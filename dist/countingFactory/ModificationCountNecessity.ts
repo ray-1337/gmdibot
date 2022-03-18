@@ -1,7 +1,6 @@
 import Eris from "eris";
 import Config from "../config/config";
 import GMDIBot from "../handler/Client";
-import db from "quick.db";
 
 export default async function (client: Eris.Client & GMDIBot, message: Eris.Message, oldMessage?: Eris.OldMessage) {
   try {
@@ -9,10 +8,10 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
 
     let countingChannel = client.getChannel(Config.counting.channelID) as Eris.GuildTextableChannel;
 
-    const messageIDList = db.get("countingMessageIDList");
+    const messageIDList = client.database.get("countingMessageIDList");
 
     const prepping = () => {
-      db.set("countingState", 0);
+      client.database.set("countingState", 0);
       client.counter.state.set("prepping", true);
       setTimeout(() => {
         client.counter.state.delete("prepping");

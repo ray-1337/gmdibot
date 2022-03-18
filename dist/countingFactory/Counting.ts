@@ -1,7 +1,6 @@
 import Eris from "eris";
 import Config from "../config/config";
 import GMDIBot from "../handler/Client";
-import db from "quick.db";
 import { stripIndents } from "common-tags";
 
 export default async function (client: Eris.Client & GMDIBot, message: Eris.Message) {
@@ -14,10 +13,10 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   };
 
   // endpoint start
-  db.get("countingState") == null ? db.set("countingState", 0) : null;
+  client.database.has("countingState") ? null : client.database.set("countingState", 0);
 
   const prepping = () => {
-    db.set("countingState", 0);
+    client.database.set("countingState", 0);
     client.counter.state.set("prepping", true);
     setTimeout(() => {
       client.counter.state.delete("prepping");
@@ -45,7 +44,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
   // let previous = [...message.channel.messages.values()].length > 0 ? [...message.channel.messages.values()].filter(x => x.member?.user.bot === false) : await client.getMessages(message.channel.id, {before: message.id, limit: 1});
   let previous = await client.getMessages(message.channel.id, {before: message.id, limit: 1});
   let mistake: boolean[] = [
-    parseInt(message.content) !== db.get("countingState"),
+    parseInt(message.content) !== client.database.get("countingState"),
     !numberOnlyRegex.test(message.content),
     previous[previous.length - 1] !== undefined && previous[previous.length - 1].author.id === message.author.id
   ];
@@ -69,7 +68,7 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
         return countingChannel.createMessage({
           messageReference: {messageID: message.id},
           content: stripIndents`
-          Counting tidak sesuai peraturan (saat ini: **${db.get("countingState").toLocaleString()}**).
+          Counting tidak sesuai peraturan (saat ini: **${client.database.get("countingState").toLocaleString()}**).
           Kamu memiliki ${userErrorLimit}/${Config.counting.limitError} kesempatan untuk mengulanginya lagi.`
         });
       } else {
@@ -79,8 +78,11 @@ export default async function (client: Eris.Client & GMDIBot, message: Eris.Mess
     };
   };
 
-  db.get("countingMessageIDList") == null ? db.set("countingMessageIDList", [message.id]) : db.push("countingMessageIDList", message.id);
-  db.add("countingState", 1);
+  client.database.has("countingMessageIDList") ? 
+  client.database.push("countingMessageIDList", message.id) :
+  client.database.set("countingMessageIDList", [message.id]);
+
+  client.database.set("countingState", client.database.get("countingState") + 1);
 
   return;
 };

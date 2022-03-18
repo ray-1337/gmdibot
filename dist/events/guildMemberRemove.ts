@@ -1,12 +1,12 @@
 import Eris from "eris";
 import config from "../config/config";
-import db from "quick.db";
 import ms from "ms";
+import GMDIBot from "../handler/Client";
 
-export default async (client: Eris.Client, guild: Eris.Guild, member: Eris.Member) => {
+export default async (client: Eris.Client & GMDIBot, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
-  db.set(`replaceWelcomeMessageUser.${member.user.id}`, {
+  client.database.set(`replaceWelcomeMessageUser.${member.user.id}`, {
     activateWhenComingBack: true,
     leavingSince: Date.now(),
     memberID: member.id || member.user.id

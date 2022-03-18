@@ -1,13 +1,12 @@
 import Eris from "eris";
 import Config from "../config/config";
 import Util from "../handler/Util";
-import db from "quick.db";
 import ms from "ms";
 import parseDur from "parse-duration";
 import prettyMS from "pretty-ms";
-import centra from "centra";
+import GMDIBot from "../handler/Client";
 
-export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
+export = async (client: Eris.Client & GMDIBot, interaction: Eris.CommandInteraction) => {
   await interaction.defer();
 
   const util = new Util();
@@ -142,7 +141,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
         let due = util.getRandomInt(Config.warning.session.III.minRange, Config.warning.session.III.maxRange);
         let conversionToDay = ms(due + "d");
 
-        db.set(`warningLasted.${member.value}`, {
+        client.database.set(`warningLasted.${member.value}`, {
           since: Date.now(),
           due: conversionToDay,
           full: new Date(Date.now() + conversionToDay).getTime(),
@@ -191,7 +190,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
             return interaction.createMessage("The timeout parameter is out of limit. Should be more than an hour, less than a year or equivalent.");
           };
   
-          db.set(`warningLasted.${member.value}`, {
+          client.database.set(`warningLasted.${member.value}`, {
             since: Date.now(),
             due: parsedTime,
             full: new Date(Date.now() + parsedTime).getTime(),
@@ -230,7 +229,7 @@ export = async (client: Eris.Client, interaction: Eris.CommandInteraction) => {
       try {
         await client.createMessage(Config.warning.channel.warning, {embeds: [embed]}, fileContent)
         .then((x) => {
-          if (timeout && level.value < 3) db.set(`warningLasted.${member.value}.warningLogID`, x.id);
+          if (timeout && level.value < 3) client.database.set(`warningLasted.${member.value}.warningLogID`, x.id);
         });
       } catch (error) {
         if (!(error instanceof Eris.DiscordRESTError)) return console.error(error);
