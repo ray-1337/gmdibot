@@ -55,14 +55,14 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         .setDescription(stripIndents`
         ${truncate(message.content)}
 
-        [Original Content](${message.jumpLink})
+        **[Original Content](${message.jumpLink})**
         `);
 
       if (message.attachments.length && /image\/(gif|png|jpe?g)/gi.test(message.attachments[0].content_type!)) {
         embed.setImage(message.attachments[0].proxy_url);
       };
 
-      return client.createMessage(channelID, { content: message.channel.mention, embeds: [embed] });
+      return client.createMessage(channelID, { embeds: [embed] });
     };
   } catch (error) {
     return console.error(error);
