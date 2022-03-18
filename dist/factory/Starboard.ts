@@ -20,13 +20,19 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // star emoji validation
+    let limit = 7;
     const starEmoji = "⭐";
-    const limit = 7;
     const channelID = "954291153203769354";
     
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
+
+    let reactions = await client.getMessageReaction(message.channel.id, message.id, starEmoji);
+
+    // increment if same user reacted
+    if (reactions.find(val => val.id == message.author.id)) ++limit;
+
     if (message.reactions[starEmoji].count >= limit) {
       if (client.database.has("postedStarboard")) {
         let check = client.database.get("postedStarboard") as string[] | null;
