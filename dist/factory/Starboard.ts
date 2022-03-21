@@ -1,6 +1,7 @@
 import { stripIndents } from "common-tags";
 import Eris from "eris";
 import GMDIBot from "../handler/Client";
+import ms from "ms";
 
 export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
   try {
@@ -19,8 +20,6 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
       message = restMessage;
     };
 
-    // star emoji validation
-    let limit = 7;
     let totalCharLengthMinimum = 8;
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
@@ -31,6 +30,15 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     if (message.reactions[starEmoji].me) return; // bot
 
     let reactions = await client.getMessageReaction(message.channel.id, message.id, starEmoji);
+
+    // star emoji validation
+    let _maxR = 11, _minR = 7;
+    let limit = client.cache.get<number | null>(`starboardLimitCache_${message.id}`);
+    if (!limit || isNaN(limit)) {
+      let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
+      limit = randLimit;
+      client.cache.set(`starboardLimitCache_${message.id}`, randLimit, Math.round(ms("1h") / 1000));
+    };
 
     // increment if same user reacted
     if (reactions.find(val => val.id == message.author.id)) ++limit;
