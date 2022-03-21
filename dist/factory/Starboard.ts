@@ -21,9 +21,11 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
     // star emoji validation
     let limit = 7;
+    let totalCharLengthMinimum = 8;
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
     
+    if (message.content.replace(/\s/g, "").length < totalCharLengthMinimum) return;
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
