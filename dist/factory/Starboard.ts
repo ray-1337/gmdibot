@@ -76,6 +76,8 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
       let file: Eris.FileContent | undefined;
 
+      let embeddings: string[] = [];
+
       if (message.attachments.length) {
         let ext = {
           "image/gif": ".gif",
@@ -87,41 +89,45 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
           "video/webm": ".webm"
         };
 
-        if (message.attachments.length == 1 && !message.attachments[0].content_type?.match(/^(video\/\w+)/gi)) {
-          // one content only (not a video)
-          embed.setImage(normalizeURL(message.attachments[0].url));
-        } else {
+        if (message.attachments.length == 1) {
+          // video
+          if (message.attachments[0].content_type?.match(/^(video\/(mp4|webm))/gi)) {
+            await Undici.request(normalizeURL(message.attachments[0].url))
+            .then(async content => {
+              try {
+                let buffer = Buffer.from(await content.body.arrayBuffer());
+                file = {
+                  file: buffer,
+                  name: Math.floor(Math.random() * 10e16).toString(16) + ext[message.attachments[0].content_type!]
+                };
+              } catch {
+                return;
+              };
+            });
+          }
+
+          // photo
+          else if (message.attachments[0].content_type?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
+            embed.setImage(normalizeURL(message.attachments[0].url));
+          };
+        } else if (message.attachments.length > 1) {
           for (let data of message.attachments) {
             if (!data.content_type) continue;
   
             switch (data.content_type) {
               case Object.keys(ext).find(mime => mime == data.content_type): {
-                try {
-                  await Undici.request(normalizeURL(data.url))
-                  .then(async content => {
-                    try {
-                      let buffer = Buffer.from(await content.body.arrayBuffer());
-                      file = {
-                        file: buffer,
-                        name: Math.floor(Math.random() * 10e16).toString(16) + ext[data.content_type!]
-                      };
-                    } catch {
-                      return;
-                    };
-                  });
-                } catch {
-                  return;
-                };
+                embeddings.push(data.url);
               };
   
-              default:
-                continue;
+              default: continue;
             };
           };
+        } else {
+          return;
         };
       };
 
-      return client.createMessage(channelID, { embeds: [embed] }, file);
+      return client.createMessage(channelID, { content: embeddings.join("\n"), embeds: [embed] }, file);
     };
   } catch (error) {
     return console.error(error);
