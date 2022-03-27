@@ -117,6 +117,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
             switch (data.content_type) {
               case Object.keys(ext).find(mime => mime == data.content_type): {
                 embeddings.push(data.url);
+                break;
               };
   
               default: continue;
