@@ -2,6 +2,8 @@ import { stripIndents } from "common-tags";
 import Eris from "eris";
 import GMDIBot from "../handler/Client";
 import ms from "ms";
+import Undici from "undici";
+import normalizeURL from "normalize-url";
 
 export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
   try {
@@ -20,7 +22,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
       message = restMessage;
     };
 
-    let totalCharLengthMinimum = 8;
+    let totalCharLengthMinimum = 4;
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
     
@@ -36,7 +38,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     let reactions = await client.getMessageReaction(message.channel.id, message.id, starEmoji);
 
     // star emoji validation
-    let _maxR = 11, _minR = 7;
+    let _maxR = 11, _minR = 6;
     let limit = client.cache.get<number | null>(`starboardLimitCache_${message.id}`);
     if (!limit || isNaN(limit)) {
       let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
@@ -72,11 +74,54 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         **[Original Content](${message.jumpLink})**
         `);
 
-      if (message.attachments.length && /image\/(gif|png|jpe?g)/gi.test(message.attachments[0].content_type!)) {
-        embed.setImage(message.attachments[0].proxy_url);
+      let file: Eris.FileContent | undefined;
+
+      if (message.attachments.length) {
+        let ext = {
+          "image/gif": ".gif",
+          "image/jpeg": ".jpeg",
+          "image/jpg": ".jpg",
+          "image/png": ".png",
+          "image/webp": ".webp",
+          "video/mp4": ".mp4",
+          "video/webm": ".webm"
+        };
+
+        if (message.attachments.length == 1 && !message.attachments[0].content_type?.match(/^(video\/\w+)/gi)) {
+          // one content only (not a video)
+          embed.setImage(normalizeURL(message.attachments[0].url));
+        } else {
+          for (let data of message.attachments) {
+            if (!data.content_type) continue;
+  
+            switch (data.content_type) {
+              case Object.keys(ext).find(mime => mime == data.content_type): {
+                try {
+                  await Undici.request(normalizeURL(data.url))
+                  .then(async content => {
+                    try {
+                      let buffer = Buffer.from(await content.body.arrayBuffer());
+                      file = {
+                        file: buffer,
+                        name: Math.floor(Math.random() * 10e16).toString(16) + ext[data.content_type!]
+                      };
+                    } catch {
+                      return;
+                    };
+                  });
+                } catch {
+                  return;
+                };
+              };
+  
+              default:
+                continue;
+            };
+          };
+        };
       };
 
-      return client.createMessage(channelID, { embeds: [embed] });
+      return client.createMessage(channelID, { embeds: [embed] }, file);
     };
   } catch (error) {
     return console.error(error);
