@@ -78,7 +78,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
       let embeddings: string[] = [];
 
-      if (message.attachments.length) {
+      if (message.attachments.length || message.embeds.length) {
         let ext = {
           "image/gif": ".gif",
           "image/jpeg": ".jpeg",
@@ -89,25 +89,9 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
           "video/webm": ".webm"
         };
 
+        // attachments
         if (message.attachments.length == 1) {
-          // video
-          if (message.attachments[0].content_type?.match(/^(video\/(mp4|webm))/gi)) {
-            await Undici.request(normalizeURL(message.attachments[0].url))
-            .then(async content => {
-              try {
-                let buffer = Buffer.from(await content.body.arrayBuffer());
-                file = {
-                  file: buffer,
-                  name: Math.floor(Math.random() * 10e16).toString(16) + ext[message.attachments[0].content_type!]
-                };
-              } catch {
-                return;
-              };
-            });
-          }
-
-          // photo
-          else if (message.attachments[0].content_type?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
+          if (message.attachments[0].content_type?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
             embed.setImage(normalizeURL(message.attachments[0].url));
           };
         } else if (message.attachments.length > 1) {
@@ -123,8 +107,21 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
               default: continue;
             };
           };
-        } else {
-          return;
+        };
+
+        // embeds
+        if (message.embeds.length == 1) {
+          if (message.embeds[0].type == "image" && message.embeds[0].url) {
+            embed.setImage(normalizeURL(message.embeds[0].url));
+          };
+        } else if (message.embeds.length > 1) {
+          for (let data of message.embeds) {
+            if (data.type.match(/(image|video)/gi) && data.url) {
+              embeddings.push(data.url);
+            };
+
+            continue;
+          };
         };
       };
 
