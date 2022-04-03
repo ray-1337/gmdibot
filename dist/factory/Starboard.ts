@@ -97,15 +97,12 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         } else if (message.attachments.length > 1) {
           for (let data of message.attachments) {
             if (!data.content_type) continue;
-  
-            switch (data.content_type) {
-              case Object.keys(ext).find(mime => mime == data.content_type): {
-                embeddings.push(data.url);
-                break;
-              };
-  
-              default: continue;
+
+            if (Object.keys(ext).find(mime => mime == data.content_type)) {
+              embeddings.push(data.url);
             };
+
+            continue;
           };
         };
 
