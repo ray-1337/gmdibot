@@ -30,7 +30,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     let _2022 = new Date("Jan 1 2022").getTime();
     if (message.createdAt < _2022) return;
 
-    if (message.content.replace(/[a-zA-Z]/g, "").length < totalCharLengthMinimum) return;
+    // if (message.content.replace(/[a-zA-Z]/g, "").length < totalCharLengthMinimum) return;
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
