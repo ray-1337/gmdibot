@@ -93,6 +93,10 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         if (message.attachments.length == 1) {
           if (message.attachments[0].content_type?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
             embed.setImage(normalizeURL(message.attachments[0].url));
+          }
+
+          else if (message.attachments[0].content_type?.match(/^(video)/gi)) {
+            embeddings.push(normalizeURL(message.attachments[0].url));
           };
         } else if (message.attachments.length > 1) {
           for (let data of message.attachments) {
@@ -110,6 +114,10 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         if (message.embeds.length == 1) {
           if (message.embeds[0].type == "image" && message.embeds[0].url) {
             embed.setImage(normalizeURL(message.embeds[0].url));
+          }
+
+          else if (message.embeds[0].type == "video" && message.embeds[0].url) {
+            embeddings.push(normalizeURL(message.embeds[0].url));
           };
         } else if (message.embeds.length > 1) {
           for (let data of message.embeds) {
