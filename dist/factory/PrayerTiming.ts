@@ -82,7 +82,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
         currentTime.isBefore(addOneMoreDay ? currentTime.add(24, "h").startOf("date") : currentTime.startOf("date"), "ms") &&
         currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).tz(currentTimezone, true), "ms");
   
-      if (currentTime.isSameOrBefore(prayTimeListed)) {
+      if (prayTimeListed.isSameOrBefore(currentTime)) {
         // prevent multiple announcement
         // the times from its API may changed everytime
         let prayersSchedule = nodeSchedule.scheduledJobs;
