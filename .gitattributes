@@ -1,3 +1,1 @@
-.env.example -linguist-detectable
-
-dist/* linguist-vendored
+dist/** linguist-vendored
