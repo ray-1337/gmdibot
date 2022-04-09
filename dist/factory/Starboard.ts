@@ -27,8 +27,8 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     const channelID = "954291153203769354";
     
     // message older than Jan 1 2022 will be ignored
-    let _2022 = new Date("Jan 1 2022").getTime();
-    if (message.createdAt < _2022) return;
+    // let _2022 = new Date("Jan 1 2022").getTime();
+    // if (message.createdAt < _2022) return;
 
     // if (message.content.replace(/[a-zA-Z]/g, "").length < totalCharLengthMinimum) return;
     if (message.channel.id == channelID) return; // star in the same channel
