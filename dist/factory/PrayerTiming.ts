@@ -74,6 +74,10 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
       let prayerSupposeTime = prayerTiming[i][1];
       let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).tz(currentTimezone, true);
 
+      if (addOneMoreDay) {
+        prayTimeListed.add(24, "h")
+      };
+
       let inRegionOfPray = 
         currentTime.isBefore(addOneMoreDay ? currentTime.add(24, "h").startOf("date") : currentTime.startOf("date"), "ms") &&
         currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).tz(currentTimezone, true), "ms");
