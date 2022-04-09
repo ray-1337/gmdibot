@@ -1,5 +1,6 @@
 import GMDIBot from "../handler/Client";
 import CRON from "../factory/CRON";
+import PrayerTiming from "../factory/PrayerTiming";
 
 // Moderation Registry
 import removalChannelCooldown from "../moderationRegistry/removalChannelCooldown";
@@ -17,4 +18,7 @@ export default async (client: GMDIBot) => {
 
   // cron
   CRON(client);
+
+  // prayer reminder
+  PrayerTiming(client);
 };
