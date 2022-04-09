@@ -16,6 +16,8 @@ dayjs.extend(dayjsCustomParseFormat);
 dayjs.extend(dayjsSameBefore)
 
 async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean) {
+  let capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
   // gmdi majority is from Jabodetabek.
   let currentTimezone = "Asia/Jakarta";
   let currentTime = dayjs().tz(currentTimezone);
@@ -91,6 +93,8 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
           const embed = new Eris.RichEmbed()
           .setColor(0xF8F8F8)
           .setTimestamp(prayTimeListed.valueOf())
+          .setTitle(capitalize(prayerTypeTime))
+          .setDescription(`${prayTimeListed.format("hh:mm")} WIB`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
           client.createMessage(generalChannelID, {content: appropriateMessage[prayerTypeTime], embeds: [embed]}).catch(() => {});
