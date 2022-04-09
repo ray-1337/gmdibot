@@ -130,7 +130,19 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         };
       };
 
-      return client.createMessage(channelID, { content: embeddings.join("\n"), embeds: [embed] }, file);
+      const embedMsg = await client.createMessage(channelID, { embeds: [embed] }, file);
+
+      if (embeddings.length) {
+        client.createMessage(channelID, {
+          content: embeddings.join("\n"),
+          messageReference: {
+            messageID: embedMsg.id,
+            channelID: channelID,
+            failIfNotExists: false,
+            guildID: embedMsg.guildID
+          }
+        });
+      };
     };
   } catch (error) {
     return console.error(error);
