@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "yarn ts-node --transpile-only ./dist/index.ts",
-    "dev": "yarn ts-node-dev ./dist/index.ts",
+    "dev": "yarn ts-node-dev --respawn --transpile-only ./dist/index.ts",
     "rspm": "pm2 reload gmdibot && pm2 logs gmdibot"
   },
   "devDependencies": {
