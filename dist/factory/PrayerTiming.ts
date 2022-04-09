@@ -75,7 +75,14 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
         currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).tz(currentTimezone, true), "ms");
   
       if (currentTime.isSameOrBefore(prayTimeListed)) {
-        console.log(prayerTypeTime, prayerSupposeTime);
+        // prevent multiple announcement
+        // the times from its API may changed everytime
+        let prayersSchedule = nodeSchedule.scheduledJobs;
+        let existedSchedule = Object.keys(prayersSchedule);
+        if (existedSchedule.find(i => i.startsWith(prayerTypeTime) && i.endsWith(currentTime.get("date").toString()))) {
+          continue;
+        };
+
         nodeSchedule.scheduleJob(`${prayerTypeTime}_${prayerSupposeTime}_${currentTime.get("date")}`, prayTimeListed.toDate(), function() {
           const generalChannelID = "190826809896468480";
 
