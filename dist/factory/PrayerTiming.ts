@@ -88,7 +88,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
 
           const embed = new Eris.RichEmbed()
           .setColor(0xF8F8F8)
-          .setTimestamp(currentTime.valueOf())
+          .setTimestamp(prayTimeListed.valueOf())
           .setDescription(appropriateMessage[prayerTypeTime])
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
