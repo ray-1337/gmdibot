@@ -46,7 +46,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
 
   // picked from https://kemenag.go.id/
   async function retrieveData() {
-    let apiEndpoint = `https://api.myquran.com/v1/sholat/jadwal/1301/2022/${currentMonth}/${addOneMoreDay ? currentTime.get("day") + 1 : currentTime.get("day")}`;
+    let apiEndpoint = `https://api.myquran.com/v1/sholat/jadwal/1301/2022/${currentMonth}/${String(addOneMoreDay ? currentTime.get("dates") + 1 : currentTime.get("date"))}`;
     let apiFetch = await undici.request(apiEndpoint).catch(() => {});
 
     if (apiFetch) {
