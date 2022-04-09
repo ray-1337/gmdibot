@@ -61,13 +61,19 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
     let prayerTiming = Object.entries(data.jadwal).filter(x => !x[0].match(/(tanggal|terbit|date)/gi)) as Array<[PrayerType, string]>;
 
     for (let i = 0; i < prayerTiming.length; i++) {
-      let timeFormat = "HH:mm";
+      // thanks to Abdi#5670
+      let importancePrayerType: Array<PrayerType> = ["imsak", "subuh", "maghrib", "dzuhur", "ashar"];
       let prayerTypeTime = prayerTiming[i][0];
+
+      // skip the loop if its not a part of importancePrayerType
+      if (!importancePrayerType.includes(prayerTypeTime)) continue;
+
+      let timeFormat = "HH:mm";
       let prayerSupposeTime = prayerTiming[i][1];
-      let prayTimeListed = dayjs(prayerSupposeTime, "HH:mm").tz(currentTimezone, true);
+      let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).tz(currentTimezone, true);
 
       if (addOneMoreDay) {
-        dayjs(prayerSupposeTime, "HH:mm").add(24, "h").startOf("date");
+        dayjs(prayerSupposeTime, timeFormat).add(24, "h").startOf("date");
       };
 
       let inRegionOfPray = 
