@@ -97,7 +97,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
           const embed = new Eris.RichEmbed()
           .setColor(0xF8F8F8)
           .setTitle(capitalize(prayerTypeTime))
-          .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:t> WIB`)
+          .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:F>`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
           client.createMessage(generalChannelID, {content: appropriateMessage[prayerTypeTime], embeds: [embed]}).catch(() => {});
