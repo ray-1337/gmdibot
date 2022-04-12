@@ -39,7 +39,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
     "subuh": `${random(sentencePrefix)} sholat subuh`,
     "dhuha": `${random(sentencePrefix)} sholat dhuha`,
     "dzuhur": `${random(sentencePrefix)} sholat dzuhur`,
-    "ashar": `${random(sentencePrefix)} sholat azhar`,
+    "ashar": `${random(sentencePrefix)} sholat ashar`,
     "maghrib": `${random(sentencePrefix)} sholat maghrib, dan selamat berbuka puasa`,
     "isya": `${random(sentencePrefix)} sholat isya`
   };
