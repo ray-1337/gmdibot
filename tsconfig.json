@@ -25,5 +25,6 @@
   },
 
   "files": ["./dist/typings/GMDI.d.ts"],
-  "include": ["**/*"]
+  "include": ["**/*", ".archived/messageUpdate.ts", ".archived/interactionCreate.ts"],
+  "exclude": [".archived/**/*"]
 }
