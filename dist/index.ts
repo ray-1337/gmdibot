@@ -8,7 +8,8 @@ const client = new GMDIBot(`Bot ${process.env.DISCORD_BOT_TOKEN}`, {
   intents: ["guilds", "guildMembers", "guildMessages", "guildMessageReactions"],
   getAllUsers: false,
   guildCreateTimeout: 30000,
-  messageLimit: 3
+  messageLimit: 3,
+  restMode: true
 });
 
 Promise.all([
