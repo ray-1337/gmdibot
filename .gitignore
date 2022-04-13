@@ -16,3 +16,4 @@ package.lock.json
 .yarnrc.yml
 /database/*
 /server/content/*
+.archived/*
