@@ -21,7 +21,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
     let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
     let listDeletedContent: string[] = [];
 
-    if (message.attachments && message.attachments.length >= 1) {
+    if (message.attachments?.length) {
       if (message.attachments.length === 1) {
         if (!message.attachments[0].content_type) return;
 
