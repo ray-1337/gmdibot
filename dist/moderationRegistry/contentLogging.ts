@@ -9,13 +9,13 @@ const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
   try {
-    if (!message || message.member?.user.bot) return;
+    if (!message || message.author.bot) return;
 
     const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
-      .setAuthor(`${message.member?.user.username}#${message.member?.user.discriminator}`, undefined, message.member?.user.dynamicAvatarURL("png", 128))
+      .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
       .addField("User Information", stripIndents`
       **Channel:** ${message.channel.mention}
-      **User ID:** ${message.member?.user.id}
+      **User ID:** ${message.author.id}
       ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}`);
 
     let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
