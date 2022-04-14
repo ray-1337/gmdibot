@@ -97,9 +97,8 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
     if (listDeletedContent?.length) {
       embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
+      return client.createMessage(config.channel.modlog, { embeds: [embed] });
     };
-
-    return client.createMessage(config.channel.modlog, { embeds: [embed] });
   } catch (error) {
     console.error(error);
   };
