@@ -38,7 +38,7 @@ export default class Util {
         case "image/webp": return "webp";
         case "video/webm": return "webm";
         case "audio/mpeg": return "mp3";
-        case "video/mpeg": return "mp4";
+        case "video/mpeg": case "video/mp4": return "mp4";
         case "video/quicktime": return "mov";
         default: mimeExtension !== undefined ? mimeExtension[0] : undefined;
       };
