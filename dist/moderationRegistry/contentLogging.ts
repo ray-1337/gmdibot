@@ -44,8 +44,6 @@ export = async (client: Eris.Client, message: Eris.Message) => {
           
           continue;
         };
-
-        embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
       };
     }
 
@@ -94,9 +92,11 @@ export = async (client: Eris.Client, message: Eris.Message) => {
           
           continue;
         };
-
-        embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
       };
+    };
+
+    if (listDeletedContent?.length) {
+      embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
     };
 
     return client.createMessage(config.channel.modlog, { embeds: [embed] });
