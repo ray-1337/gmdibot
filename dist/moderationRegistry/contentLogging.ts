@@ -117,7 +117,9 @@ async function contentStore(identifier: string, url: string) {
     let extension = util.contentTypeDecide(data.headers["content-type"]);
     if (!extension) return;
 
-    let generatedFileName = `${identifier}.${UIDGenerator(UIDLength)}.${extension}`;
+    let generatedUID = UIDGenerator(UIDLength);
+
+    let generatedFileName = `${identifier}.${generatedUID}.${extension}`;
     let stream = fs.createWriteStream(storagePath + generatedFileName);
     
     stream.once('open', async () => {
@@ -125,7 +127,7 @@ async function contentStore(identifier: string, url: string) {
       stream.end();
     });
 
-    return endpoint + generatedFileName;
+    return `[${generatedUID}.${extension}](${endpoint + generatedFileName})`;
   } catch (error) {
     return console.error(error);
   };
