@@ -28,14 +28,14 @@ export = async (client: Eris.Client, message: Eris.Message) => {
         let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url);
         if (promisedStore) listDeletedContent.push(promisedStore);
 
-        if (!videoRegexMimeType.test(message.attachments[0].content_type!)) {
+        if (!videoRegexMimeType.test(message.attachments[0].content_type)) {
           embed.setImage(message.attachments[0].proxy_url);
         };
       }
 
       else if (message.attachments.length > 1) {
         for await (let content of message.attachments) {
-          if (!message.attachments[0].content_type) continue;
+          if (!content.content_type) continue;
 
           let promisedStore = await contentStore(message.author.id, content.proxy_url);
           if (promisedStore) listDeletedContent.push(promisedStore);
