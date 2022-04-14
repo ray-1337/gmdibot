@@ -18,9 +18,11 @@ export = async (client: Eris.Client, message: Eris.Message) => {
       **User ID:** ${message.author.id}
       ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}`);
 
-    let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
+    let videoRegexMimeType = /^(video)\/.*/gi;
+    let acceptableEmbedsRegexType = /^(video|image)$/gi;
     let listDeletedContent: string[] = [];
 
+    // attachments
     if (message.attachments?.length) {
       if (message.attachments.length === 1) {
         if (!message.attachments[0].content_type) return;
@@ -47,11 +49,55 @@ export = async (client: Eris.Client, message: Eris.Message) => {
       };
     }
 
-    else return;
+    // embeds
+    if (message.embeds?.length) {
+      if (message.embeds.length === 1) {
+        if (message.embeds[0].type.match(acceptableEmbedsRegexType)) {
+          let URLDecision: Eris.EmbedVideo | Eris.EmbedImage | undefined;
+          if (message.embeds[0].type == "video" && message.embeds[0].video) {
+            URLDecision = message.embeds[0].video;
+          } else if (message.embeds[0].type == "image" && message.embeds[0].image) {
+            URLDecision = message.embeds[0].image;
+          };
 
-    // work in progress.
-    // if (message.embeds) {
-    // };
+          // @ts-expect-error
+          if (URLDecision?.proxy_url) {
+            // @ts-expect-error
+            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
+            if (promisedStore) listDeletedContent.push(promisedStore);
+
+            if (message.embeds[0].type !== "video") {
+              // @ts-expect-error
+              embed.setImage(URLDecision.proxy_url);
+            };
+          };
+        };
+      }
+
+      else if (message.embeds.length > 1) {
+        for await (let embed of message.embeds) {
+          if (!embed.type.match(acceptableEmbedsRegexType)) continue;
+
+          let URLDecision: Eris.EmbedVideo | Eris.EmbedImage | undefined;
+          if (embed.type == "video" && embed.video) {
+            URLDecision = embed.video;
+          } else if (embed.type == "image" && embed.image) {
+            URLDecision = embed.image;
+          };
+
+          // @ts-expect-error
+          if (URLDecision?.proxy_url) {
+            // @ts-expect-error
+            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
+            if (promisedStore) listDeletedContent.push(promisedStore);
+          };
+          
+          continue;
+        };
+
+        embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
+      };
+    };
 
     return client.createMessage(config.channel.modlog, { embeds: [embed] });
   } catch (error) {
