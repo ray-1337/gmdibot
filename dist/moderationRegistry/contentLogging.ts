@@ -12,11 +12,15 @@ export = async (client: Eris.Client, message: Eris.Message) => {
     if (!message || message.author.bot) return;
 
     const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
-      .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
-      .addField("User Information", stripIndents`
+    .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
+    .addField("User Information", stripIndents`
       **Channel:** ${message.channel.mention}
       **User ID:** ${message.author.id}
-      ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}`);
+    `);
+
+      if (message?.content.length) {
+        embed.addField("Caption", util.truncate(message.content, 1024));
+      };
 
     let videoRegexMimeType = /^(video)\/.*/gi;
     let acceptableEmbedsRegexType = /^(video|image)$/gi;
