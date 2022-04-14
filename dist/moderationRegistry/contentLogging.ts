@@ -18,55 +18,29 @@ export = async (client: Eris.Client, message: Eris.Message) => {
       **User ID:** ${message.member?.user.id}
       ${message.content?.length > 0 ? `**Caption:** ${util.truncate(message.content, 64)}` : ""}`);
 
-    let defaultHashLength: number = 9;
     let videoRegexMimeType: RegExp = /^(video)\/.*/gi;
     let listDeletedContent: string[] = [];
-    let mainEndpoint = config.endpoint.contentLogging;
 
     if (message.attachments && message.attachments.length >= 1) {
       if (message.attachments.length === 1) {
         if (!message.attachments[0].content_type) return;
 
-        let extension = util.contentTypeDecide(message.attachments[0].content_type);
-        if (extension == undefined) return;
+        let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url);
+        if (promisedStore) listDeletedContent.push(promisedStore);
 
-        let generatedFileName = `${message.member?.user.id}.${util.generateHash(defaultHashLength)}.${extension}`;
-
-        embed.addField("Backup Endpoint", mainEndpoint + generatedFileName);
-
-        if (!videoRegexMimeType.test(message.attachments[0].content_type!)) embed.setImage(message.attachments[0].proxy_url);
-        
-        undici.request(message.attachments[0].proxy_url, { method: "GET" })
-        .then(res => {
-          let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
-          stream.once('open', async () => {
-            stream.write(Buffer.from(await res.body.arrayBuffer()));
-            stream.end();
-          });
-        })
-        .catch(console.error);
+        if (!videoRegexMimeType.test(message.attachments[0].content_type!)) {
+          embed.setImage(message.attachments[0].proxy_url);
+        };
       }
 
       else if (message.attachments.length > 1) {
-        for (let content of message.attachments) {
+        for await (let content of message.attachments) {
           if (!message.attachments[0].content_type) continue;
 
-          let extension = util.contentTypeDecide(message.attachments[0].content_type);
-          if (extension == undefined) continue;
-
-          let generatedFileName = `${message.member?.user.id}.${util.generateHash(defaultHashLength)}.${extension}`;
-
-          undici.request(content.proxy_url, { method: "GET" })
-          .then(res => {
-            let stream = fs.createWriteStream(`/home/ray/gmdi-content-logging/${generatedFileName}`);
-            stream.once('open', async () => {
-              stream.write(Buffer.from(await res.body.arrayBuffer()));
-              stream.end();
-            });
-          })
-          .catch(console.error);
-
-          listDeletedContent.push(mainEndpoint + generatedFileName);
+          let promisedStore = await contentStore(message.author.id, content.proxy_url);
+          if (promisedStore) listDeletedContent.push(promisedStore);
+          
+          continue;
         };
 
         embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
@@ -83,4 +57,41 @@ export = async (client: Eris.Client, message: Eris.Message) => {
   } catch (error) {
     console.error(error);
   };
+};
+
+async function contentStore(identifier: string, url: string) {
+  try {
+    let UIDLength = 12;
+    let endpoint = config.endpoint.contentLogging;
+    let storagePath = "/home/ray/gmdi-content-logging/";
+
+    let data = await undici.request(url, { method: "GET" });
+    if (!data?.headers["content-type"] || !data?.body) return;
+
+    let extension = util.contentTypeDecide(data.headers["content-type"]);
+    if (!extension) return;
+
+    let generatedFileName = `${identifier}.${UIDGenerator(UIDLength)}.${extension}`;
+    let stream = fs.createWriteStream(storagePath + generatedFileName);
+    
+    stream.once('open', async () => {
+      stream.write(Buffer.from(await data.body.arrayBuffer()));
+      stream.end();
+    });
+
+    return endpoint + generatedFileName;
+  } catch (error) {
+    return console.error(error);
+  };
+};
+
+function UIDGenerator(length: number) {
+  let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let randVal = "";
+
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    randVal += charset.charAt(Math.floor(Math.random() * n));
+  };
+
+  return randVal;
 };
