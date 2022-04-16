@@ -69,7 +69,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         client.database.set("postedStarboard", [message.id]);
       };
 
-      const truncate = (str: string, num = 950) => str.length >= num ? str.slice(0, num) + "..." : str;
+      const truncate = (str: string, num = 1024) => str.length >= num ? str.slice(0, num) + "..." : str;
 
       const embed = new Eris.RichEmbed()
         .setColor(0xffac33)
