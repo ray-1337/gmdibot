@@ -20,7 +20,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
       if (!restMessage) return;
       message = restMessage;
     };
-    
+
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
     
@@ -34,6 +34,15 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     if (message.reactions[starEmoji].me) return; // bot
 
     let reactions = await client.getMessageReaction(message.channel.id, message.id, starEmoji);
+
+    // starboard starter
+    let starterQueryKey = `starboardStarter_${message.id}`;
+    let starterQuery = await client.database.get(starterQueryKey);
+    if (reactions.length == 1) {
+      if (!starterQuery) await client.database.set(starterQueryKey, reactions[0].id);
+    } else if (reactions.length <= 0) {
+      if (starterQuery) await client.database.delete(starterQueryKey);
+    };
 
     // star emoji validation
     let _maxR = 11, _minR = 6;
@@ -71,6 +80,13 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
         **[Original Content](${message.jumpLink})**
         `);
+
+      if (starterQuery) {
+        let starterUser = client.users.get(starterQuery) || await client.getRESTUser(starterQuery).catch(() => {});
+        if (starterUser) {
+          embed.setFooter(`Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`);
+        };
+      };
 
       let file: Eris.FileContent | undefined;
 
