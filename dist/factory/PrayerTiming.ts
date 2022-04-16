@@ -64,7 +64,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
 
     for (let i = 0; i < prayerTiming.length; i++) {
       // thanks to Abdi#5670
-      let importancePrayerType: Array<PrayerType> = ["imsak", "subuh", "maghrib", "dzuhur", "ashar"];
+      let importancePrayerType: Array<PrayerType> = ["subuh", "maghrib", "dzuhur", "ashar"];
       let prayerTypeTime = prayerTiming[i][0];
 
       // skip the loop if its not a part of importancePrayerType
