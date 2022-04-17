@@ -66,6 +66,7 @@ async function isRedcat(url: string) {
 
   imageData.dispose();
   tf.dispose(model_checking);
+  tf.engine().endScope();
 
   return { className: classes[topkI[0]], probability: topk[0] };
 };
