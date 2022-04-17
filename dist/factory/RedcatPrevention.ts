@@ -100,7 +100,7 @@ export default async (client: Eris.Client, message: Eris.Message) => {
 
     if (message.attachments.length) {
       for await (let attachment of message.attachments) {
-        let predictRedCat = await isRedcat(attachment.proxy_url);
+        let predictRedCat = await isRedcat(attachment.url);
         if (predictRedCat && predictRedCat.className == "rc" && Math.round(predictRedCat.probability * 100) > redcatAIThreshold) {
           setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => { }), deleteCooldown);
           break;
