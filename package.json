@@ -8,6 +8,8 @@
   },
   "devDependencies": {
     "@cwasm/webp": "^0.1.5",
+    "@tensorflow/tfjs": "^3.15.0",
+    "@tensorflow/tfjs-core": "^3.15.0",
     "@tensorflow/tfjs-node": "^3.15.0",
     "@types/common-tags": "^1.8.1",
     "@types/mime-db": "^1.43.1",
@@ -67,5 +69,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
+  },
+  "optionalDependencies": {
+    "long": "^5.2.0"
   }
 }
