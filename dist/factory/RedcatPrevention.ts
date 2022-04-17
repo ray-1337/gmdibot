@@ -2,6 +2,7 @@ import Eris from "eris";
 import dayjs from "dayjs";
 import similarity from "string-similarity";
 import Util from "../handler/Util";
+import { normalizeText } from "normalize-text";
 
 export default async (client: Eris.Client, message: Eris.Message) => {
   const currentTime = dayjs().tz("Asia/Jakarta");
@@ -32,8 +33,9 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     };
 
     for (let word of sanitizedContent) {
-      let checkSimilarity = similarity.findBestMatch(word, redcatString);
-      if (word.match(redcatRegex) || checkSimilarity.bestMatch.rating >= 0.8) {
+      let sanitizedWord = normalizeText(word);
+      let checkSimilarity = similarity.findBestMatch(sanitizedWord, redcatString);
+      if (sanitizedWord.match(redcatRegex) || checkSimilarity.bestMatch.rating >= 0.8) {
         setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => {}), deleteCooldown);
         break;
       };
