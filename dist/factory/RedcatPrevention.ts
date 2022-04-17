@@ -15,7 +15,7 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     let sanitizedContent = message.content.toLowerCase().replace(/[^a-zA-Z0-9\s]/gi, "").split(/\W/gi);
     if (sanitizedContent.length <= 0) return;
 
-    let redcatString = ["redcat", "r3dc4t", "r3dcat", "redc4t"];
+    let redcatString = ["redcat", "r3dc4t", "r3dcat", "redc4t", "redket", "r3dk3t", "r3dkat", "redkat"];
 
     for (let word of sanitizedContent) {
       let checkSimilarity = similarity.findBestMatch(word, redcatString);
