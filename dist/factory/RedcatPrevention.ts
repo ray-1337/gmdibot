@@ -8,6 +8,9 @@ export default async (client: Eris.Client, message: Eris.Message) => {
   const util = new Util();
 
   if (currentTime.get("date") == 17 && currentTime.get("month") == 3 && currentTime.get("year") == 2022) {
+    // exclude bot owner
+    if (message.author.id == "331265944363991042") return;
+
     // remove
     let sanitizedContent = message.content.toLowerCase().replace(/[^a-zA-Z0-9\s]/gi, "").split(/\W/gi);
     if (sanitizedContent.length <= 0) return;
