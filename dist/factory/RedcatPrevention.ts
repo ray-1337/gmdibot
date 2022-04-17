@@ -80,9 +80,6 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     if (message.author.id == "331265944363991042") return;
 
     // remove
-    let sanitizedContent = message.content.toLowerCase().split(/\s/gi);
-    if (sanitizedContent.length <= 0) return;
-
     let redcatString = ["redcat", "r3dc4t", "r3dcat", "redc4t", "redket", "r3dk3t", "r3dkat", "redkat", "redcet", "rdkt"];
     let redcatRegex = new RegExp("(" + redcatString.join("|") + ")", "gi");
     let httpRegex = /^http(s)?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gi;
@@ -122,6 +119,9 @@ export default async (client: Eris.Client, message: Eris.Message) => {
         };
       };
     };
+
+    let sanitizedContent = message.content.toLowerCase().split(/\s/gi);
+    if (sanitizedContent.length <= 0) return;
 
     for (let word of sanitizedContent) {
       let sanitizedWord = foldToAscii.foldMaintaining(normalizeText(word));
