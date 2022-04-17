@@ -86,7 +86,7 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     let redcatRegex = new RegExp("(" + redcatString.join("|") + ")", "gi");
     let httpRegex = /^http(s)?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gi;
 
-    let deleteCooldown = util.getRandomInt(1000, 7500);
+    let deleteCooldown = util.getRandomInt(1000, 3000);
     let redcatAIThreshold = 80;
 
     let URLRegex = message.content.match(httpRegex);
