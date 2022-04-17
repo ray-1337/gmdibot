@@ -21,10 +21,10 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "noFallthroughCasesInSwitch": true,
-    "removeComments": true
+    "removeComments": true,
+    "typeRoots": ["./dist/typings/"]
   },
 
-  "files": ["./dist/typings/GMDI.d.ts"],
-  "include": ["**/*", ".archived/messageUpdate.ts", ".archived/interactionCreate.ts"],
+  "include": ["**/*"],
   "exclude": [".archived/**/*"]
 }
