@@ -71,6 +71,8 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
+    "@types/fold-to-ascii": "^5.0.0",
+    "fold-to-ascii": "^5.0.0",
     "long": "^5.2.0"
   }
 }

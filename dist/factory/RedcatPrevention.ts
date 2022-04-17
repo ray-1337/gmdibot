@@ -6,6 +6,7 @@ import { normalizeText } from "normalize-text";
 import * as tf from "@tensorflow/tfjs";
 import * as tfNode from "@tensorflow/tfjs-node";
 import undici from "undici";
+import foldToAscii from "fold-to-ascii";
 
 async function isRedcat(url: string) {
   tf.engine().startScope();
@@ -123,11 +124,11 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     };
 
     for (let word of sanitizedContent) {
-      let sanitizedWord = normalizeText(word).replace(/\W/gi, "");
+      let sanitizedWord = foldToAscii.foldMaintaining(normalizeText(word));
       let checkSimilarity = similarity.findBestMatch(sanitizedWord, redcatString);
       if (
         (word.replace(/\W/gi, "").match(redcatRegex) || sanitizedWord.match(redcatRegex)) ||
-        checkSimilarity.bestMatch.rating >= 0.6
+        checkSimilarity.bestMatch.rating >= 0.61
       ) {
         setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => { }), deleteCooldown);
         break;
