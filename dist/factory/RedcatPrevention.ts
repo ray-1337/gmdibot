@@ -123,10 +123,10 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     };
 
     for (let word of sanitizedContent) {
-      let sanitizedWord = normalizeText(word);
+      let sanitizedWord = normalizeText(word).replace(/\W/gi, "");
       let checkSimilarity = similarity.findBestMatch(sanitizedWord, redcatString);
       if (
-        (sanitizedWord.replace(/\W/gi, "").match(redcatRegex) || sanitizedWord.match(redcatRegex)) ||
+        (word.replace(/\W/gi, "").match(redcatRegex) || sanitizedWord.match(redcatRegex)) ||
         checkSimilarity.bestMatch.rating >= 0.8
       ) {
         setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => { }), deleteCooldown);
