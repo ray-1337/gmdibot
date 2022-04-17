@@ -22,9 +22,9 @@
     "allowUnusedLabels": false,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
-    "typeRoots": ["./dist/typings/"]
+    "typeRoots": ["./dist/typings/"],
+    "declaration": true
   },
 
-  "include": ["**/*"],
   "exclude": [".archived/**/*"]
 }
