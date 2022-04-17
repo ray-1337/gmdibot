@@ -127,7 +127,7 @@ export default async (client: Eris.Client, message: Eris.Message) => {
       let checkSimilarity = similarity.findBestMatch(sanitizedWord, redcatString);
       if (
         (word.replace(/\W/gi, "").match(redcatRegex) || sanitizedWord.match(redcatRegex)) ||
-        checkSimilarity.bestMatch.rating >= 0.8
+        checkSimilarity.bestMatch.rating >= 0.6
       ) {
         setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => { }), deleteCooldown);
         break;
