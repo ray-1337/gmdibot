@@ -66,7 +66,6 @@ async function isRedcat(url: string) {
 
   imageData.dispose();
   tf.dispose(model_checking);
-  tf.engine().endScope();
 
   return { className: classes[topkI[0]], probability: topk[0] };
 };
@@ -94,7 +93,6 @@ export default async (client: Eris.Client, message: Eris.Message) => {
     if (URLRegex?.length) {
       for await (let url of URLRegex) {
         let predictRedCat = await isRedcat(url);
-        console.log(predictRedCat)
         if (predictRedCat && predictRedCat.className == "rc" && Math.round(predictRedCat.probability * 100) > redcatAIThreshold) {
           setTimeout(() => client.deleteMessage(message.channel.id, message.id).catch(() => { }), deleteCooldown);
           break;
