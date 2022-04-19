@@ -23,7 +23,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
 
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
-    
+
     // message older than Jan 1 2022 will be ignored
     // let _2022 = new Date("Jan 1 2022").getTime();
     // if (message.createdAt < _2022) return;
@@ -69,20 +69,16 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         client.database.set("postedStarboard", [message.id]);
       };
 
-      const truncate = (str: string, num = 1024) => str.length >= num ? str.slice(0, num) + "..." : str;
+      const truncate = (str: string, num = 4096) => str.length >= num ? str.slice(0, num) + "..." : str;
 
       const embed = new Eris.RichEmbed()
         .setColor(0xffac33)
         .setTimestamp(new Date(message.timestamp))
         .setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, undefined, message.author.dynamicAvatarURL("png", 16))
-        .setDescription(stripIndents`
-        ${truncate(message.content)}
-
-        **[Original Content](${message.jumpLink})**
-        `);
+        .setDescription(truncate(message.content));
 
       if (starterQuery) {
-        let starterUser = client.users.get(starterQuery) || await client.getRESTUser(starterQuery).catch(() => {});
+        let starterUser = client.users.get(starterQuery) || await client.getRESTUser(starterQuery).catch(() => { });
         if (starterUser) {
           embed.setFooter(`Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`);
         };
@@ -144,7 +140,17 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         };
       };
 
-      const embedMsg = await client.createMessage(channelID, { embeds: [embed] }, file);
+      let redirectButton: Eris.ActionRow[] = [{
+        type: Eris.Constants.ComponentTypes.ACTION_ROW,
+        components: [{
+          type: Eris.Constants.ComponentTypes.BUTTON,
+          style: Eris.Constants.ButtonStyles.LINK,
+          label: "Original Content",
+          url: message.jumpLink
+        }]
+      }];
+
+      const embedMsg = await client.createMessage(channelID, { embeds: [embed], components: redirectButton }, file);
 
       if (embeddings.length) {
         client.createMessage(channelID, {
