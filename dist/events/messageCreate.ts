@@ -1,7 +1,6 @@
 import Eris from "eris";
 import Config from "../config/config";
 import GMDIBot from "../handler/Client";
-import AntiRedcat from "../factory/RedcatPrevention";
 
 // Moderation Registry
 import ChannelCooldown from "../moderationRegistry/channelCooldown";
@@ -12,9 +11,6 @@ import EvalFactory from "../factory/Eval";
 export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // ignore
   if (message.author.bot) return;
-
-  // anti redcat
-  AntiRedcat(client, message);
 
   if (Config.channel.watchChannelModeration.some(x => x === message.channel.id)) {
     ChannelCooldown(client, message);
