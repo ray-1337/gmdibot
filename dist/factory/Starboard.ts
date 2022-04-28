@@ -150,11 +150,12 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         }]
       }];
 
-      const embedMsg = await client.createMessage(channelID, { embeds: [embed], components: redirectButton }, file);
+      const embedMsg = await client.createMessage(channelID, { embeds: [embed], components: embeddings.length ? undefined : redirectButton }, file);
 
       if (embeddings.length) {
         client.createMessage(channelID, {
           content: embeddings.join("\n"),
+          components: embeddings.length ? redirectButton : undefined,
           messageReference: {
             messageID: embedMsg.id,
             channelID: channelID,
