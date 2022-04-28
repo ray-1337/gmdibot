@@ -100,7 +100,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
           .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:F>`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
-          client.createMessage(generalChannelID, {content: appropriateMessage[prayerTypeTime], embeds: [embed]}).catch(() => {});
+          client.createMessage(generalChannelID, {content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`, embeds: [embed]}).catch(() => {});
         });
       } else {
         // its last (isya)
