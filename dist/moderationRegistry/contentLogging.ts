@@ -110,7 +110,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
 async function contentStore(identifier: string, url: string) {
   try {
-    let UIDLength = 12;
+    let UIDLength = util.getRandomInt(12, 16);
     let endpoint = config.endpoint.contentLogging;
     let storagePath = "/home/ray/gmdi-content-logging/";
 
