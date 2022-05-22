@@ -142,7 +142,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
         components: [{
           type: Eris.Constants.ComponentTypes.BUTTON,
           style: Eris.Constants.ButtonStyles.LINK,
-          label: "Original Content",
+          label: "Konten Asli",
           url: message.jumpLink
         }]
       }];
