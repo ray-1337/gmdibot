@@ -15,7 +15,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // check message
-    let message = await Util.checkMessageExistence(client, msg);
+    let message = await Util.transformMessage(client, msg);
     if (!message) return;
 
     const starEmoji = "⭐";

@@ -2,7 +2,7 @@ import crypto from "crypto";
 import Eris from "eris";
 import mime from "mime-db";
 
-export async function checkMessageExistence(client: Eris.Client, message: Eris.Message | DeletedMessage | null): Promise<Eris.Message<Eris.TextableChannel> | null> {
+export async function transformMessage(client: Eris.Client, message: Eris.Message | DeletedMessage | null): Promise<Eris.Message<Eris.TextableChannel> | null> {
   if (message) {
     if (message instanceof Eris.Message) {
       return message;
