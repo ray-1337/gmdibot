@@ -1,6 +1,6 @@
 import Eris from "eris";
 import GMDIBot from "../handler/Client";
-import PrayerTiming from "../factory/PrayerTiming";
+import PrayerTiming from "../registry/PrayerTiming";
 
 // Moderation Registry
 import removalChannelCooldown from "../registry/removalChannelCooldown";

@@ -6,7 +6,7 @@ import GMDIBot from "../handler/Client";
 import ChannelCooldown from "../registry/channelCooldown";
 
 // command
-import EvalFactory from "../factory/Eval";
+import EvalFactory from "../registry/Eval";
 
 export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
   // ignore
