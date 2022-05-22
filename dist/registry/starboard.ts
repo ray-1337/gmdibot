@@ -51,7 +51,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // increment if same user reacted
-    if (reactions.find(val => message.author.id == val.id)) ++limit;
+    if (reactions.find(val => message && (message.author.id == val.id))) ++limit;
 
     if (message.reactions[starEmoji].count >= limit) {
       if (client.database.has("postedStarboard")) {
