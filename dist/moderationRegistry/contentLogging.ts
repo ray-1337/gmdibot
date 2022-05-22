@@ -1,11 +1,9 @@
 import Eris from "eris";
-import Util from "../handler/Util";
+import * as Util from "../handler/Util";
 import undici from "undici";
 import { stripIndents } from "common-tags";
 import config from "../config/config";
 import fs from "fs";
-
-const util = new Util();
 
 export = async (client: Eris.Client, message: Eris.Message) => {
   try {
@@ -19,7 +17,7 @@ export = async (client: Eris.Client, message: Eris.Message) => {
     `);
 
       if (message?.content.length) {
-        embed.addField("Caption", util.truncate(message.content, 1024));
+        embed.addField("Caption", Util.truncate(message.content, 1024));
       };
 
     let videoRegexMimeType = /^(video)\/.*/gi;
@@ -110,14 +108,14 @@ export = async (client: Eris.Client, message: Eris.Message) => {
 
 async function contentStore(identifier: string, url: string) {
   try {
-    let UIDLength = util.getRandomInt(12, 16);
+    let UIDLength = Util.getRandomInt(12, 16);
     let endpoint = config.endpoint.contentLogging;
     let storagePath = "/home/ray/gmdi-content-logging/";
 
     let data = await undici.request(url, { method: "GET" });
     if (!data?.headers["content-type"] || !data?.body) return;
 
-    let extension = util.contentTypeDecide(data.headers["content-type"]);
+    let extension = Util.contentTypeDecide(data.headers["content-type"]);
     if (!extension) return;
 
     let generatedUID = UIDGenerator(UIDLength);
