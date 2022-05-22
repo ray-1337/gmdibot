@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "common-tags": "^1.8.2",
-    "eris": "^0.16.1",
+    "eris": "DonovanDMC/eris#everything",
     "node-cache": "^5.1.2",
     "pluris": "ray-1337/pluris"
   },
