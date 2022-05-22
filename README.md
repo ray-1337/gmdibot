@@ -4,8 +4,8 @@ Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://n
 Database built with [jsoning](https://npmjs.com/package/jsoning) for the sake of simplicity.
 
 ## Current
-- **TypeScript:** v4.5.4
-- **Node.js:** v16.13.2
+- **TypeScript:** v4.6.3
+- **Node.js:** v16.15.0
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
