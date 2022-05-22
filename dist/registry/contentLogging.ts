@@ -60,14 +60,11 @@ export default async (client: Eris.Client, message: Eris.Message) => {
             URLDecision = message.embeds[0].image;
           };
 
-          // @ts-expect-error
           if (URLDecision?.proxy_url) {
-            // @ts-expect-error
             let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
             if (promisedStore) listDeletedContent.push(promisedStore);
 
             if (message.embeds[0].type !== "video") {
-              // @ts-expect-error
               embed.setImage(URLDecision.proxy_url);
             };
           };
@@ -85,9 +82,7 @@ export default async (client: Eris.Client, message: Eris.Message) => {
             URLDecision = embed.image;
           };
 
-          // @ts-expect-error
           if (URLDecision?.proxy_url) {
-            // @ts-expect-error
             let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
             if (promisedStore) listDeletedContent.push(promisedStore);
           };
