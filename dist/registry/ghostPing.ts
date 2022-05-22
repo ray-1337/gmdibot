@@ -56,8 +56,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
           return;
         } else {
           if (userDiffer.length) {
-            console.log(userDiffer)
-            ctx.content = userDiffer.join(" ");
+            ctx.content = userDiffer.map(userID => `<@!${userID}>`).join(" ");
           };
         };
       } else {
