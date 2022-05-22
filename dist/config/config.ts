@@ -40,8 +40,8 @@ export default {
 
   cooldown: {
     limit: {
-      exceed: 30,
-      cooling: 20
+      exceed: 28,
+      cooling: 15
     },
 
     message: {
