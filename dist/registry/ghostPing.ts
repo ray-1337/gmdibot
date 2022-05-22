@@ -35,6 +35,10 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
 
     // from messageUpdate (edited, stuff)
     if (oldMessage) {
+      // no ping but edited ({notag} -> {tag}) which will triggers checkMentionsDifference
+      if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
+        return immediateIgnore(client, message.id);
+      };
 
       embed.setColor(0xF29C3F);
 
