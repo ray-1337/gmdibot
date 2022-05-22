@@ -3,7 +3,7 @@ import GMDIBot from "../handler/Client";
 import PrayerTiming from "../factory/PrayerTiming";
 
 // Moderation Registry
-import removalChannelCooldown from "../moderationRegistry/removalChannelCooldown";
+import removalChannelCooldown from "../registry/removalChannelCooldown";
 
 export default async (client: GMDIBot) => {
   client.editStatus("idle", {type: Eris.Constants.ActivityTypes.WATCHING, name: "Love Live"});

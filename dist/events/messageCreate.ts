@@ -3,7 +3,7 @@ import Config from "../config/config";
 import GMDIBot from "../handler/Client";
 
 // Moderation Registry
-import ChannelCooldown from "../moderationRegistry/channelCooldown";
+import ChannelCooldown from "../registry/channelCooldown";
 
 // command
 import EvalFactory from "../factory/Eval";
