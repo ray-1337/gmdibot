@@ -1,0 +1,1 @@
+export default (message: string, _: number) => console.warn(message);
