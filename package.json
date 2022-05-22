@@ -36,7 +36,7 @@
     "node-cache": "^5.1.2",
     "pluris": "ray-1337/pluris"
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@3.2.1",
   "author": {
     "name": "Hizkia Ray",
     "email": "personal@13373333.one",
