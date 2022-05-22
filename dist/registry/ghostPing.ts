@@ -109,17 +109,6 @@ function mentionsFiltering(users: Array<Eris.User>, userID: string) {
   return users.filter(val => val.id !== userID && !val.bot);
 };
 
-async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: string) {
-  const ignoreCheckingKey = "ignoreChecking";
-  const check = await client.database.get(ignoreCheckingKey) as string[] | null;
-  if (!check?.find(val => val == messageID)) {
-    await client.database.push(ignoreCheckingKey, messageID);
-    return false;
-  } else {
-    return true;
-  };
-};
-
 function checkMentionsDifference(arr1: string[], arr2: string[]) {
   return arr1
     .filter(x => !arr2.includes(x))
@@ -147,4 +136,15 @@ async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.Gui
   };
 
   return { hasMentions, variant };
+};
+
+export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: string) {
+  const ignoreCheckingKey = "ignoreChecking";
+  const check = await client.database.get(ignoreCheckingKey) as string[] | null;
+  if (!check?.find(val => val == messageID)) {
+    await client.database.push(ignoreCheckingKey, messageID);
+    return false;
+  } else {
+    return true;
+  };
 };
