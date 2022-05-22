@@ -1,6 +1,7 @@
 import Eris from "eris";
 import Client from "../handler/Client";
 import Config from "../config/config";
+import * as Util from "../handler/Util";
 
 export = async (client: Client, message: Eris.Message<Eris.TextableChannel>) => {
   // cache limit
@@ -12,7 +13,7 @@ export = async (client: Client, message: Eris.Message<Eris.TextableChannel>) => 
   // Applies
   if (messages.length >= limit && !client.cache.get(`slowmode.${message.channel.id}`)) {
     client.cache.set(`slowmode.${message.channel.id}`, true);
-    client.editChannel(message.channel.id, { rateLimitPerUser: Config.cooldown.timeout }, "High Traffic").catch(() => {});
+    client.editChannel(message.channel.id, { rateLimitPerUser: Util.getRandomInt(5, 15) }, "High Traffic").catch(() => {});
 
     client.createMessage(Config.channel.modlog, {
       embeds: [
