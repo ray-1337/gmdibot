@@ -1,4 +1,3 @@
-import { stripIndents } from "common-tags";
 import Eris from "eris";
 import GMDIBot from "../handler/Client";
 import ms from "ms";

@@ -1,5 +1,4 @@
 import Eris from "eris";
-import config from "../config/config";
 import GMDIBot from "../handler/Client";
 
 import membershipScreenings from "../registry/membershipScreenings";
