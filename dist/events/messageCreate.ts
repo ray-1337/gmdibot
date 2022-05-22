@@ -8,9 +8,12 @@ import ChannelCooldown from "../registry/channelCooldown";
 // command
 import EvalFactory from "../registry/eval";
 
-export default async (client: Eris.Client & GMDIBot, message: Eris.Message) => {
-  // ignore
-  if (message.author.bot) return;
+export default async (client: Eris.Client & GMDIBot, message: Eris.Message<Eris.GuildTextableChannel>) => {
+  if (
+    message.author.bot ||
+    message.channel instanceof Eris.PrivateChannel ||
+    !(message.channel instanceof Eris.GuildChannel)
+  ) return;
 
   if (Config.channel.watchChannelModeration.some(x => x === message.channel.id)) {
     ChannelCooldown(client, message);
