@@ -42,8 +42,12 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       };
 
       // temporary checking
-      // @ts-expect-error
-      let userDiffer = checkMentionsDifference((oldMessage.mentions as Eris.User[]).map(val => val.id), message.mentions.map(val => val.id));
+      let userDiffer = checkMentionsDifference(
+        // @ts-expect-error
+        mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id),
+        mentionsFiltering(message.mentions, message.author.id).map(val => val.id)
+      );
+
       let roleDiffer = checkMentionsDifference(oldMessage.roleMentions, message.roleMentions);
 
       if (userDiffer.length || roleDiffer.length) {
@@ -91,6 +95,10 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
   };
 };
 
+function mentionsFiltering(users: Array<Eris.User>, userID: string) {
+  return users.filter(val => val.id !== userID && !val.bot);
+};
+
 async function isIgnored(client: Eris.Client & GMDIBot, messageID: string) {
   const ignoreCheckingKey = "ignoreChecking";
   const check = await client.database.get(ignoreCheckingKey) as string[] | null;
@@ -113,7 +121,7 @@ async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.Gui
   let variant: string[] = [];
 
   // check user mentions
-  const UserMention = message.mentions.filter(val => (val.id !== message.author.id && !val.bot)); // depressing filter func
+  const UserMention = mentionsFiltering(message.mentions, message.author.id); // depressing filter func
   if (UserMention.length >= 1) {
     variant = UserMention.map(val => val.mention);
     hasMentions = true;
