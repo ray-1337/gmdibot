@@ -25,3 +25,14 @@ interface UserChatInterface {
     since: Date | null;
   }
 }
+
+interface DeletedMessage {
+  id: string;
+  guildID: string;
+  channel: Eris.GuildTextableChannel | {
+    id: string;
+    guild: {
+      id: string;
+    }
+  }
+};
