@@ -3,6 +3,7 @@ import Eris from "eris";
 import GMDIBot from "../handler/Client";
 import ms from "ms";
 import normalizeURL from "normalize-url";
+import * as Util from "../handler/Util";
 
 export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
   try {
@@ -14,12 +15,8 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // check message
-    let message = msg;
-    if (!message.type) {
-      let restMessage = await client.getMessage(msg.channel.id, msg.id);
-      if (!restMessage) return;
-      message = restMessage;
-    };
+    let message = await Util.checkMessageExistence(client, msg);
+    if (!message) return;
 
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
@@ -54,7 +51,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // increment if same user reacted
-    if (reactions.find(val => val.id == message.author.id)) ++limit;
+    if (reactions.find(val => message.author.id == val.id)) ++limit;
 
     if (message.reactions[starEmoji].count >= limit) {
       if (client.database.has("postedStarboard")) {
