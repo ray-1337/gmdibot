@@ -3,7 +3,7 @@ import Client from "../handler/Client";
 import Config from "../config/config";
 import * as Util from "../handler/Util";
 
-export = async (client: Client, message: Eris.Message<Eris.TextableChannel>) => {
+export default async (client: Client, message: Eris.Message<Eris.TextableChannel>) => {
   // cache limit
   if (message.channel.messages.limit !== Config.cache.limit) message.channel.messages.limit = Config.cache.limit;
 

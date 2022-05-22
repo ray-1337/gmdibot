@@ -5,7 +5,7 @@ import { stripIndents } from "common-tags";
 import config from "../config/config";
 import fs from "fs";
 
-export = async (client: Eris.Client, message: Eris.Message) => {
+export default async (client: Eris.Client, message: Eris.Message) => {
   try {
     if (!message?.author || message?.author?.bot) return;
 
