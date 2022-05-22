@@ -5,7 +5,7 @@ import ms from "ms";
 import normalizeURL from "normalize-url";
 import * as Util from "../handler/Util";
 
-export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
+export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.GuildTextableChannel>, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
   try {
     // must be presented in guild
     if (!msg.guildID || !msg?.channel?.id) return;

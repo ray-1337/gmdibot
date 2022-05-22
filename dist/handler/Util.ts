@@ -2,7 +2,7 @@ import crypto from "crypto";
 import Eris from "eris";
 import mime from "mime-db";
 
-export async function transformMessage(client: Eris.Client, message: Eris.Message | DeletedMessage | null): Promise<Eris.Message<Eris.TextableChannel> | null> {
+export async function transformMessage(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage | null): Promise<Eris.Message<Eris.GuildTextableChannel> | null> {
   if (message) {
     if (message instanceof Eris.Message) {
       return message;
@@ -11,7 +11,7 @@ export async function transformMessage(client: Eris.Client, message: Eris.Messag
         let restMessage = await client.getMessage(message.channel.id, message.id).catch(() => {return null});
 
         if (restMessage) {
-          return message = restMessage;
+          return message = restMessage as Eris.Message<Eris.GuildTextableChannel>;
         } else {
           return null;
         };
