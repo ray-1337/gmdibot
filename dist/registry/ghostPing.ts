@@ -35,6 +35,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
 
     // from messageUpdate (edited, stuff)
     if (oldMessage) {
+
       embed.setColor(0xF29C3F);
 
       if (oldMessage.content) {
@@ -51,7 +52,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       let roleDiffer = checkMentionsDifference(oldMessage.roleMentions, message.roleMentions);
 
       if (userDiffer.length || roleDiffer.length) {
-        let ignored = await isIgnored(client, message.id);
+        let ignored = await immediateIgnore(client, message.id);
         if (ignored) {
           return;
         } else {
@@ -75,7 +76,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       const check = await checkMentions(client, message);
 
       if (check?.hasMentions) {
-        let ignored = await isIgnored(client, message.id);
+        let ignored = await immediateIgnore(client, message.id);
         if (ignored) {
           return;
         } else {
@@ -98,7 +99,7 @@ function mentionsFiltering(users: Array<Eris.User>, userID: string) {
   return users.filter(val => val.id !== userID && !val.bot);
 };
 
-async function isIgnored(client: Eris.Client & GMDIBot, messageID: string) {
+async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: string) {
   const ignoreCheckingKey = "ignoreChecking";
   const check = await client.database.get(ignoreCheckingKey) as string[] | null;
   if (!check?.find(val => val == messageID)) {
