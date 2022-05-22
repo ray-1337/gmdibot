@@ -121,7 +121,7 @@ function checkMentionsDifference(arr1: string[], arr2: string[]) {
     .concat(arr2.filter(x => !arr1.includes(x)));
 };
 
-async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
+export async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
   let hasMentions: boolean = false;
   let variant: string[] = [];
 
