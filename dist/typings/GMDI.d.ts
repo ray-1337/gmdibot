@@ -29,7 +29,7 @@ interface UserChatInterface {
 interface DeletedMessage {
   id: string;
   guildID: string;
-  channel: Eris.GuildTextableChannel | {
+  channel: import("eris").GuildTextableChannel | {
     id: string;
     guild: {
       id: string;
