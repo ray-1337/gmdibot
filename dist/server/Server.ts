@@ -24,4 +24,4 @@ app.get('/favicon.ico', (_, res) => {
   return res.end();
 });
 
-export default app.listen(process.env.SERVER_PORT as unknown as number).catch(console.error);
+export default app.listen(+process.env.SERVER_PORT!).catch(console.error);
