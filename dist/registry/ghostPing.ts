@@ -2,6 +2,7 @@ import Eris from "eris";
 import * as Util from "../handler/Util";
 import GMDIBot from "../handler/Client";
 import Config from "../config/config";
+import ms from "ms";
 
 export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage, oldMessage?: Eris.OldMessage) => {
   try {
@@ -12,6 +13,11 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     // ignore category
     let ignoredCategory = ["759298776656510998", "360450207386828810", "627808236015190017", "954290819886612480", "535466115459973120"];
     if (message.channel.parentID && ignoredCategory.includes(message.channel.parentID)) {
+      return;
+    };
+
+    // ignore old message more than 6 hours
+    if (Math.floor(Date.now() - message.timestamp) < ms("6h")) {
       return;
     };
 
