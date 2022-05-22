@@ -42,7 +42,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message, emoji: E
     };
 
     // star emoji validation
-    let _maxR = 11, _minR = 6;
+    let _maxR = 9, _minR = 6;
     let limit = client.cache.get<number | null>(`starboardLimitCache_${message.id}`);
     if (!limit || isNaN(limit)) {
       let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
