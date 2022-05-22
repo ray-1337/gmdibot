@@ -17,7 +17,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     };
 
     // ignore old message more than 6 hours
-    if (Math.floor(Date.now() - message.timestamp) < ms("6h")) {
+    if (Math.floor(Date.now() - message.timestamp) > ms("6h")) {
       return;
     };
 
