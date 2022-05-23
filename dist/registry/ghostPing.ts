@@ -5,7 +5,7 @@ import Config from "../config/config";
 import ms from "ms";
 import Cache from "node-cache";
 
-const standardOldMessageTime = ms("1h");
+const standardOldMessageTime = ms("5m");
 
 // export function cache(channelID: string, userID: string) {
 //   const expireTime = Math.round(standardOldMessageTime / 1000);
