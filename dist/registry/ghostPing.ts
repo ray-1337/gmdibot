@@ -7,6 +7,8 @@ import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 
+let endeavour: Array<{messageID: string, previous: string[]}> = [];
+
 // export function cache(channelID: string, userID: string) {
 //   const expireTime = Math.round(standardOldMessageTime / 1000);
 //   const cache = new Cache({checkperiod: 60, deleteOnExpire: true, stdTTL: expireTime});
@@ -73,29 +75,43 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       };
 
       embed.setColor(0xF29C3F);
-
-      if (oldMessage.content) {
-        embed.setDescription(oldMessage.content);
-      };
+      if (oldMessage.content) embed.setDescription(oldMessage.content);
 
       // temporary checking
-      let userDiffer = checkMentionsDifference(
-        // @ts-expect-error
-        mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id),
-        mentionsFiltering(message.mentions, message.author.id).map(val => val.id)
-      );
-
+      // @ts-expect-error
+      let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
+      let usersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
+      
+      let userDiffer = checkMentionsDifference(oldUsersMention, usersMention);
       let roleDiffer = checkMentionsDifference(oldMessage.roleMentions, message.roleMentions);
 
       if (userDiffer.length || roleDiffer.length) {
-        let ignored = await immediateIgnore(client, message.id);
-        if (ignored) {
-          return;
-        } else {
-          if (userDiffer.length) {
-            ctx.content = userDiffer.map(userID => `<@!${userID}>`).join(" ");
+        console.log(endeavour);
+
+        // check {tag1} -> {tag1} {...tag} principle
+        let checkEndeavour = endeavour.find(val => val.messageID == message!.id);
+        let checkPreviousPing = (checkEndeavour?.previous || oldUsersMention).filter(val => usersMention.includes(val));
+        if (checkPreviousPing.length) {
+          if (!checkEndeavour) {
+            return endeavour.push({messageID: message.id, previous: oldUsersMention});
+          }
+        };
+
+        if (checkEndeavour) {
+          if (checkEndeavour.previous.filter(val => !usersMention.includes(val)).length) {
+            let ignored = await immediateIgnore(client, message.id);
+            if (ignored) {
+              return;
+            } else {
+              if (userDiffer.length) {
+                ctx.content = userDiffer.map(userID => `<@!${userID}>`).join(" ");
+              };
+            };
+          } else {
+            return;
           };
         };
+
       } else {
         return;
       };
