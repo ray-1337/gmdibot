@@ -3,6 +3,21 @@ import * as Util from "../handler/Util";
 import GMDIBot from "../handler/Client";
 import Config from "../config/config";
 import ms from "ms";
+import Cache from "node-cache";
+
+const standardOldMessageTime = ms("1h");
+
+// export function cache(channelID: string, userID: string) {
+//   const expireTime = Math.round(standardOldMessageTime / 1000);
+//   const cache = new Cache({checkperiod: 60, deleteOnExpire: true, stdTTL: expireTime});
+//   const cacheKey = `proceedWarningGhostPing_${channelID}_${userID}`;
+
+//   const get = () => (cache.get(cacheKey) as boolean | null) || false;
+//   const set = () => cache.set(cacheKey, true, expireTime);
+//   const del = () => get() ? cache.del(cacheKey) : null;
+
+//   return {get, set, del};
+// };
 
 export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage, oldMessage?: Eris.OldMessage) => {
   try {
@@ -16,8 +31,13 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       return;
     };
 
+    // ignore if its not existed
+    // if (!cache(message.channel.id, message.author.id).get()) {
+    //   return;
+    // };
+
     // ignore old message more than an hour
-    if (Math.floor(Date.now() - message.timestamp) > ms("1h")) {
+    if (Math.floor(Date.now() - message.timestamp) > standardOldMessageTime) {
       return;
     };
 
@@ -154,3 +174,10 @@ export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: 
     return true;
   };
 };
+
+// export async function removalForth(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
+//   let current = await checkMentions(client, message);
+//   if (current.hasMentions) {
+//     cache(message.channel.id, message.author.id).set();
+//   };
+// };
