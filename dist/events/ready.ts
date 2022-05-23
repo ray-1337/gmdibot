@@ -6,7 +6,7 @@ import GMDIBot from "../handler/Client";
 import removalChannelCooldown from "../registry/removalChannelCooldown";
 
 export default async (client: GMDIBot) => {
-  client.editStatus("idle", {type: Eris.Constants.ActivityTypes.WATCHING, name: "Love Live"});
+  client.editStatus("dnd", {type: Eris.Constants.ActivityTypes.WATCHING, name: "Kobo Kanaeru"});
 
   console.log("Ready.");
 
