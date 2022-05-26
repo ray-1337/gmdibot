@@ -22,6 +22,7 @@
     "allowUnusedLabels": false,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
+    "types": ["@types/jest"],
     "typeRoots": ["./dist/typings/"],
     "declaration": true
   },

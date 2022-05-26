@@ -7,7 +7,7 @@ import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 
-type Endeavour = Array<{messageID: string, mentioned: string[]}>;
+export type Endeavour = Array<{messageID: string, mentioned: string[]}>;
 let endeavour: Endeavour = [];
 
 // export function cache(channelID: string, userID: string) {
@@ -198,21 +198,25 @@ export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: 
 //   };
 // };
 
-type GhostPingUserMention = {id: string, bot: boolean | undefined};
-type GhostPingMessage = {id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[]};
-type GhostPing = {userAnnouncedIds: string[]}
-function handleGhostPingEvent(
+export type GhostPingUserMention = {id: string, bot?: boolean};
+export type GhostPingMessage = {id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[]};
+export type GhostPing = {userAnnouncedIds: string[]}
+
+export function handleGhostPingEvent(
     currentEndeavour: Endeavour,
     mentionableRoleIds: string[],
     message: GhostPingMessage,
     previousMessage?: GhostPingMessage): GhostPing | undefined {
   
   if (previousMessage != undefined) {
-    const previousUserMentionIds = previousMessage.userMentions.map(mention => mention.id);
-    const currentUserMentionIds = message.userMentions.map(mention => mention.id);
+    const previousUserMentionIds = mentionsFilteringOffline(previousMessage.userMentions, previousMessage.authorId).map(mention => mention.id);
+    const currentUserMentionIds = mentionsFilteringOffline(message.userMentions, message.authorId).map(mention => mention.id);
     const deletedUserMentionIds = getDeletedMentionIds(previousUserMentionIds, currentUserMentionIds);
 
-    const deletedRoleMentionIds = getDeletedMentionIds(previousMessage.mentionedRoleIds, message.mentionedRoleIds);
+    const deletedRoleMentionIds = getDeletedMentionIds(
+      previousMessage.mentionedRoleIds,
+      message.mentionedRoleIds
+    ).filter(id => mentionableRoleIds.includes(id));
 
     if (deletedUserMentionIds.length + deletedRoleMentionIds.length == 0) {
       return;
@@ -228,10 +232,6 @@ function handleGhostPingEvent(
           currentEndeavourElement.mentioned = currentMentioned;
         }
       };
-
-      if (ghostMentionedIds.length == 0) {
-        return;
-      }
 
       return {userAnnouncedIds: ghostMentionedIds};
     }
