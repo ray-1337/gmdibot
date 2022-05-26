@@ -44,6 +44,45 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       return;
     };
 
+    if (oldMessage) {
+      if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
+        return immediateIgnore(client, message.id);
+      };
+    }
+
+    let ignored = await immediateIgnore(client, message.id);
+    if (ignored) {
+      return;
+    }
+
+    const mentionableRoleIds = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
+    let nonErisMessage = {
+      id: message.id,
+      authorId: message.author.id,
+      userMentions: (message.mentions as Eris.User[]).map(user => ({id: user.id, bot: user.bot})),
+      mentionedRoleIds: message.roleMentions
+    }
+    let nonErisPreviousMessage: GhostPingMessage | undefined = undefined;
+    if (oldMessage) {
+      nonErisPreviousMessage = {
+        id: message.id,
+        authorId: message.author.id,
+        userMentions: (oldMessage.mentions as unknown as Eris.User[]).map(user => ({id: user.id, bot: user.bot})),
+        mentionedRoleIds: oldMessage.roleMentions
+      }
+    }
+
+    const result = handleGhostPingEvent(
+      endeavour,
+      mentionableRoleIds,
+      nonErisMessage,
+      nonErisPreviousMessage
+    );
+
+    if (result == undefined) {
+      return;
+    }
+
     const embed = new Eris.RichEmbed()
       .setTimestamp()
       .setAuthor(
@@ -68,80 +107,94 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       }
     };
 
-    // from messageUpdate (edited, stuff)
     if (oldMessage) {
-      // no ping but edited ({notag} -> {tag}) which will triggers checkMentionsDifference
-      if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
-        return immediateIgnore(client, message.id);
-      };
-
       embed.setColor(0xF29C3F);
       if (oldMessage.content) embed.setDescription(oldMessage.content);
-
-      // temporary checking
-      // @ts-expect-error
-      let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
-      let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
-      
-      let deletedUserMentions = getDeletedMentionIds(oldUsersMention, newUsersMention);
-      let deletedRoleMentions = getDeletedMentionIds(oldMessage.roleMentions, message.roleMentions);
-
-      if (deletedUserMentions.length + deletedRoleMentions.length == 0) {
-        return;
-
-      } else {
-        console.log(endeavour);
-        let currentEndeavour = endeavour.find(val => val.messageID == message!.id);
-        let previousMentioned = currentEndeavour?.mentioned || oldUsersMention;
-        let ghostMention = previousMentioned.filter(mention => deletedUserMentions.includes(mention));
-        let currentMentioned = previousMentioned.filter(mention => ghostMention.includes(mention));
-        if (currentMentioned.length) {
-          if (!currentEndeavour) {
-            endeavour.push({messageID: message.id, mentioned: currentMentioned});
-          } else {
-            currentEndeavour.mentioned = currentMentioned;
-          }
-        };
-
-        if (ghostMention.length == 0) {
-          return;
-        }
-
-        let ignored = await immediateIgnore(client, message.id);
-        if (ignored) {
-          return;
-        }
-        
-        if (ghostMention.length) {
-          ctx.content = ghostMention.map(userID => `<@!${userID}>`).join(" ");
-        };
-      }
-
+    } else {
+      embed.setColor(0xF53131);
+      if (message.content) embed.setDescription(message.content);
     }
 
-    // from messageDelete(pure)
-    else {
-      embed.setColor(0xF53131);
-
-      if (message.content) {
-        embed.setDescription(message.content);
-      };
-
-      const check = await checkMentions(client, message);
-
-      if (check?.hasMentions) {
-        let ignored = await immediateIgnore(client, message.id);
-        if (ignored) {
-          return;
-        } else {
-          ctx.content = check.variant.join(" ");
-        };
-      } else {
-        return;
-      };
+    if (result.userAnnouncedIds.length) {
+      ctx.content = result.userAnnouncedIds.map(userID => `<@!${userID}>`).join(" ");
     };
 
     await client.createMessage(message.channel.id, ctx);
+
+    // // from messageUpdate (edited, stuff)
+    // if (oldMessage) {
+    //   // no ping but edited ({notag} -> {tag}) which will triggers checkMentionsDifference
+    //   if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
+    //     return immediateIgnore(client, message.id);
+    //   };
+
+    //   embed.setColor(0xF29C3F);
+    //   if (oldMessage.content) embed.setDescription(oldMessage.content);
+
+    //   // temporary checking
+    //   // @ts-expect-error
+    //   let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
+    //   let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
+      
+    //   let deletedUserMentions = getDeletedMentionIds(oldUsersMention, newUsersMention);
+    //   let deletedRoleMentions = getDeletedMentionIds(oldMessage.roleMentions, message.roleMentions);
+
+    //   if (deletedUserMentions.length + deletedRoleMentions.length == 0) {
+    //     return;
+
+    //   } else {
+    //     console.log(endeavour);
+    //     let currentEndeavour = endeavour.find(val => val.messageID == message!.id);
+    //     let previousMentioned = currentEndeavour?.mentioned || oldUsersMention;
+    //     let ghostMention = previousMentioned.filter(mention => deletedUserMentions.includes(mention));
+    //     let currentMentioned = previousMentioned.filter(mention => ghostMention.includes(mention));
+    //     if (currentMentioned.length) {
+    //       if (!currentEndeavour) {
+    //         endeavour.push({messageID: message.id, mentioned: currentMentioned});
+    //       } else {
+    //         currentEndeavour.mentioned = currentMentioned;
+    //       }
+    //     };
+
+    //     if (ghostMention.length == 0) {
+    //       return;
+    //     }
+
+    //     let ignored = await immediateIgnore(client, message.id);
+    //     if (ignored) {
+    //       return;
+    //     }
+        
+    //     if (ghostMention.length) {
+    //       ctx.content = ghostMention.map(userID => `<@!${userID}>`).join(" ");
+    //     };
+    //   }
+
+    // }
+
+    // // from messageDelete(pure)
+    // else {
+    //   embed.setColor(0xF53131);
+
+    //   if (message.content) {
+    //     embed.setDescription(message.content);
+    //   };
+
+    //   const check = await checkMentions(client, message);
+
+    //   if (check?.hasMentions) {
+    //     let ignored = await immediateIgnore(client, message.id);
+    //     if (ignored) {
+    //       return;
+    //     } else {
+    //       ctx.content = check.variant.join(" ");
+    //     };
+    //   } else {
+    //     return;
+    //   };
+    // };
+
+    // await client.createMessage(message.channel.id, ctx);
     
     return;
   } catch (error) {

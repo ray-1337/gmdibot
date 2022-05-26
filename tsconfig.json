@@ -24,8 +24,9 @@
     "removeComments": true,
     "types": ["@types/jest"],
     "typeRoots": ["./dist/typings/"],
-    "declaration": true
+    "declaration": true,
+    "outDir": "./build"
   },
 
-  "exclude": [".archived/**/*"]
+  "exclude": [".archived/**/*", "./built/**/*"]
 }
