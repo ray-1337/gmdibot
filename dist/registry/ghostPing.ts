@@ -7,7 +7,7 @@ import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 
-let endeavour: Array<{messageID: string, previous: string[]}> = [];
+let endeavour: Array<{messageID: string, mentioned: string[]}> = [];
 
 // export function cache(channelID: string, userID: string) {
 //   const expireTime = Math.round(standardOldMessageTime / 1000);
@@ -80,41 +80,42 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       // temporary checking
       // @ts-expect-error
       let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
-      let usersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
+      let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
       
-      let userDiffer = checkMentionsDifference(oldUsersMention, usersMention);
-      let roleDiffer = checkMentionsDifference(oldMessage.roleMentions, message.roleMentions);
+      let deletedUserMentions = checkDeletedMentions(oldUsersMention, newUsersMention);
+      let deletedRoleMentions = checkDeletedMentions(oldMessage.roleMentions, message.roleMentions);
 
-      if (userDiffer.length || roleDiffer.length) {
+      if (deletedUserMentions.length + deletedRoleMentions.length == 0) {
+        return;
+
+      } else {
         console.log(endeavour);
-
-        // check {tag1} -> {tag1} {...tag} principle
-        let checkEndeavour = endeavour.find(val => val.messageID == message!.id);
-        let checkPreviousPing = (checkEndeavour?.previous || oldUsersMention).filter(val => usersMention.includes(val));
-        if (checkPreviousPing.length) {
-          if (!checkEndeavour) {
-            return endeavour.push({messageID: message.id, previous: oldUsersMention});
+        let currentEndeavour = endeavour.find(val => val.messageID == message!.id);
+        let previousMentioned = currentEndeavour?.mentioned || oldUsersMention;
+        let ghostMention = previousMentioned.filter(mention => deletedUserMentions.includes(mention));
+        let currentMentioned = previousMentioned.filter(mention => ghostMention.includes(mention));
+        if (currentMentioned.length) {
+          if (!currentEndeavour) {
+            endeavour.push({messageID: message.id, mentioned: currentMentioned});
+          } else {
+            currentEndeavour.mentioned = currentMentioned;
           }
         };
 
-        if (checkEndeavour) {
-          if (checkEndeavour.previous.filter(val => !usersMention.includes(val)).length) {
-            let ignored = await immediateIgnore(client, message.id);
-            if (ignored) {
-              return;
-            } else {
-              if (userDiffer.length) {
-                ctx.content = userDiffer.map(userID => `<@!${userID}>`).join(" ");
-              };
-            };
-          } else {
-            return;
-          };
-        };
+        if (ghostMention.length == 0) {
+          return;
+        }
 
-      } else {
-        return;
-      };
+        let ignored = await immediateIgnore(client, message.id);
+        if (ignored) {
+          return;
+        }
+        
+        if (ghostMention.length) {
+          ctx.content = ghostMention.map(userID => `<@!${userID}>`).join(" ");
+        };
+      }
+
     }
 
     // from messageDelete(pure)
@@ -151,10 +152,8 @@ function mentionsFiltering(users: Array<Eris.User>, userID: string) {
   return users.filter(val => val.id !== userID && !val.bot);
 };
 
-function checkMentionsDifference(arr1: string[], arr2: string[]) {
-  return arr1
-    .filter(x => !arr2.includes(x))
-    .concat(arr2.filter(x => !arr1.includes(x)));
+function checkDeletedMentions(oldMentions: string[], newMentions: string[]) {
+  return oldMentions.filter(x => !newMentions.includes(x));
 };
 
 export async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
@@ -170,7 +169,7 @@ export async function checkMentions(client: Eris.Client, message: Eris.Message<E
 
   // check role mentions
   const RoleMention = message.roleMentions;
-  if (RoleMention.length >= 1) {
+  if (RoleMention.length >= 1 && !hasMentions) {
     let rolesMentionable = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable);
     let check = rolesMentionable.some(val => RoleMention.includes(val.id));
 

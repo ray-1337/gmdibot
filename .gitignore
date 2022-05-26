@@ -17,3 +17,4 @@ package.lock.json
 /database/*
 /server/content/*
 .archived/*
+node_modules/
