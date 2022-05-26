@@ -7,7 +7,8 @@ import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 
-let endeavour: Array<{messageID: string, mentioned: string[]}> = [];
+type Endeavour = Array<{messageID: string, mentioned: string[]}>;
+let endeavour: Endeavour = [];
 
 // export function cache(channelID: string, userID: string) {
 //   const expireTime = Math.round(standardOldMessageTime / 1000);
@@ -82,8 +83,8 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
       let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
       
-      let deletedUserMentions = checkDeletedMentions(oldUsersMention, newUsersMention);
-      let deletedRoleMentions = checkDeletedMentions(oldMessage.roleMentions, message.roleMentions);
+      let deletedUserMentions = getDeletedMentionIds(oldUsersMention, newUsersMention);
+      let deletedRoleMentions = getDeletedMentionIds(oldMessage.roleMentions, message.roleMentions);
 
       if (deletedUserMentions.length + deletedRoleMentions.length == 0) {
         return;
@@ -152,8 +153,8 @@ function mentionsFiltering(users: Array<Eris.User>, userID: string) {
   return users.filter(val => val.id !== userID && !val.bot);
 };
 
-function checkDeletedMentions(oldMentions: string[], newMentions: string[]) {
-  return oldMentions.filter(x => !newMentions.includes(x));
+function getDeletedMentionIds(oldMentionIds: string[], newMentionIds: string[]) {
+  return oldMentionIds.filter(x => !newMentionIds.includes(x));
 };
 
 export async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
@@ -196,3 +197,79 @@ export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: 
 //     cache(message.channel.id, message.author.id).set();
 //   };
 // };
+
+type GhostPingUserMention = {id: string, bot: boolean | undefined};
+type GhostPingMessage = {id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[]};
+type GhostPing = {userAnnouncedIds: string[]}
+function handleGhostPingEvent(
+    currentEndeavour: Endeavour,
+    mentionableRoleIds: string[],
+    message: GhostPingMessage,
+    previousMessage?: GhostPingMessage): GhostPing | undefined {
+  
+  if (previousMessage != undefined) {
+    const previousUserMentionIds = previousMessage.userMentions.map(mention => mention.id);
+    const currentUserMentionIds = message.userMentions.map(mention => mention.id);
+    const deletedUserMentionIds = getDeletedMentionIds(previousUserMentionIds, currentUserMentionIds);
+
+    const deletedRoleMentionIds = getDeletedMentionIds(previousMessage.mentionedRoleIds, message.mentionedRoleIds);
+
+    if (deletedUserMentionIds.length + deletedRoleMentionIds.length == 0) {
+      return;
+    } else {
+      let currentEndeavourElement = currentEndeavour.find(val => val.messageID == message.id);
+      let previousMentioned = currentEndeavourElement?.mentioned || previousUserMentionIds;
+      let ghostMentionedIds = previousMentioned.filter(mention => deletedUserMentionIds.includes(mention));
+      let currentMentioned = previousMentioned.filter(mention => ghostMentionedIds.includes(mention));
+      if (currentMentioned.length) {
+        if (!currentEndeavourElement) {
+          currentEndeavour.push({messageID: message.id, mentioned: currentMentioned});
+        } else {
+          currentEndeavourElement.mentioned = currentMentioned;
+        }
+      };
+
+      if (ghostMentionedIds.length == 0) {
+        return;
+      }
+
+      return {userAnnouncedIds: ghostMentionedIds};
+    }
+
+  }
+
+  // from messageDelete(pure)
+  else {
+    const check = checkMentionsOffline(mentionableRoleIds, message);
+    if (!check.hasMentions) {
+      return;
+    }
+
+    return {userAnnouncedIds: check.ghostMentionedIds}
+  };
+}
+
+function checkMentionsOffline(mentionableRoleIds: string[], message: GhostPingMessage) {
+  let hasMentions: boolean = false;
+  let ghostMentionedIds: string[] = [];
+
+  // check user mentions
+  const userMentions = mentionsFilteringOffline(message.userMentions, message.authorId);
+  if (userMentions.length >= 1) {
+    ghostMentionedIds = userMentions.map(val => val.id);
+    hasMentions = true;
+  };
+
+  // check role mentions
+  const mentionedRoleIds = message.mentionedRoleIds;
+  if (mentionedRoleIds.length >= 1 && !hasMentions) {
+    let check = mentionableRoleIds.some(id => mentionedRoleIds.includes(id));
+    hasMentions = check;
+  };
+
+  return { hasMentions, ghostMentionedIds };
+};
+
+function mentionsFilteringOffline(userMentions: GhostPingUserMention[], userID: string) {
+  return userMentions.filter(val => val.id !== userID && !val.bot);
+};
