@@ -27,6 +27,7 @@
     "normalize-url": "6.1.0",
     "parse-duration": "^1.0.2",
     "pretty-ms": "^7.0.1",
+    "sqlite3": "^5.0.8",
     "string-similarity": "^4.0.4",
     "ts-jest": "^28.0.3",
     "ts-node": "^10.8.0",
@@ -38,7 +39,8 @@
     "common-tags": "^1.8.2",
     "eris": "DonovanDMC/eris#everything",
     "node-cache": "^5.1.2",
-    "pluris": "ray-1337/pluris"
+    "pluris": "ray-1337/pluris",
+    "sequelize": "^6.20.1"
   },
   "packageManager": "yarn@3.2.1",
   "author": {
