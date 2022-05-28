@@ -3,11 +3,11 @@ import * as Util from "../handler/Util";
 import GMDIBot from "../handler/Client";
 import Config from "../config/config";
 import ms from "ms";
-import Cache from "node-cache";
+// import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 
-export type Endeavour = Array<{messageID: string, mentioned: string[]}>;
+export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
 
 // export function cache(channelID: string, userID: string) {
@@ -48,29 +48,28 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
       if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
         return immediateIgnore(client, message.id);
       };
-    }
+    };
 
     let ignored = await immediateIgnore(client, message.id);
-    if (ignored) {
-      return;
-    }
+    if (ignored) return;
 
     const mentionableRoleIds = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
     let nonErisMessage = {
       id: message.id,
       authorId: message.author.id,
-      userMentions: (message.mentions as Eris.User[]).map(user => ({id: user.id, bot: user.bot})),
+      userMentions: (message.mentions as Eris.User[]).map(user => ({ id: user.id, bot: user.bot })),
       mentionedRoleIds: message.roleMentions
-    }
+    };
+
     let nonErisPreviousMessage: GhostPingMessage | undefined = undefined;
     if (oldMessage) {
       nonErisPreviousMessage = {
         id: message.id,
         authorId: message.author.id,
-        userMentions: (oldMessage.mentions as unknown as Eris.User[]).map(user => ({id: user.id, bot: user.bot})),
+        userMentions: (oldMessage.mentions as unknown as Eris.User[]).map(user => ({ id: user.id, bot: user.bot })),
         mentionedRoleIds: oldMessage.roleMentions
       }
-    }
+    };
 
     const result = handleGhostPingEvent(
       endeavour,
@@ -81,7 +80,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
 
     if (result == undefined) {
       return;
-    }
+    };
 
     const embed = new Eris.RichEmbed()
       .setTimestamp()
@@ -113,7 +112,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     } else {
       embed.setColor(0xF53131);
       if (message.content) embed.setDescription(message.content);
-    }
+    };
 
     if (result.userAnnouncedIds.length) {
       ctx.content = result.userAnnouncedIds.map(userID => `<@!${userID}>`).join(" ");
@@ -135,7 +134,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     //   // @ts-expect-error
     //   let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
     //   let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
-      
+
     //   let deletedUserMentions = getDeletedMentionIds(oldUsersMention, newUsersMention);
     //   let deletedRoleMentions = getDeletedMentionIds(oldMessage.roleMentions, message.roleMentions);
 
@@ -164,7 +163,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     //     if (ignored) {
     //       return;
     //     }
-        
+
     //     if (ghostMention.length) {
     //       ctx.content = ghostMention.map(userID => `<@!${userID}>`).join(" ");
     //     };
@@ -195,7 +194,7 @@ export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.Guil
     // };
 
     // await client.createMessage(message.channel.id, ctx);
-    
+
     return;
   } catch (error) {
     return console.error(error);
@@ -251,16 +250,16 @@ export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: 
 //   };
 // };
 
-export type GhostPingUserMention = {id: string, bot?: boolean};
-export type GhostPingMessage = {id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[]};
-export type GhostPing = {userAnnouncedIds: string[]}
+export type GhostPingUserMention = { id: string, bot?: boolean };
+export type GhostPingMessage = { id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[] };
+export type GhostPing = { userAnnouncedIds: string[] };
 
 export function handleGhostPingEvent(
-    currentEndeavour: Endeavour,
-    mentionableRoleIds: string[],
-    message: GhostPingMessage,
-    previousMessage?: GhostPingMessage): GhostPing | undefined {
-  
+  currentEndeavour: Endeavour,
+  mentionableRoleIds: string[],
+  message: GhostPingMessage,
+  previousMessage?: GhostPingMessage): GhostPing | undefined {
+
   if (previousMessage != undefined) {
     const previousUserMentionIds = mentionsFilteringOffline(previousMessage.userMentions, previousMessage.authorId).map(mention => mention.id);
     const currentUserMentionIds = mentionsFilteringOffline(message.userMentions, message.authorId).map(mention => mention.id);
@@ -280,14 +279,14 @@ export function handleGhostPingEvent(
       let currentMentioned = previousMentioned.filter(mention => ghostMentionedIds.includes(mention));
       if (currentMentioned.length) {
         if (!currentEndeavourElement) {
-          currentEndeavour.push({messageID: message.id, mentioned: currentMentioned});
+          currentEndeavour.push({ messageID: message.id, mentioned: currentMentioned });
         } else {
           currentEndeavourElement.mentioned = currentMentioned;
         }
       };
 
-      return {userAnnouncedIds: ghostMentionedIds};
-    }
+      return { userAnnouncedIds: ghostMentionedIds };
+    };
 
   }
 
@@ -298,9 +297,9 @@ export function handleGhostPingEvent(
       return;
     }
 
-    return {userAnnouncedIds: check.ghostMentionedIds}
+    return { userAnnouncedIds: check.ghostMentionedIds }
   };
-}
+};
 
 function checkMentionsOffline(mentionableRoleIds: string[], message: GhostPingMessage) {
   let hasMentions: boolean = false;
