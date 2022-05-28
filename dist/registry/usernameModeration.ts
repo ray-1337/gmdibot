@@ -2,7 +2,7 @@ import Eris from "eris";
 import * as Util from "../handler/Util";
 import Config from "../config/config";
 
-export default async (client: Eris.Client, user: Eris.User | Eris.Member) => {
+export default async (client: Eris.GMDIExtension, user: Eris.User | Eris.Member) => {
   try {
     const regex = /([\w]){2,}/gim;
     const pseudoID = Util.generateHash(8);

@@ -1,6 +1,5 @@
 import Eris from "eris";
 import Config from "../config/config";
-import GMDIBot from "../handler/Client";
 
 // Moderation Registry
 import ChannelCooldown from "../registry/channelCooldown";
@@ -8,7 +7,7 @@ import ChannelCooldown from "../registry/channelCooldown";
 // command
 import EvalFactory from "../registry/eval";
 
-export default async (client: Eris.Client & GMDIBot, message: Eris.Message<Eris.GuildTextableChannel>) => {
+export default async (client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) => {
   if (
     message.author.bot ||
     message.channel instanceof Eris.PrivateChannel ||

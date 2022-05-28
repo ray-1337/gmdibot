@@ -15,7 +15,7 @@ dayjs.extend(dayjsLocalize);
 dayjs.extend(dayjsCustomParseFormat);
 dayjs.extend(dayjsSameBefore)
 
-async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean) {
+async function initiatePrayingTime(client: Eris.GMDIExtension, addOneMoreDay?: boolean) {
   let capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   // gmdi majority is from Jabodetabek.
@@ -115,7 +115,7 @@ async function initiatePrayingTime(client: Eris.Client, addOneMoreDay?: boolean)
   };
 };
 
-export default async (client: Eris.Client) => {
+export default async (client: Eris.GMDIExtension) => {
   try {
     initiatePrayingTime(client)
   } catch (error) {

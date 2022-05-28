@@ -1,8 +1,7 @@
 import Eris from "eris";
 import config from "../config/config";
-import GMDIBot from "../handler/Client";
 
-export default async (client: Eris.Client & GMDIBot, guild: Eris.Guild, member: Eris.Member) => {
+export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
   // still 

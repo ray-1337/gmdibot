@@ -2,7 +2,7 @@ import crypto from "crypto";
 import Eris from "eris";
 import mime from "mime-db";
 
-export async function transformMessage(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage | null): Promise<Eris.Message<Eris.GuildTextableChannel> | null> {
+export async function transformMessage(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage | null): Promise<Eris.Message<Eris.GuildTextableChannel> | null> {
   if (message) {
     if (message instanceof Eris.Message) {
       return message;

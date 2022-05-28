@@ -1,9 +1,8 @@
 import Eris from "eris";
 import config from "../config/config";
 import {stripIndents} from "common-tags";
-import GMDIBot from "../handler/Client";
 
-export default async (client: Eris.Client & GMDIBot, guild: Eris.Guild, member: Eris.Member, oldMember: Eris.OldMember) => {
+export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member, oldMember: Eris.OldMember) => {
   if (guild.id !== config.guildID || member.bot) return;
   
   if (oldMember?.pending && !member?.pending) {

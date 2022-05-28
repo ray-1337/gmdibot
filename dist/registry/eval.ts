@@ -3,7 +3,7 @@ import Config from "../config/config";
 import undici from "undici";
 import nodeUtil from "util";
 
-export default async (client: Eris.Client, message: Eris.Message, args: any[]) => {
+export default async (client: Eris.GMDIExtension, message: Eris.Message, args: any[]) => {
   if (message.author.id !== Config.botOwner) {
     return client.createMessage(message.channel.id, `Only the developer (${Config.botOwner}) can access this.`);
   };

@@ -1,11 +1,10 @@
 import Eris from "eris";
-import GMDIBot from "../handler/Client";
 // import PrayerTiming from "../registry/PrayerTiming";
 
 // Moderation Registry
 import removalChannelCooldown from "../registry/removalChannelCooldown";
 
-export default async (client: GMDIBot) => {
+export default async (client: Eris.GMDIExtension) => {
   client.editStatus("dnd", {type: Eris.Constants.ActivityTypes.WATCHING, name: "Kobo Kanaeru"});
 
   console.log("Ready.");

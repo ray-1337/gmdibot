@@ -1,6 +1,5 @@
 import Eris from "eris";
 import * as Util from "../handler/Util";
-import GMDIBot from "../handler/Client";
 import Config from "../config/config";
 import ms from "ms";
 // import Cache from "node-cache";
@@ -22,7 +21,7 @@ let endeavour: Endeavour = [];
 //   return {get, set, del};
 // };
 
-export default async (client: Eris.Client & GMDIBot, msg: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage, oldMessage?: Eris.OldMessage) => {
+export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage, oldMessage?: Eris.OldMessage) => {
   try {
     // check message
     let message = await Util.transformMessage(client, msg);
@@ -209,7 +208,7 @@ function getDeletedMentionIds(oldMentionIds: string[], newMentionIds: string[]) 
   return oldMentionIds.filter(x => !newMentionIds.includes(x));
 };
 
-export async function checkMentions(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
+export async function checkMentions(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) {
   let hasMentions: boolean = false;
   let variant: string[] = [];
 
@@ -232,7 +231,7 @@ export async function checkMentions(client: Eris.Client, message: Eris.Message<E
   return { hasMentions, variant };
 };
 
-export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: string) {
+export async function immediateIgnore(client: Eris.GMDIExtension, messageID: string) {
   const ignoreCheckingKey = "ignoreChecking";
   const check = await client.database.get(ignoreCheckingKey) as string[] | null;
   if (!check?.find(val => val == messageID)) {
@@ -243,7 +242,7 @@ export async function immediateIgnore(client: Eris.Client & GMDIBot, messageID: 
   };
 };
 
-// export async function removalForth(client: Eris.Client, message: Eris.Message<Eris.GuildTextableChannel>) {
+// export async function removalForth(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) {
 //   let current = await checkMentions(client, message);
 //   if (current.hasMentions) {
 //     cache(message.channel.id, message.author.id).set();
