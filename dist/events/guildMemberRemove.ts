@@ -5,6 +5,9 @@ import ms from "ms";
 export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
+  // skip if member still on verification pending
+  if (member.pending) return;
+
   client.database.set(`replaceWelcomeMessageUser.${member.user.id}`, {
     activateWhenComingBack: true,
     leavingSince: Date.now(),
