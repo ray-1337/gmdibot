@@ -46,18 +46,17 @@ export default {
 
     message: {
       exceed: [
-        "gandeng ajg",
         "gw pukul lu ajg",
         "males banget ribut tolo",
         "ngerusuh mulu",
-        "dibaikin malah ngelunjak"
+        "berisik lu pada",
+        "sehari gausah ribut bisa gak"
       ],
 
       cooling: [
         "ribut mulu daritadi",
         "nah gitu dong",
-        "nah gini kan enak ga berisik2 amat",
-        "kebiasaan"
+        "nah gini kan enak ga berisik2 amat"
       ]
     },
 
