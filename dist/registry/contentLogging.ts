@@ -30,10 +30,14 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
         if (!message.attachments[0].content_type) return;
 
         let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url);
-        if (promisedStore) listDeletedContent.push(promisedStore);
 
         if (!videoRegexMimeType.test(message.attachments[0].content_type)) {
-          embed.setImage(message.attachments[0].proxy_url);
+          if (promisedStore) {
+            listDeletedContent.push(promisedStore);
+            embed.setImage(promisedStore);
+          } else {
+            embed.setImage(message.attachments[0].proxy_url);
+          };
         };
       }
 
@@ -65,7 +69,11 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
             if (promisedStore) listDeletedContent.push(promisedStore);
 
             if (message.embeds[0].type !== "video") {
-              embed.setImage(URLDecision.proxy_url);
+              if (promisedStore) {
+                embed.setImage(promisedStore);
+              } else {
+                embed.setImage(URLDecision.proxy_url);
+              };
             };
           };
         };
