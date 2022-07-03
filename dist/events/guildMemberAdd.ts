@@ -4,7 +4,7 @@ import config from "../config/config";
 export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
-  client.addGuildMemberRole(guild.id, member.id, "312868594549653514").catch(() => {});
+  // client.addGuildMemberRole(guild.id, member.id, "312868594549653514").catch(() => {});
 
   // still 
   let userDataWarn = await client.database.get(`warningLasted.${member.id}`) as WarningLastedOptions;
