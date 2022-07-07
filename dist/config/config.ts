@@ -1,5 +1,7 @@
 const command = process.argv.slice(2);
 
+const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
+
 export default {
   guildID: "190826809896468480",
   botOwner: "331265944363991042",
@@ -46,17 +48,15 @@ export default {
 
     message: {
       exceed: [
-        "gw pukul lu ajg",
-        "males banget ribut tolo",
         "ngerusuh mulu",
         "berisik lu pada",
-        "sehari gausah ribut bisa gak"
+        "sehari gausah ribut bisa gak",
+        `ngomong sama ${satireContext[Math.floor(Math.random() * satireContext.length)]}`
       ],
 
       cooling: [
         "ribut mulu daritadi",
-        "nah gitu dong",
-        "nah gini kan enak ga berisik2 amat"
+        "kata mamah jangan ribut"
       ]
     },
 
