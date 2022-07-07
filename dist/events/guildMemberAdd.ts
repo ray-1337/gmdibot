@@ -1,8 +1,12 @@
 import Eris from "eris";
 import config from "../config/config";
 
+import usernameModeration from "../registry/usernameModeration";
+
 export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member) => {
   if (guild.id !== config.guildID || member.bot) return;
+
+  usernameModeration(client, member);
 
   // client.addGuildMemberRole(guild.id, member.id, "312868594549653514").catch(() => {});
 
