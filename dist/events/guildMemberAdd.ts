@@ -7,8 +7,8 @@ export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eri
   // client.addGuildMemberRole(guild.id, member.id, "312868594549653514").catch(() => {});
 
   // still 
-  let userDataWarn = await client.database.get(`warningLasted.${member.id}`) as WarningLastedOptions;
-  if (userDataWarn && userDataWarn.level) {
-    return client.editGuildMember(config.guildID, member.id, {roles: [config.warning.role[userDataWarn.level]]});
-  };
+  // let userDataWarn = await client.database.get(`warningLasted.${member.id}`) as WarningLastedOptions;
+  // if (userDataWarn && userDataWarn.level) {
+  //   return client.editGuildMember(config.guildID, member.id, {roles: [config.warning.role[userDataWarn.level]]});
+  // };
 };
