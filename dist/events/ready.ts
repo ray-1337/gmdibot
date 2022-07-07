@@ -5,7 +5,10 @@ import Eris from "eris";
 import removalChannelCooldown from "../registry/removalChannelCooldown";
 
 export default async (client: Eris.GMDIExtension) => {
-  client.editStatus("dnd", {type: Eris.Constants.ActivityTypes.WATCHING, name: "Kobo Kanaeru"});
+  client.editStatus("idle", {
+    type: Eris.Constants.ActivityTypes.WATCHING,
+    name: "darryl my beloved"
+  });
 
   console.log("Ready.");
 
