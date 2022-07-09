@@ -5,6 +5,7 @@ import ms from "ms";
 // import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
+const ignoreCheckingKey = "ignoreChecking";
 
 export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
@@ -43,14 +44,12 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
       return;
     };
 
-    if (oldMessage) {
-      if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
-        return immediateIgnore(client, message.id);
-      };
-    };
-
     let ignored = await immediateIgnore(client, message.id);
     if (ignored) return;
+
+    if (oldMessage && isOldMessageEditedAndNoTag(oldMessage)) {
+      return await client.database.push(ignoreCheckingKey, message.id);
+    };
 
     const mentionableRoleIds = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
     let nonErisMessage = {
@@ -119,82 +118,6 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
 
     await client.createMessage(message.channel.id, ctx);
 
-    // // from messageUpdate (edited, stuff)
-    // if (oldMessage) {
-    //   // no ping but edited ({notag} -> {tag}) which will triggers checkMentionsDifference
-    //   if (!oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length)) {
-    //     return immediateIgnore(client, message.id);
-    //   };
-
-    //   embed.setColor(0xF29C3F);
-    //   if (oldMessage.content) embed.setDescription(oldMessage.content);
-
-    //   // temporary checking
-    //   // @ts-expect-error
-    //   let oldUsersMention = mentionsFiltering((oldMessage.mentions as Eris.User[]), message.author.id).map(val => val.id);
-    //   let newUsersMention = mentionsFiltering(message.mentions, message.author.id).map(val => val.id);
-
-    //   let deletedUserMentions = getDeletedMentionIds(oldUsersMention, newUsersMention);
-    //   let deletedRoleMentions = getDeletedMentionIds(oldMessage.roleMentions, message.roleMentions);
-
-    //   if (deletedUserMentions.length + deletedRoleMentions.length == 0) {
-    //     return;
-
-    //   } else {
-    //     console.log(endeavour);
-    //     let currentEndeavour = endeavour.find(val => val.messageID == message!.id);
-    //     let previousMentioned = currentEndeavour?.mentioned || oldUsersMention;
-    //     let ghostMention = previousMentioned.filter(mention => deletedUserMentions.includes(mention));
-    //     let currentMentioned = previousMentioned.filter(mention => ghostMention.includes(mention));
-    //     if (currentMentioned.length) {
-    //       if (!currentEndeavour) {
-    //         endeavour.push({messageID: message.id, mentioned: currentMentioned});
-    //       } else {
-    //         currentEndeavour.mentioned = currentMentioned;
-    //       }
-    //     };
-
-    //     if (ghostMention.length == 0) {
-    //       return;
-    //     }
-
-    //     let ignored = await immediateIgnore(client, message.id);
-    //     if (ignored) {
-    //       return;
-    //     }
-
-    //     if (ghostMention.length) {
-    //       ctx.content = ghostMention.map(userID => `<@!${userID}>`).join(" ");
-    //     };
-    //   }
-
-    // }
-
-    // // from messageDelete(pure)
-    // else {
-    //   embed.setColor(0xF53131);
-
-    //   if (message.content) {
-    //     embed.setDescription(message.content);
-    //   };
-
-    //   const check = await checkMentions(client, message);
-
-    //   if (check?.hasMentions) {
-    //     let ignored = await immediateIgnore(client, message.id);
-    //     if (ignored) {
-    //       return;
-    //     } else {
-    //       ctx.content = check.variant.join(" ");
-    //     };
-    //   } else {
-    //     return;
-    //   };
-    // };
-
-    // await client.createMessage(message.channel.id, ctx);
-
-    return;
   } catch (error) {
     return console.error(error);
   };
@@ -232,15 +155,17 @@ export async function checkMentions(client: Eris.GMDIExtension, message: Eris.Me
 };
 
 export async function immediateIgnore(client: Eris.GMDIExtension, messageID: string) {
-  const ignoreCheckingKey = "ignoreChecking";
   const check = await client.database.get(ignoreCheckingKey) as string[] | null;
   if (!check?.find(val => val == messageID)) {
-    await client.database.push(ignoreCheckingKey, messageID);
     return false;
   } else {
     return true;
   };
 };
+
+function isOldMessageEditedAndNoTag(oldMessage: Eris.OldMessage) {
+  return !oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length);
+}
 
 // export async function removalForth(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) {
 //   let current = await checkMentions(client, message);
