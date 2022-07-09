@@ -4,7 +4,7 @@ const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠",
 
 export default {
   guildID: "190826809896468480",
-  botOwner: "331265944363991042",
+  botOwner: ["929036943226990674", "331265944363991042"],
   prefix: ".",
   channel: {
     general: "190826809896468480",
