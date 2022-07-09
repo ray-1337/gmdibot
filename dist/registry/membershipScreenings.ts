@@ -5,7 +5,7 @@ import {stripIndents} from "common-tags";
 export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member, oldMember: Eris.OldMember) => {
   if (guild.id !== config.guildID || member.bot) return;
   
-  if (oldMember?.pending && !member?.pending) {
+  if (oldMember?.pending && !member?.pending && !config.botOwner.includes(member.id)) {
     let returnMember: FarewellMemberConclusion = await client.database.get(`replaceWelcomeMessageUser.${member.user.id}`);
 
     let returnMemberMessage = returnMember ? 
