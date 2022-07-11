@@ -349,7 +349,7 @@ it("TC 15: Tag many users, and delete", () => {
   expectGhostPing.withOnlyUserIds([user1Id, user2Id]).toBeNotified();
 });
 
-it("TC 16: Tag many roles, and delete", () => {
+it("TC 15: Tag many roles, and delete", () => {
   initializeEnvironment();
   const mentionableRoleId = "2";
   const unmentionableRoleId = "3";
@@ -366,7 +366,7 @@ it("TC 16: Tag many roles, and delete", () => {
   expectGhostPing.withNoUser.toBeNotified();
 });
 
-it("TC 17: Tag user and unmentionable role, and delete", () => {
+it("TC 16: Tag user and unmentionable role, and delete", () => {
   initializeEnvironment();
   setMentionableRoleIds([]);
   const taggedUserId = "2";
@@ -377,27 +377,6 @@ it("TC 17: Tag user and unmentionable role, and delete", () => {
   }
 
   const messageId = sendMentionedMessage(messageConfig);
-  deleteMentionedMessage(messageId);
-  expectGhostPing.withOnlyUserIds([taggedUserId]).toBeNotified();
-});
-
-it("TC 18: Tag, edit but keep the tag, and delete", () => {
-  initializeEnvironment();
-  setMentionableRoleIds([]);
-  const taggedUserId = "2";
-  const messageConfig = {
-    authorId: "1",
-    userMentions: [{id: taggedUserId}],
-    mentionedRoleIds: []
-  }
-
-  const messageId = sendMentionedMessage(messageConfig);
-  editMentionedMessage(messageId, {
-    userMentions: [{id: taggedUserId}],
-    mentionedRoleIds: []
-  });
-  expectNoGhostPing();
-
   deleteMentionedMessage(messageId);
   expectGhostPing.withOnlyUserIds([taggedUserId]).toBeNotified();
 });
