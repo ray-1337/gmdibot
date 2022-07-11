@@ -138,7 +138,7 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
         components: [{
           type: Eris.Constants.ComponentTypes.BUTTON,
           style: Eris.Constants.ButtonStyles.LINK,
-          label: "Konten Asli",
+          label: "Dokumen Asli",
           url: message.jumpLink
         }]
       }];
