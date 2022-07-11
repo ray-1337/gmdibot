@@ -19,3 +19,4 @@ package.lock.json
 .archived/*
 node_modules/
 build/
+node_modules
