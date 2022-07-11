@@ -3,6 +3,8 @@ import ms from "ms";
 
 export default async (client: GMDIExtension, guild: Guild, member: Member) => {
   try {
+    console.log(`${member.username}#${member.discriminator} joined the server.`);
+    
     const day = ms("1d");
     const age = Date.now() - member.createdAt;
     const dayLimit = 30; // 30 days
