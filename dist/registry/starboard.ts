@@ -41,11 +41,11 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
 
     // star emoji validation
     let _maxR = 9, _minR = 6;
-    let limit = client.cache.get<number | null>(`starboardLimitCache_${message.id}`);
+    let limit = client.cache.get<number | null>(`sLC_${message.id}`);
     if (!limit || isNaN(limit)) {
       let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
       limit = randLimit;
-      client.cache.set(`starboardLimitCache_${message.id}`, randLimit, Math.round(ms("1h") / 1000));
+      client.cache.set(`sLC_${message.id}`, randLimit, Math.round(ms("1h") / 1000));
     };
 
     // increment if same user reacted
