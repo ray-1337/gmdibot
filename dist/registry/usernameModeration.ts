@@ -4,7 +4,7 @@ import Config from "../config/config";
 
 export default async (client: Eris.GMDIExtension, user: Eris.User | Eris.Member) => {
   try {
-    const regex = /([\w\d]){4,}/gim;
+    const regex = /([\w\d]){2,}/gim;
     const pseudoID = Util.generateHash(8);
   
     if (user instanceof Eris.Member) {
