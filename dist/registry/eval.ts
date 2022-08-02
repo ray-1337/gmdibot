@@ -24,7 +24,11 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message, args: a
       const resJSON = await request.body.json();
       embed.setDescription(resJSON.url);
     } else {
-      embed.setDescription("```js\n" + output + "```");
+      if (output?.length <= 0) {
+        return message.addReaction("🟢");
+      } else {
+        embed.setDescription("```js\n" + output + "```");
+      };
     };
   } catch (err) {
     let error = checkingEvaluation(err);
