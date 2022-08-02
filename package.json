@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "common-tags": "^1.8.2",
-    "eris": "https://github.com/DonovanDMC/eris#everything",
+    "eris": "DonovanDMC/eris#everything",
     "node-cache": "^5.1.2",
     "pluris": "ray-1337/pluris",
     "sequelize": "^6.21.3"
