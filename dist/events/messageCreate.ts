@@ -21,7 +21,7 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message<Eris.Gui
   let args = message.content.slice(Config.prefix.length).trim().split(/ +/g);
   let cmd = args.shift()?.toLowerCase();
 
-  if (cmd === "eval") {
+  if (message.content.startsWith(Config.prefix + "eval")) {
     return EvalFactory(client, message, args);
   };
 };
