@@ -29,7 +29,7 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
       if (message.attachments.length === 1) {
         if (!message.attachments[0].content_type) return;
 
-        let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url);
+        let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url, true);
 
         if (!videoRegexMimeType.test(message.attachments[0].content_type)) {
           if (promisedStore) {
@@ -65,7 +65,7 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
           };
 
           if (URLDecision?.proxy_url) {
-            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
+            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url, true);
             if (promisedStore) listDeletedContent.push(promisedStore);
 
             if (message.embeds[0].type !== "video") {
@@ -109,7 +109,7 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
   };
 };
 
-async function contentStore(identifier: string, url: string) {
+async function contentStore(identifier: string, url: string, returnURL?: boolean) {
   try {
     let UIDLength = Util.getRandomInt(12, 16);
     let endpoint = config.endpoint.contentLogging;
@@ -131,7 +131,7 @@ async function contentStore(identifier: string, url: string) {
       stream.end();
     });
 
-    return `[${generatedUID}.${extension}](${endpoint + generatedFileName})`;
+    return returnURL ? `${endpoint + generatedFileName}` : `[${generatedUID}.${extension}](${endpoint + generatedFileName})`;
   } catch (error) {
     return console.error(error);
   };
