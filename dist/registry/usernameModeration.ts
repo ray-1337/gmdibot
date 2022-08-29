@@ -1,31 +1,35 @@
-import Eris from "eris";
-import * as Util from "../handler/Util";
+import {MemberOptions, GMDIExtension, User, Member} from "eris";
+import {generateHash} from "../handler/Util";
 import Config from "../config/config";
 
-export default async (client: Eris.GMDIExtension, user: Eris.User | Eris.Member) => {
+export default async (client: GMDIExtension, user: User | Member) => {
   try {
     const regex = /([\w\d]){2,}/gim;
-    const pseudoID = Util.generateHash(8);
+    const pseudoID = generateHash(8);
+    const memberOptions: MemberOptions = {
+      nick: `biar bisa ditag ${pseudoID}`
+    };
   
-    if (user instanceof Eris.Member) {
+    if (user instanceof Member) {
       if (user.bot || user.guild.id !== Config.guildID) return;
 
-      if (user?.nick && !user.nick.match(regex)) {
-        return client.editGuildMember(user.guild.id, user.id, {
-          nick: `biar bisa ditag ${pseudoID}`
-        }).catch(() => {});
+      if (user?.nick) {
+        if (user.nick.match(regex)) {
+          await client.editGuildMember(user.guild.id, user.id, {nick: null});
+        } else {
+          await client.editGuildMember(user.guild.id, user.id, memberOptions);
+        };
       };
     } else {
       if (user.bot) return;
 
       if (!user.username.match(regex)) {
-        return client.editGuildMember(Config.guildID, user.id, {
-          nick: `biar bisa ditag ${pseudoID}`
-        }).catch(() => {});
+        await client.editGuildMember(Config.guildID, user.id, memberOptions)
       };
-    }
-  } catch (error) {
-    console.error(error);
+    };
+
     return;
+  } catch (error) {
+    return console.error(error);
   };
 };
