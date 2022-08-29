@@ -18,9 +18,6 @@ export default async (client: GMDIExtension, guild: Guild, member: Member) => {
     // nickname validation
     usernameModeration(client, member);
 
-    // giving role (last)
-    await client.addGuildMemberRole(guild.id, member.id, "312868594549653514");
-
     return;
   } catch (error) {
     console.error(error);
