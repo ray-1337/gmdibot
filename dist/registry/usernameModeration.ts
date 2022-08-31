@@ -14,9 +14,7 @@ export default async (client: GMDIExtension, user: User | Member) => {
       if (user.bot || user.guild.id !== Config.guildID) return;
 
       if (user?.nick) {
-        if (user.nick.match(regex)) {
-          await client.editGuildMember(user.guild.id, user.id, {nick: null});
-        } else {
+        if (!user.nick.match(regex)) {
           await client.editGuildMember(user.guild.id, user.id, memberOptions);
         };
       };
