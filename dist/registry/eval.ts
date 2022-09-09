@@ -1,49 +1,51 @@
-import Eris from "eris";
+import {GMDIExtension, Message, EmbedOptions} from "oceanic.js";
 import Config from "../config/config";
 import undici from "undici";
 import nodeUtil from "util";
 
-export default async (client: Eris.GMDIExtension, message: Eris.Message, args: any[]) => {
+export default async (client: GMDIExtension, message: Message, args: any[]) => {
   if (!Config.botOwner.includes(message.author.id)) {
-    return client.createMessage(message.channel.id, `Only the developer (${Config.botOwner.join(", ")}) can access this.`);
+    return client.rest.channels.createMessage(message.channel.id, {content: `Only the developer (${Config.botOwner.join(", ")}) can access this.`});
   };
 
   if (args.length < 1) {
-    return client.createMessage(message.channel.id, "Some content were missing. Please try again.");
+    return client.rest.channels.createMessage(message.channel.id, {content: "Some content were missing. Please try again."});
   };
 
-  const embed = new Eris.RichEmbed();
+  const embed: EmbedOptions = {};
   let code = args.join(" "); // (interaction.data.options[0] as Eris.InteractionDataOptionsString).value;
 
   try {
     let output = await checkingEvaluation(code);
-    embed.setTitle("Output:").setColor(0x7289DA);
+    embed.title = "Output";
+    embed.color = 0x7289DA;
 
     if (output.toString().length >= 1024) {
       const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: output })});
       const resJSON = await request.body.json();
-      embed.setDescription(resJSON.url);
+      embed.description = resJSON.url;
     } else {
       if (output?.length <= 0) {
-        return message.addReaction("🟢");
+        return message.createReaction("🟢");
       } else {
-        embed.setDescription("```js\n" + output + "```");
+        embed.description = "```js\n" + output + "```";
       };
     };
   } catch (err) {
     let error = checkingEvaluation(err);
-    embed.setTitle("Error:").setColor(0xFF0F46);
+    embed.title = "Error";
+    embed.color = 0xFF0F46;
 
     if (error.toString().length >= 1024) {
       const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: error })});
       const resJSON = await request.body.json();
-      embed.setDescription(resJSON.url);
+      embed.description = resJSON.url;
     } else {
-      embed.setDescription("```js\n" + error + "```");
+      embed.description = "```js\n" + error + "```";
     };
   };
 
-  return client.createMessage(message.channel.id, { embeds: [embed] });
+  return client.rest.channels.createMessage(message.channel.id, { embeds: [embed] });
 
   async function checkingEvaluation(content: any) {
     let res: any;

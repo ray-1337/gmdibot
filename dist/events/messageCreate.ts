@@ -1,4 +1,4 @@
-import Eris from "eris";
+import {GMDIExtension, Message, AnyGuildTextChannel, PrivateChannel, GuildChannel} from "oceanic.js";
 import Config from "../config/config";
 
 // Moderation Registry
@@ -7,11 +7,11 @@ import ChannelCooldown from "../registry/channelCooldown";
 // command
 import EvalFactory from "../registry/eval";
 
-export default async (client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) => {
+export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
   if (
     message.author.bot ||
-    message.channel instanceof Eris.PrivateChannel ||
-    !(message.channel instanceof Eris.GuildChannel)
+    message.channel instanceof PrivateChannel ||
+    !(message.channel instanceof GuildChannel)
   ) return;
 
   if (Config.channel.watchChannelModeration.some(x => x === message.channel.id)) {
