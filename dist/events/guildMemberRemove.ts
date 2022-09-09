@@ -1,8 +1,8 @@
-import Eris from "eris";
+import { GMDIExtension, Guild, Member, EmbedOptions } from "oceanic.js";
 import config from "../config/config";
 import ms from "ms";
 
-export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eris.Member) => {
+export default async (client: GMDIExtension, guild: Guild, member: Member) => {
   if (guild.id !== config.guildID || member.bot) return;
 
   // skip if member still on verification pending
@@ -15,15 +15,21 @@ export default async (client: Eris.GMDIExtension, guild: Eris.Guild, member: Eri
   });
 
   // Embed
-  let embeds = new Eris.RichEmbed().setColor(0xC82427).setTimestamp();
+  // let embeds = new Eris.RichEmbed().setColor(0xC82427).setTimestamp();
+  let embed: EmbedOptions = {
+    color: 0xC82427,
+    timestamp: Date.now().toString()
+  };
 
-  if (Math.floor(Date.now() - member.joinedAt!) < ms("5m")) {
-    embeds.setTitle(`Dadah...`).setDescription(`**${member.user.username}#${member.user.discriminator}** langsung keluar dari server.`);
+  if (Math.floor(Date.now() - new Date(member.joinedAt!).getTime()) < ms("5m")) {
+    embed.title = "Dadah...";
+    embed.description = `**${member.user.username}#${member.user.discriminator}** langsung keluar dari server.`;
   }
 
   else {
-    embeds.setTitle(`Farewell.`).setDescription(`**${member.user.username}#${member.user.discriminator}** keluar dari server.`);
+    embed.title = "Farewell...";
+    embed.description = `**${member.user.username}#${member.user.discriminator}** keluar dari server.`;
   };
   
-  return client.createMessage(config.channel.general, {embeds: [embeds]});
+  return client.rest.channels.createMessage(config.channel.general, {embeds: [embed]});
 };

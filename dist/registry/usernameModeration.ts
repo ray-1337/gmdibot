@@ -1,4 +1,4 @@
-import {MemberOptions, GMDIExtension, User, Member} from "eris";
+import {EditMemberOptions, GMDIExtension, User, Member} from "oceanic.js";
 import {generateHash} from "../handler/Util";
 import Config from "../config/config";
 
@@ -6,7 +6,7 @@ export default async (client: GMDIExtension, user: User | Member) => {
   try {
     const regex = /([\w\d]){2,}/gim;
     const pseudoID = generateHash(8);
-    const memberOptions: MemberOptions = {
+    const memberOptions: EditMemberOptions = {
       nick: `biar bisa ditag ${pseudoID}`
     };
   
@@ -15,14 +15,14 @@ export default async (client: GMDIExtension, user: User | Member) => {
 
       if (user?.nick) {
         if (!user.nick.match(regex)) {
-          await client.editGuildMember(user.guild.id, user.id, memberOptions);
+          await client.rest.guilds.editMember(user.guild.id, user.id, memberOptions);
         };
       };
     } else {
       if (user.bot) return;
 
       if (!user.username.match(regex)) {
-        await client.editGuildMember(Config.guildID, user.id, memberOptions)
+        await client.rest.guilds.editMember(Config.guildID, user.id, memberOptions)
       };
     };
 
