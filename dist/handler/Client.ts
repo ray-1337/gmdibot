@@ -1,20 +1,20 @@
-import Eris from "eris";
-import pluris from "pluris";
+import {Client, ClientOptions} from "oceanic.js";
+// import pluris from "pluris";
 import Cache from "node-cache";
 import jsoning from "jsoning";
 
-pluris(Eris, {
-  awaitMessages: true,
-  awaitReactions: false,
-  createDMMessage: false,
-  embed: true,
-  endpoints: false,
-  messageGuild: false,
-  roleList: false,
-  webhooks: false
-});
+// pluris(Eris, {
+//   awaitMessages: true,
+//   awaitReactions: false,
+//   createDMMessage: false,
+//   embed: true,
+//   endpoints: false,
+//   messageGuild: false,
+//   roleList: false,
+//   webhooks: false
+// });
 
-export default class GMDIBot extends Eris.Client {
+export default class GMDIBot extends Client {
   database: jsoning;
   cache = new Cache({deleteOnExpire: true, checkperiod: 30});
   counter: {
@@ -25,8 +25,8 @@ export default class GMDIBot extends Eris.Client {
     cooldown: Map<string, true>;
   };
 
-  constructor(token: string, options: Eris.ClientOptions) {
-    super(token, options);
+  constructor(options: ClientOptions) {
+    super(options);
 
     this.database = new jsoning(process.cwd() + "/database/db.json");
     this.cache = this.cache;
