@@ -1,8 +1,8 @@
-import Eris from "eris";
+import {GMDIExtension, User} from "oceanic.js";
 
 import usernameModeration from "../registry/usernameModeration";
 
-export default async (client: Eris.GMDIExtension, user: Eris.User, /*oldUser: Eris.PartialUser*/) => {
+export default async (client: GMDIExtension, user: User, /*oldUser: PartialUser*/) => {
   // username moderation
   usernameModeration(client, user);
 };
