@@ -7,7 +7,7 @@ dotenv.config({path: process.cwd() + "/.env"});
 const client = new GMDIBot({
   auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
   gateway: {
-    intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"],
+    intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "MESSAGE_CONTENT"],
     guildCreateTimeout: 30000
   },
 });
