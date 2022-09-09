@@ -39,6 +39,7 @@
     "common-tags": "^1.8.2",
     "eris": "DonovanDMC/eris#everything",
     "node-cache": "^5.1.2",
+    "oceanic.js": "^0.0.11",
     "pluris": "ray-1337/pluris",
     "sequelize": "^6.21.4"
   },
