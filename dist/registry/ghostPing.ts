@@ -81,7 +81,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel> |
     };
 
     const embed: EmbedOptions = {
-      timestamp: new Date().toString(),
+      timestamp: new Date().toISOString(),
       author: {
         name: `Ghost Ping dari: ${message.author.username}#${message.author.discriminator}`,
         iconURL: message.author.avatarURL("png", 32)

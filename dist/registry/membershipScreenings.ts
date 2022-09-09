@@ -20,7 +20,7 @@ export default async (client: GMDIExtension, guild: Guild, member: Member, oldMe
         title: `Halo, ${member.user.username}#${member.user.discriminator} 👋`,
         description: returnMemberMessage,
         color: 0x24C86E,
-        timestamp: new Date().toString()
+        timestamp: new Date().toISOString()
       };
   
       await client.rest.guilds.addMemberRole(guild.id, member.id, "312868594549653514");

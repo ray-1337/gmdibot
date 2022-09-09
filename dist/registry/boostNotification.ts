@@ -10,7 +10,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
 
     return client.rest.channels.createMessage(Config.channel.general, {embeds: [{
       color: 0xf47fff,
-      timestamp: new Date().toString(),
+      timestamp: new Date().toISOString(),
       author: {
         name: `${userTag} barusan ngeboost server GMDI`,
         iconURL: member.avatarURL("png", 32)
