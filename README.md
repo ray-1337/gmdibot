@@ -1,11 +1,12 @@
-## Side-Project (GMDI Discord Bot)
+## Side-Project (GMDI Discord Bot, Oceanic.js Rebase)
 An advanced private Discord Bot, mostly for moderation purposes. <br>
 Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org). <br>
-Database built with [jsoning](https://npmjs.com/package/jsoning) for the sake of simplicity.
+Database built with [PostgreSQL](https://www.postgresql.org/), stored in [Supabase](https://supabase.com), and manipulated with [Sequelize](https://sequelize.org/)
 
 ## Current
-- **TypeScript:** v4.6.3
-- **Node.js:** v16.15.0
+- **TypeScript:** v4.7.4
+- **Node.js:** v16.15.1
+- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v0.0.11
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
