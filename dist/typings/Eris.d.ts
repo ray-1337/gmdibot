@@ -1,6 +1,5 @@
-import Eris from "eris";
 import GMDIBot from "../handler/Client";
 
-export declare module "eris" {
+export declare module "oceanic.js" {
   type GMDIExtension = GMDIBot;
 };
