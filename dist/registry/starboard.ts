@@ -1,14 +1,14 @@
-import Eris from "eris";
+import {Constants, ActionRowBase, GMDIExtension, Message, AnyGuildTextChannel, PartialEmoji, Member, Uncached, User, EmbedOptions, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
 import * as Util from "../handler/Util";
 
-export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTextableChannel>, emoji: Eris.PartialEmoji, reactor: Eris.Member | { id: string }) => {
+export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
     // must be presented in guild
     if (!msg.guildID || !msg?.channel?.id) return;
 
-    if (reactor instanceof Eris.Member) {
+    if (reactor instanceof Member) {
       if (reactor.bot) return;
     };
 
@@ -28,7 +28,7 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
 
-    let reactions = await client.getMessageReaction(message.channel.id, message.id, starEmoji);
+    let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
 
     // starboard starter
     let starterQueryKey = `starboardStarter_${message.id}`;
@@ -64,24 +64,28 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
         client.database.set("postedStarboard", [message.id]);
       };
 
-      const embed = new Eris.RichEmbed()
-        .setColor(0xffac33)
-        .setTimestamp(new Date(message.timestamp))
-        .setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, undefined, message.author.dynamicAvatarURL("png", 16))
-        .setDescription(Util.truncate(message.content, 4096));
+      const embed: EmbedOptions = {
+        color: 0xffac33,
+        timestamp: new Date(message.timestamp).toISOString(),
+        description: Util.truncate(message.content, 4096),
+        author: {
+          name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+          iconURL: message.author.avatarURL("png", 16)
+        }
+      };
 
       if (starterQuery) {
-        let starterUser = client.users.get(starterQuery) || await client.getRESTUser(starterQuery).catch(() => { });
+        let starterUser = client.users.get(starterQuery) || await client.rest.users.get(starterQuery).catch(() => { });
         if (starterUser) {
-          embed.setFooter(`Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`);
+          embed.footer!["text"] = `Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`;
         };
       };
 
-      let file: Eris.FileContent | undefined;
+      let file: File | undefined;
 
       let embeddings: string[] = [];
 
-      if (message.attachments.length || message.embeds.length) {
+      if (message.attachments.size || message.embeds.length) {
         let ext = {
           "image/gif": ".gif",
           "image/jpeg": ".jpeg",
@@ -93,20 +97,20 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
         };
 
         // attachments
-        if (message.attachments.length == 1) {
+        if (message.attachments.size == 1) {
           if (message.attachments[0].content_type?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
-            embed.setImage(normalizeURL(message.attachments[0].url));
+            embed.image!["url"] = normalizeURL(message.attachments[0].url);
           }
 
           else if (message.attachments[0].content_type?.match(/^(video)/gi)) {
             embeddings.push(normalizeURL(message.attachments[0].url));
           };
-        } else if (message.attachments.length > 1) {
+        } else if (message.attachments.size > 1) {
           for (let data of message.attachments) {
-            if (!data.content_type) continue;
+            if (!data[1].contentType) continue;
 
-            if (Object.keys(ext).find(mime => mime == data.content_type)) {
-              embeddings.push(data.url);
+            if (Object.keys(ext).find(mime => mime == data[1].contentType)) {
+              embeddings.push(data[1].url);
             };
 
             continue;
@@ -116,7 +120,7 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
         // embeds
         if (message.embeds.length == 1) {
           if (message.embeds[0].type == "image" && message.embeds[0].url) {
-            embed.setImage(normalizeURL(message.embeds[0].url));
+            embed.image!.url = normalizeURL(message.embeds[0].url);
           }
 
           else if (message.embeds[0].type == "video" && message.embeds[0].url) {
@@ -124,7 +128,7 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
           };
         } else if (message.embeds.length > 1) {
           for (let data of message.embeds) {
-            if (data.type.match(/(image|video)/gi) && data.url) {
+            if (data[1].type.match(/(image|video)/gi) && data.url) {
               embeddings.push(data.url);
             };
 
@@ -133,20 +137,24 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
         };
       };
 
-      let redirectButton: Eris.ActionRow[] = [{
-        type: Eris.Constants.ComponentTypes.ACTION_ROW,
+      let redirectButton: MessageActionRow[] = [{
+        type: Constants.ComponentTypes.ACTION_ROW,
         components: [{
-          type: Eris.Constants.ComponentTypes.BUTTON,
-          style: Eris.Constants.ButtonStyles.LINK,
+          type: Constants.ComponentTypes.BUTTON,
+          style: Constants.ButtonStyles.LINK,
           label: "Dokumen Asli",
-          url: message.jumpLink
+          url: `https://discord.com/channels/${message.guildID}/${message.channel.id}/${message.id}`
         }]
       }];
 
-      const embedMsg = await client.createMessage(channelID, { embeds: [embed], components: embeddings.length ? undefined : redirectButton }, file);
+      const embedMsg = await client.rest.channels.createMessage(channelID, {
+        embeds: [embed],
+        components: embeddings.length ? undefined : redirectButton,
+        files: file ? [file] : undefined
+      });
 
       if (embeddings.length) {
-        client.createMessage(channelID, {
+        client.rest.channels.createMessage(channelID, {
           content: embeddings.join("\n"),
           components: embeddings.length ? redirectButton : undefined,
           messageReference: {
