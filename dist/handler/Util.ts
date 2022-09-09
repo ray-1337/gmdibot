@@ -1,17 +1,17 @@
-import crypto from "crypto";
-import Eris from "eris";
+import { GMDIExtension, Message, AnyGuildTextChannel } from "oceanic.js";
+import {randomBytes} from "crypto";
 import mime from "mime-db";
 
-export async function transformMessage(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage | null): Promise<Eris.Message<Eris.GuildTextableChannel> | null> {
+export async function transformMessage(client: GMDIExtension, message: Message<AnyGuildTextChannel> | DeletedMessage | null): Promise<Message<AnyGuildTextChannel> | null> {
   if (message) {
-    if (message instanceof Eris.Message) {
+    if (message instanceof Message) {
       return message;
     } else {
       try {
-        let restMessage = await client.getMessage(message.channel.id, message.id).catch(() => {return null});
+        let restMessage = await client.rest.channels.getMessage(message.channel.id, message.id);
 
         if (restMessage) {
-          return message = restMessage as Eris.Message<Eris.GuildTextableChannel>;
+          return message = restMessage as Message<AnyGuildTextChannel>;
         } else {
           return null;
         };
@@ -37,7 +37,7 @@ export function countString(string: string) {
 };
 
 export function generateHash(length: number) {
-  return crypto.randomBytes(length / 2).toString("hex");
+  return randomBytes(length / 2).toString("hex");
 };
 
 export function truncate(str: string, len: number) {
