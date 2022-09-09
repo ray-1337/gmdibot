@@ -1,10 +1,9 @@
-import Eris from "eris";
-import Config from "../config/config";
+import {GMDIExtension, Message, AnyGuildTextChannel} from "oceanic.js";
 
 import contentLogging from "../registry/contentLogging";
 import ghostPing from "../registry/ghostPing";
 
-export default async (client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) => {
+export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
   contentLogging(client, message);
 
   ghostPing(client, message);

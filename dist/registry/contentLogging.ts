@@ -1,23 +1,35 @@
-import Eris from "eris";
+import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel, EmbedVideo, EmbedImage} from "oceanic.js";
 import * as Util from "../handler/Util";
-import undici from "undici";
+import {request} from "undici";
 import { stripIndents } from "common-tags";
 import config from "../config/config";
 import fs from "fs";
 
-export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
+export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
   try {
     if (!message?.author || message?.author?.bot) return;
 
-    const embed = new Eris.RichEmbed().setColor(0x242424).setTitle("Deleted Content")
-    .setAuthor(`${message.author.username}#${message.author.discriminator}`, undefined, message.author.dynamicAvatarURL("png", 128))
-    .addField("User Information", stripIndents`
-      **Channel:** ${message.channel.mention}
-      **User ID:** ${message.author.id}
-    `);
+    const embed: EmbedOptions = {
+      color: 0x242424,
+      title: "Deleted Content",
+      author: {
+        name: `${message.author.username}#${message.author.discriminator}`,
+        iconURL: message.author.avatarURL("png", 128)
+      },
+      fields: [{
+        name: "User Information",
+        value: stripIndents`
+          **Channel:** ${message.channel.mention}
+          **User ID:** ${message.author.id}
+        `
+      }]
+    }
 
       if (message?.content.length) {
-        embed.addField("Caption", Util.truncate(message.content, 1024));
+        embed.fields?.push({
+          name: "Caption",
+          value: Util.truncate(message.content, 1024)
+        });
       };
 
     let videoRegexMimeType = /^(video)\/.*/gi;
@@ -25,8 +37,8 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
     let listDeletedContent: string[] = [];
 
     // attachments
-    if (message.attachments?.length) {
-      if (message.attachments.length === 1) {
+    if (message.attachments?.size) {
+      if (message.attachments.size === 1) {
         if (!message.attachments[0].content_type) return;
 
         let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url, true);
@@ -34,18 +46,18 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
         if (!videoRegexMimeType.test(message.attachments[0].content_type)) {
           if (promisedStore) {
             listDeletedContent.push(promisedStore);
-            embed.setImage(promisedStore);
+            embed.image!["url"] = promisedStore;
           } else {
-            embed.setImage(message.attachments[0].proxy_url);
+            embed.image!["url"] = message.attachments[0].proxy_url;
           };
         };
       }
 
-      else if (message.attachments.length > 1) {
+      else if (message.attachments.size > 1) {
         for await (let content of message.attachments) {
-          if (!content.content_type) continue;
+          if (!content[1].contentType) continue;
 
-          let promisedStore = await contentStore(message.author.id, content.proxy_url);
+          let promisedStore = await contentStore(message.author.id, content[1].proxyURL);
           if (promisedStore) listDeletedContent.push(promisedStore);
           
           continue;
@@ -56,23 +68,23 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
     // embeds
     if (message.embeds?.length) {
       if (message.embeds.length === 1) {
-        if (message.embeds[0].type.match(acceptableEmbedsRegexType)) {
-          let URLDecision: Eris.EmbedVideo | Eris.EmbedImage | undefined;
+        if (message.embeds[0].type?.match(acceptableEmbedsRegexType)) {
+          let URLDecision: EmbedVideo | EmbedImage | undefined;
           if (message.embeds[0].type == "video" && message.embeds[0].video) {
             URLDecision = message.embeds[0].video;
           } else if (message.embeds[0].type == "image" && message.embeds[0].image) {
             URLDecision = message.embeds[0].image;
           };
 
-          if (URLDecision?.proxy_url) {
-            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url, true);
+          if (URLDecision?.proxyURL) {
+            let promisedStore = await contentStore(message.author.id, URLDecision.proxyURL, true);
             if (promisedStore) listDeletedContent.push(promisedStore);
 
             if (message.embeds[0].type !== "video") {
               if (promisedStore) {
-                embed.setImage(promisedStore);
+                embed.image!["url"] = promisedStore;
               } else {
-                embed.setImage(URLDecision.proxy_url);
+                embed.image!["url"] = URLDecision.proxyURL;
               };
             };
           };
@@ -81,17 +93,17 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
 
       else if (message.embeds.length > 1) {
         for await (let embed of message.embeds) {
-          if (!embed.type.match(acceptableEmbedsRegexType)) continue;
+          if (!embed.type?.match(acceptableEmbedsRegexType)) continue;
 
-          let URLDecision: Eris.EmbedVideo | Eris.EmbedImage | undefined;
+          let URLDecision: EmbedVideo | EmbedImage | undefined;
           if (embed.type == "video" && embed.video) {
             URLDecision = embed.video;
           } else if (embed.type == "image" && embed.image) {
             URLDecision = embed.image;
           };
 
-          if (URLDecision?.proxy_url) {
-            let promisedStore = await contentStore(message.author.id, URLDecision.proxy_url);
+          if (URLDecision?.proxyURL) {
+            let promisedStore = await contentStore(message.author.id, URLDecision.proxyURL);
             if (promisedStore) listDeletedContent.push(promisedStore);
           };
           
@@ -101,8 +113,12 @@ export default async (client: Eris.GMDIExtension, message: Eris.Message) => {
     };
 
     if (listDeletedContent?.length) {
-      embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"))
-      return client.createMessage(config.channel.modlog, { embeds: [embed] });
+      embed.fields?.push({
+        name: `Backup Endpoint (Total: ${listDeletedContent.length})`,
+        value: listDeletedContent.map(x => `- ${x}`).join("\n")
+      })
+      
+      return client.rest.channels.createMessage(config.channel.modlog, { embeds: [embed] });
     };
   } catch (error) {
     console.error(error);
@@ -115,7 +131,7 @@ async function contentStore(identifier: string, url: string, returnURL?: boolean
     let endpoint = config.endpoint.contentLogging;
     let storagePath = "/home/ray/gmdi-content-logging/";
 
-    let data = await undici.request(url, { method: "GET" });
+    let data = await request(url, { method: "GET" });
     if (!data?.headers["content-type"] || !data?.body) return;
 
     let extension = Util.contentTypeDecide(data.headers["content-type"]);

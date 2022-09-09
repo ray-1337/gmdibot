@@ -1,4 +1,4 @@
-import Eris from "eris";
+import {GMDIExtension, Message, AnyGuildTextChannel, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
 import * as Util from "../handler/Util";
 import Config from "../config/config";
 import ms from "ms";
@@ -22,7 +22,7 @@ let endeavour: Endeavour = [];
 //   return {get, set, del};
 // };
 
-export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTextableChannel> | DeletedMessage, oldMessage?: Eris.OldMessage) => {
+export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel> | DeletedMessage, oldMessage?: JSONMessage | null) => {
   try {
     // check message
     let message = await Util.transformMessage(client, msg);
@@ -40,7 +40,7 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
     // };
 
     // ignore old message more than an hour
-    if (Math.floor(Date.now() - message.timestamp) > standardOldMessageTime) {
+    if (Math.floor(Date.now() - new Date(message.timestamp).getTime()) > standardOldMessageTime) {
       return;
     };
 
@@ -51,12 +51,12 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
       return await client.database.push(ignoreCheckingKey, message.id);
     };
 
-    const mentionableRoleIds = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
+    const mentionableRoleIds = (message.channel?.guild?.roles || await client.rest.guilds.getRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
     let nonErisMessage = {
       id: message.id,
       authorId: message.author.id,
-      userMentions: (message.mentions as Eris.User[]).map(user => ({ id: user.id, bot: user.bot })),
-      mentionedRoleIds: message.roleMentions
+      userMentions: (message.mentions.users).map(user => ({ id: user.id, bot: user.bot })),
+      mentionedRoleIds: message.mentions.roles
     };
 
     let nonErisPreviousMessage: GhostPingMessage | undefined = undefined;
@@ -64,8 +64,8 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
       nonErisPreviousMessage = {
         id: message.id,
         authorId: message.author.id,
-        userMentions: (oldMessage.mentions as unknown as Eris.User[]).map(user => ({ id: user.id, bot: user.bot })),
-        mentionedRoleIds: oldMessage.roleMentions
+        userMentions: (oldMessage.mentions.users).map(user => ({ id: user.id, bot: user.bot })),
+        mentionedRoleIds: oldMessage.mentions.roles
       }
     };
 
@@ -80,15 +80,15 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
       return;
     };
 
-    const embed = new Eris.RichEmbed()
-      .setTimestamp()
-      .setAuthor(
-        `Ghost Ping dari: ${message.author.username}#${message.author.discriminator}`,
-        undefined,
-        message.author.dynamicAvatarURL("png", 32)
-      );
+    const embed: EmbedOptions = {
+      timestamp: new Date().toString(),
+      author: {
+        name: `Ghost Ping dari: ${message.author.username}#${message.author.discriminator}`,
+        iconURL: message.author.avatarURL("png", 32)
+      }
+    };
 
-    let ctx: Eris.MessageContent = {
+    let ctx: CreateMessageOptions = {
       embeds: [embed],
 
       messageReference: {
@@ -105,25 +105,25 @@ export default async (client: Eris.GMDIExtension, msg: Eris.Message<Eris.GuildTe
     };
 
     if (oldMessage) {
-      embed.setColor(0xF29C3F);
-      if (oldMessage.content) embed.setDescription(oldMessage.content);
+      embed.color = 0xF29C3F;
+      if (oldMessage.content) embed.description = oldMessage.content;
     } else {
-      embed.setColor(0xF53131);
-      if (message.content) embed.setDescription(message.content);
+      embed.color = 0xF53131;
+      if (message.content) embed.description = message.content;
     };
 
     if (result.userAnnouncedIds.length) {
       ctx.content = result.userAnnouncedIds.map(userID => `<@!${userID}>`).join(" ");
     };
 
-    await client.createMessage(message.channel.id, ctx);
+    await client.rest.channels.createMessage(message.channel.id, ctx);
 
   } catch (error) {
     return console.error(error);
   };
 };
 
-function mentionsFiltering(users: Array<Eris.User>, userID: string) {
+function mentionsFiltering(users: Array<User>, userID: string) {
   return users.filter(val => val.id !== userID && !val.bot);
 };
 
@@ -131,21 +131,21 @@ function getDeletedMentionIds(oldMentionIds: string[], newMentionIds: string[]) 
   return oldMentionIds.filter(x => !newMentionIds.includes(x));
 };
 
-export async function checkMentions(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) {
+export async function checkMentions(client: GMDIExtension, message: Message<AnyGuildTextChannel>) {
   let hasMentions: boolean = false;
   let variant: string[] = [];
 
   // check user mentions
-  const UserMention = mentionsFiltering(message.mentions, message.author.id); // depressing filter func
+  const UserMention = mentionsFiltering(message.mentions.users, message.author.id); // depressing filter func
   if (UserMention.length >= 1) {
     variant = UserMention.map(val => val.mention);
     hasMentions = true;
   };
 
   // check role mentions
-  const RoleMention = message.roleMentions;
+  const RoleMention = message.mentions.roles;
   if (RoleMention.length >= 1 && !hasMentions) {
-    let rolesMentionable = (message.channel?.guild?.roles || await client.getRESTGuildRoles(message.guildID)).filter(val => val.mentionable);
+    let rolesMentionable = (message.channel?.guild?.roles || await client.rest.guilds.getRoles(message.guildID!)).filter(val => val.mentionable);
     let check = rolesMentionable.some(val => RoleMention.includes(val.id));
 
     hasMentions = check;
@@ -154,7 +154,7 @@ export async function checkMentions(client: Eris.GMDIExtension, message: Eris.Me
   return { hasMentions, variant };
 };
 
-export async function immediateIgnore(client: Eris.GMDIExtension, messageID: string) {
+export async function immediateIgnore(client: GMDIExtension, messageID: string) {
   const check = await client.database.get(ignoreCheckingKey) as string[] | null;
   if (!check?.find(val => val == messageID)) {
     return false;
@@ -163,11 +163,11 @@ export async function immediateIgnore(client: Eris.GMDIExtension, messageID: str
   };
 };
 
-function isOldMessageEditedAndNoTag(oldMessage: Eris.OldMessage) {
-  return !oldMessage.editedTimestamp && (!oldMessage.roleMentions.length && !oldMessage.mentions.length);
+function isOldMessageEditedAndNoTag(oldMessage: JSONMessage | null) {
+  return oldMessage !== null && !oldMessage.editedTimestamp && (!oldMessage.mentions.roles.length && !oldMessage.mentions.users.length);
 }
 
-// export async function removalForth(client: Eris.GMDIExtension, message: Eris.Message<Eris.GuildTextableChannel>) {
+// export async function removalForth(client: GMDIExtension, message: Message<GuildTextableChannel>) {
 //   let current = await checkMentions(client, message);
 //   if (current.hasMentions) {
 //     cache(message.channel.id, message.author.id).set();
