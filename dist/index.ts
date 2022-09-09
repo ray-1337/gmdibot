@@ -4,12 +4,12 @@ import GMDIServer from "./server/Server";
 import dotenv from "dotenv";
 dotenv.config({path: process.cwd() + "/.env"});
 
-const client = new GMDIBot(`Bot ${process.env.DISCORD_BOT_TOKEN}`, {
-  intents: ["guilds", "guildMembers", "guildMessages", "guildMessageReactions"],
-  getAllUsers: false,
-  guildCreateTimeout: 30000,
-  messageLimit: 3,
-  restMode: true
+const client = new GMDIBot({
+  auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+  gateway: {
+    intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"],
+    guildCreateTimeout: 30000
+  },
 });
 
 Promise.all([
