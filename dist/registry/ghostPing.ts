@@ -2,25 +2,12 @@ import {GMDIExtension, Message, AnyGuildTextChannel, JSONMessage, EmbedOptions, 
 import * as Util from "../handler/Util";
 import Config from "../config/config";
 import ms from "ms";
-// import Cache from "node-cache";
 
 const standardOldMessageTime = ms("5m");
 const ignoreCheckingKey = "ignoreChecking";
 
 export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
-
-// export function cache(channelID: string, userID: string) {
-//   const expireTime = Math.round(standardOldMessageTime / 1000);
-//   const cache = new Cache({checkperiod: 60, deleteOnExpire: true, stdTTL: expireTime});
-//   const cacheKey = `proceedWarningGhostPing_${channelID}_${userID}`;
-
-//   const get = () => (cache.get(cacheKey) as boolean | null) || false;
-//   const set = () => cache.set(cacheKey, true, expireTime);
-//   const del = () => get() ? cache.del(cacheKey) : null;
-
-//   return {get, set, del};
-// };
 
 export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel> | DeletedMessage, oldMessage?: JSONMessage | null) => {
   try {
@@ -33,11 +20,6 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel> |
     if (message.channel.parentID && ignoredCategory.includes(message.channel.parentID)) {
       return;
     };
-
-    // ignore if its not existed
-    // if (!cache(message.channel.id, message.author.id).get()) {
-    //   return;
-    // };
 
     // ignore old message more than an hour
     if (Math.floor(Date.now() - new Date(message.timestamp).getTime()) > standardOldMessageTime) {
@@ -166,13 +148,6 @@ export async function immediateIgnore(client: GMDIExtension, messageID: string) 
 function isOldMessageEditedAndNoTag(oldMessage: JSONMessage | null) {
   return oldMessage !== null && !oldMessage.editedTimestamp && (!oldMessage.mentions.roles.length && !oldMessage.mentions.users.length);
 }
-
-// export async function removalForth(client: GMDIExtension, message: Message<GuildTextableChannel>) {
-//   let current = await checkMentions(client, message);
-//   if (current.hasMentions) {
-//     cache(message.channel.id, message.author.id).set();
-//   };
-// };
 
 export type GhostPingUserMention = { id: string, bot?: boolean };
 export type GhostPingMessage = { id: string, authorId: string, userMentions: GhostPingUserMention[], mentionedRoleIds: string[] };
