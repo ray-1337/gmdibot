@@ -12,6 +12,10 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     const embed: EmbedOptions = {
       color: 0x242424,
       title: "Deleted Content",
+      url: "",
+      image: {
+        url: ""
+      },
       author: {
         name: `${message.author.username}#${message.author.discriminator}`,
         iconURL: message.author.avatarURL("png", 128)
