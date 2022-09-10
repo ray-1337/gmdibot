@@ -39,25 +39,26 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     // attachments
     if (message.attachments?.size) {
       if (message.attachments.size === 1) {
-        if (!message.attachments[0].content_type) return;
+        const currentContent = message.attachments.toArray()?.[0];
+        if (!currentContent.contentType) return;
 
-        let promisedStore = await contentStore(message.author.id, message.attachments[0].proxy_url, true);
+        let promisedStore = await contentStore(message.author.id, currentContent.proxyURL, true);
 
-        if (!videoRegexMimeType.test(message.attachments[0].content_type)) {
+        if (!videoRegexMimeType.test(currentContent.contentType)) {
           if (promisedStore) {
             listDeletedContent.push(promisedStore);
             embed.image!["url"] = promisedStore;
           } else {
-            embed.image!["url"] = message.attachments[0].proxy_url;
+            embed.image!["url"] = currentContent.proxyURL;
           };
         };
       }
 
       else if (message.attachments.size > 1) {
-        for await (let content of message.attachments) {
-          if (!content[1].contentType) continue;
+        for await (let content of message.attachments.toArray()) {
+          if (!content.contentType) continue;
 
-          let promisedStore = await contentStore(message.author.id, content[1].proxyURL);
+          let promisedStore = await contentStore(message.author.id, content.proxyURL);
           if (promisedStore) listDeletedContent.push(promisedStore);
           
           continue;
