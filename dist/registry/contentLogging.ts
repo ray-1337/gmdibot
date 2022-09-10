@@ -1,12 +1,14 @@
-import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel, EmbedVideo, EmbedImage} from "oceanic.js";
+import {GMDIExtension, Message, EmbedOptions, EmbedVideo, EmbedImage} from "oceanic.js";
 import * as Util from "../handler/Util";
 import {request} from "undici";
 import { stripIndents } from "common-tags";
 import config from "../config/config";
 import fs from "fs";
+import {PossiblyUncachedMessage} from "../events/messageDelete";
 
-export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
+export default async (client: GMDIExtension, message: PossiblyUncachedMessage) => {
   try {
+    if (!(message instanceof Message)) return;
     if (!message?.author || message?.author?.bot) return;
 
     const embed: EmbedOptions = {
@@ -23,7 +25,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
       fields: [{
         name: "User Information",
         value: stripIndents`
-          **Channel:** ${message.channel.mention}
+          **Channel:** <#${message.channel.id}>
           **User ID:** ${message.author.id}
         `
       }]

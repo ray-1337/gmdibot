@@ -1,8 +1,9 @@
 import { GMDIExtension, Message, AnyGuildTextChannel } from "oceanic.js";
 import {randomBytes} from "crypto";
 import mime from "mime-db";
+import {PossiblyUncachedMessage} from "../events/messageDelete";
 
-export async function transformMessage(client: GMDIExtension, message: Message<AnyGuildTextChannel> | DeletedMessage | null): Promise<Message<AnyGuildTextChannel> | null> {
+export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | DeletedMessage | null): Promise<PossiblyUncachedMessage | null> {
   if (message) {
     if (message instanceof Message) {
       return message;

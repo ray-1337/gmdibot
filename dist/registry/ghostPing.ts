@@ -1,7 +1,8 @@
-import {GMDIExtension, Message, AnyGuildTextChannel, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
+import {GMDIExtension, Message, AnyGuildTextChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
 import * as Util from "../handler/Util";
 import Config from "../config/config";
 import ms from "ms";
+import {PossiblyUncachedMessage} from "../events/messageDelete";
 
 const standardOldMessageTime = ms("5m");
 const ignoreCheckingKey = "ignoreChecking";
@@ -9,11 +10,11 @@ const ignoreCheckingKey = "ignoreChecking";
 export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
 
-export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel> | DeletedMessage, oldMessage?: JSONMessage | null) => {
+export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMessage?: JSONMessage | null) => {
   try {
     // check message
     let message = await Util.transformMessage(client, msg);
-    if (!message || message.author.bot || message.guildID !== Config.guildID) return;
+    if (!(message instanceof Message) || message.author.bot || message.guildID !== Config.guildID) return;
 
     // ignore category
     let ignoredCategory = ["759298776656510998", "360450207386828810", "627808236015190017", "954290819886612480", "535466115459973120"];
