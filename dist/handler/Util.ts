@@ -3,13 +3,13 @@ import {randomBytes} from "crypto";
 import mime from "mime-db";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 
-export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | DeletedMessage | null): Promise<PossiblyUncachedMessage | null> {
+export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | DeletedMessage | null): Promise<Message<AnyGuildTextChannel> | null> {
   if (message) {
     if (message instanceof Message) {
       return message;
     } else {
       try {
-        let restMessage = await client.rest.channels.getMessage(message.channel.id, message.id);
+        let restMessage = await client.rest.channels.getMessage(message.channel.id, message.id).catch(() => {});
 
         if (restMessage) {
           return message = restMessage as Message<AnyGuildTextChannel>;
