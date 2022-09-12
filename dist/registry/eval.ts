@@ -32,6 +32,7 @@ export default async (client: GMDIExtension, message: Message, args: any[]) => {
       };
     };
   } catch (err) {
+    console.error(err)
     let error = checkingEvaluation(err);
     embed.title = "Error";
     embed.color = 0xFF0F46;
