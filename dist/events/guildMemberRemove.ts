@@ -18,7 +18,7 @@ export default async (client: GMDIExtension, member: User | Member, guild: Guild
   // let embeds = new Eris.RichEmbed().setColor(0xC82427).setTimestamp();
   let embed: EmbedOptions = {
     color: 0xC82427,
-    timestamp: Date.now().toString()
+    timestamp: new Date().toISOString()
   };
 
   if (member instanceof Member && Math.floor(Date.now() - new Date(member.joinedAt!).getTime()) < ms("5m")) {
