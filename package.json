@@ -38,7 +38,7 @@
   "dependencies": {
     "common-tags": "^1.8.2",
     "node-cache": "^5.1.2",
-    "oceanic.js": "^0.0.11",
+    "oceanic.js": "^1.0.0-rc.3",
     "sequelize": "^6.21.6"
   },
   "packageManager": "yarn@3.2.1",
