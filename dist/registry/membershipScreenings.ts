@@ -6,7 +6,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
   if (member.guild.id !== config.guildID || member.bot) return;
   
   try {
-    if (oldMember?.pending && !member?.pending && !config.botOwner.includes(member.id)) {
+    if (oldMember?.pending && !member?.pending) {
       let returnMember: FarewellMemberConclusion = await client.database.get(`replaceWelcomeMessageUser.${member.user.id}`);
   
       let returnMemberMessage = returnMember ? 
