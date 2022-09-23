@@ -36,13 +36,13 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
         embed.description = "```js\n" + output + "```";
       };
     };
-  } catch (err) {
-    console.error(err)
-    let error = checkingEvaluation(err);
+  } catch (error) {
+    console.error(error)
+    // let error = checkingEvaluation(err);
     embed.title = "Error";
     embed.color = 0xFF0F46;
 
-    if (error.toString().length >= 1024) {
+    if (String(error).length >= 1024) {
       const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: error })});
       const resJSON = await request.body.json();
       embed.description = resJSON.url;
