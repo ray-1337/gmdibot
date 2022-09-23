@@ -27,7 +27,7 @@
     "normalize-url": "6.1.0",
     "parse-duration": "^1.0.2",
     "pretty-ms": "^7.0.1",
-    "sqlite3": "^5.1.0",
+    "sqlite3": "^5.1.1",
     "string-similarity": "^4.0.4",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
@@ -38,8 +38,8 @@
   "dependencies": {
     "common-tags": "^1.8.2",
     "node-cache": "^5.1.2",
-    "oceanic.js": "^1.0.0-rc.5",
-    "sequelize": "^6.21.6"
+    "oceanic.js": "^1.1.0",
+    "sequelize": "^6.23.1"
   },
   "packageManager": "yarn@3.2.1",
   "author": {
