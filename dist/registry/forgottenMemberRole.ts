@@ -2,7 +2,7 @@ import { Message, AnyGuildTextChannel } from "oceanic.js";
 import ms from "ms";
 import config from "../config/config";
 
-export default async (_, message: Message<AnyGuildTextChannel>) => {
+export default async (message: Message<AnyGuildTextChannel>) => {
   if (message.guildID !== config.guildID) return;
 
   const memberRole = "312868594549653514";

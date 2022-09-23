@@ -21,7 +21,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     ChannelCooldown(client, message);
   };
 
-  forgottenMemberRole(undefined, message);
+  forgottenMemberRole(message);
 
   let args = message.content.slice(Config.prefix.length).trim().split(/ +/g);
   let cmd = args.shift()?.toLowerCase();
