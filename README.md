@@ -5,8 +5,8 @@ Database built with [PostgreSQL](https://www.postgresql.org/), stored in [Supaba
 
 ## Current
 - **TypeScript:** v4.7.4
-- **Node.js:** v16.15.1
-- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v0.0.11
+- **Node.js:** v16.17.0 / LTS
+- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.1.0
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
