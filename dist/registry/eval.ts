@@ -21,7 +21,12 @@ export default async (client: GMDIExtension, message: Message, args: any[]) => {
     embed.color = 0x7289DA;
 
     if (output.toString().length >= 1024) {
-      const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: output })});
+      const request = await undici.request("https://files.blob-project.com/bin", {
+        headers: {"content-type": "application/json"},
+        method: "POST",
+        body: JSON.stringify({ value: output })
+      });
+
       const resJSON = await request.body.json();
       embed.description = resJSON.url;
     } else {
