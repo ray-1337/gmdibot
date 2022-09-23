@@ -1,9 +1,9 @@
-import {GMDIExtension, Message, EmbedOptions} from "oceanic.js";
+import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel} from "oceanic.js";
 import Config from "../config/config";
 import undici from "undici";
 import nodeUtil from "util";
 
-export default async (client: GMDIExtension, message: Message, args: any[]) => {
+export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>, args: any[]) => {
   if (!Config.botOwner.includes(message.author.id)) {
     return client.rest.channels.createMessage(message.channel.id, {content: `Only the developer (${Config.botOwner.join(", ")}) can access this.`});
   };
