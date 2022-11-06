@@ -3,6 +3,8 @@ import { GMDIExtension, Message, AnyGuildTextChannel } from "oceanic.js";
 let temp: Record<string, true> = {};
 
 export default async (_: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
+  return;
+  
   if (!message || message.author.bot || !message?.embeds?.length || temp[message.id]) return;
 
   const timestamp = Date.now() - new Date(message.createdAt).getTime();
