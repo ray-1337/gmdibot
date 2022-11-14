@@ -9,16 +9,16 @@
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
-    "@types/jest": "^29.2.0",
+    "@types/jest": "^29.2.3",
     "@types/mime-db": "^1.43.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.11.3",
+    "@types/node": "^18.11.9",
     "@types/node-schedule": "^2.1.0",
     "@types/string-similarity": "^4.0.0",
     "asdfjkl": "^0.0.6",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
-    "jest": "^29.2.1",
+    "jest": "^29.3.1",
     "jsoning": "^0.13.23",
     "mime-db": "^1.52.0",
     "ms": "^2.1.3",
@@ -33,13 +33,13 @@
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "4.7.4",
-    "undici": "^5.11.0"
+    "undici": "^5.12.0"
   },
   "dependencies": {
     "common-tags": "^1.8.2",
     "node-cache": "^5.1.2",
-    "oceanic.js": "^1.2.1",
-    "sequelize": "^6.25.3"
+    "oceanic.js": "^1.3.0",
+    "sequelize": "^6.25.5"
   },
   "packageManager": "yarn@3.2.1",
   "author": {
@@ -71,6 +71,6 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.1"
   }
 }
