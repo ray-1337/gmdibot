@@ -1,5 +1,5 @@
 import {GMDIExtension, Constants} from "oceanic.js";
-// import PrayerTiming from "../registry/PrayerTiming";
+import redis from "../Cache";
 
 // Moderation Registry
 import removalChannelCooldown from "../registry/removalChannelCooldown";
@@ -14,6 +14,14 @@ export default async (client: GMDIExtension) => {
 
   removalChannelCooldown(client);
 
-  // prayer reminder
-  // PrayerTiming(client);
+  // cache (redis) startup
+  try {
+    await redis?.ping();
+  } catch {
+    try {
+      await redis.connect();
+    } catch (error) {
+      return console.error(error);
+    };
+  };
 };
