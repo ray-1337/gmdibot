@@ -1,8 +1,9 @@
 import Express, {json as parseJSON} from "express";
-import fs from "fs";
+import {existsSync} from "fs";
 import redis from "../Cache";
 import helmet from "helmet";
 import {subKey as gmdiBmkgSubKey} from "../registry/bmkgNotification";
+import {join} from "node:path";
 
 const app = Express();
 
@@ -15,12 +16,14 @@ app.get('/', (_, res) => {
 });
 
 app.get('/:filename', (req, res) => {
-  if (!req.params?.filename || !fs.existsSync(`../gmdi-content-logging/${req.params.filename}`)) {
+  const filePath = join(process.cwd(), "..", "gmdi-content-logging", req.params.filename);
+
+  if (!req.params?.filename || !existsSync(filePath)) {
     res.status(404);
     return res.send("unknown content");
   };
 
-  return res.sendFile(`../gmdi-content-logging/${req.params.filename}`);
+  return res.sendFile(filePath);
 });
 
 app.get('/favicon.ico', (_, res) => {
