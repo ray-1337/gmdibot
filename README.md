@@ -15,4 +15,4 @@ Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://n
 - And, start it. Type `yarn start`
 
 ## LICENSE
-[MIT](https://github.com/ray-1337/gmdi-private-bot/blob/master/LICENSE)
+[MIT](LICENSE)
