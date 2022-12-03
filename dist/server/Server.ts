@@ -21,6 +21,6 @@ app.get('/favicon.ico', (_, res) => {
   return res.end();
 });
 
-export default app.listen(+process.env.SERVER_PORT!, () => {
+export default app.listen(Number(process.env?.SERVER_PORT || 3000), () => {
   console.log("Server: Ready.");
 });
