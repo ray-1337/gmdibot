@@ -34,7 +34,7 @@ app.get('/favicon.ico', (_, res) => {
 // bmkg notification features
 app
 .use("/twitter/bmkg/", (req, res, next) => {
-  console.log(new Date().getTime(), req.body);
+  // console.log(new Date().getTime(), req.body);
   
   // only support text/plain, cus its just a link
   if (req.headers["content-type"] !== "application/json") {
