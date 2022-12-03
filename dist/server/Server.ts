@@ -1,9 +1,6 @@
 import nanoexpress from 'nanoexpress';
 import fs from "fs";
 
-import dotenv from "dotenv";
-dotenv.config({path: process.cwd() + "/.env"});
-
 const app = nanoexpress();
 
 app.get('/', (_, res) => {
