@@ -1,6 +1,6 @@
 import GMDIBot from "./handler/Client";
 import GMDIEvent from "./handler/Event";
-import GMDIServer from "./server/Server";
+import "./server/Server";
 import dotenv from "dotenv";
 dotenv.config({path: process.cwd() + "/.env"});
 
@@ -12,8 +12,6 @@ const client = new GMDIBot({
   },
 });
 
-Promise.all([
-  GMDIEvent(client),
-  client.connect(),
-  GMDIServer
-]);
+GMDIEvent(client);
+
+client.connect();
