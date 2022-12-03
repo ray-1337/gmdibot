@@ -3,6 +3,7 @@ import { Client as TwitterClient } from "twitter-api-sdk";
 import redis from "../Cache";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
+import ms from "ms";
 
 import dayjs from "dayjs";
 import dayjsTZ from "dayjs/plugin/timezone";
@@ -67,7 +68,12 @@ export default async (client: GMDIExtension) => {
         if (!shortenBMKGData) return console.log("GMDI & BMKG (Exclusive): Data retrieved, but results nothing.");
 
         // old data
-        if (new Date(shortenBMKGData.DateTime).getTime() <= new Date("2022-12-03T14:43:40.463Z").getTime()) return;
+        const earthquakeID = new Date(shortenBMKGData.DateTime).getTime();
+        if (earthquakeID <= new Date("2022-12-03T14:43:40.463Z").getTime()) return;
+
+        const cachedEQKey = "earthquakeAcute";
+        const cachedEarthQuake = await redis.get(cachedEQKey); // prevent replay
+        if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
 
         // post over 5.0 only
         if (Number(shortenBMKGData.Magnitude) < 5.0) return;
@@ -94,12 +100,17 @@ export default async (client: GMDIExtension) => {
           .addField("Depth", shortenBMKGData.Kedalaman, true)
           .addField("Affected Regions", shortenBMKGData.Dirasakan)
           .addField("Time Detected", dayjs(shortenBMKGData.DateTime).tz("Asia/Jakarta").utc(true).toString())
-          .addField("Disclaimer", disclaimer)
+          .addField("Disclaimer", disclaimer);
 
-        return client.rest.channels.createMessage(generalChannel, {
+        await client.rest.channels.createMessage(generalChannel, {
           content: contentTemplate,
           embeds: embed.toJSON(true)
         });
+
+        await redis.set(cachedEQKey, earthquakeID);
+        await redis.expire(cachedEQKey, Math.round(ms("7d") / 1000));
+
+        return;
       } catch (error) {
         return console.error(error);
       };
