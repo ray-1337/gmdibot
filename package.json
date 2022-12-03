@@ -73,6 +73,7 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
+    "helmet": "^6.0.1",
     "tslib": "^2.4.1",
     "twitter-api-sdk": "^1.2.1"
   }
