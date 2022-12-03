@@ -14,13 +14,22 @@ const { tweets } = new TwitterClient(process.env.TWITTER_BEARER!);
 
 export const subKey = "gmdi_bmkg_twitter_warning_subscription";
 
-let subscribed = false;
+let subscribed = false, connected = false;
+
+const sub = redis.duplicate();
 
 export default async (client: GMDIExtension) => {
+  if (!connected) {
+    await sub.connect().then(() => {
+      console.log("GMDI & BMKG: Duplicated Subredis ready.");
+      connected = true;
+    });
+  };
+
   if (subscribed) return;
 
   try {
-    await redis.subscribe(subKey, async (tweetID) => {
+    await sub.subscribe(subKey, async (tweetID) => {
       console.log(`GMDI & BMKG: tweeted on ${tweetID}`);
 
       // no content presented
