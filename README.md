@@ -13,7 +13,7 @@ Database built with [PostgreSQL](https://www.postgresql.org/), stored in [Supaba
 - Create an `.env` file.
 - Rename `.env.example` to `.env`
 - Replace `DISCORD_BOT_TOKEN` value with your Discord Bot token.
-- And, start it. Type `ts-node --transpile-only ./index.ts`
+- And, start it. Type `yarn start`
 
 ## LICENSE
 [MIT](https://github.com/ray-1337/gmdi-private-bot/blob/master/LICENSE)
