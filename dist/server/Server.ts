@@ -1,7 +1,7 @@
-import nanoexpress from 'nanoexpress';
+import Express from "express";
 import fs from "fs";
 
-const app = nanoexpress();
+const app = Express();
 
 app.get('/', (_, res) => {
   return res.send("ngapain lu liat-liat. kepo ya.");
@@ -21,4 +21,6 @@ app.get('/favicon.ico', (_, res) => {
   return res.end();
 });
 
-export default app.listen(+process.env.SERVER_PORT!).catch(console.error);
+export default app.listen(+process.env.SERVER_PORT!, () => {
+  console.log("Server: Ready.");
+});
