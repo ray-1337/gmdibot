@@ -19,16 +19,16 @@ let subscribed = false, connected = false;
 const sub = redis.duplicate();
 
 export default async (client: GMDIExtension) => {
-  if (!connected) {
-    await sub.connect().then(() => {
-      console.log("GMDI & BMKG: Duplicated Subredis ready.");
-      connected = true;
-    });
-  };
-
   if (subscribed) return;
 
   try {
+    if (!connected) {
+      await sub.connect().then(() => {
+        console.log("GMDI & BMKG: Duplicated Subredis ready.");
+        connected = true;
+      });
+    };
+    
     await sub.subscribe(subKey, async (tweetID) => {
       console.log(`GMDI & BMKG: tweeted on ${tweetID}`);
 
