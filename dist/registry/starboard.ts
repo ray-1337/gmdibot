@@ -167,7 +167,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
             messageID: embedMsg.id,
             channelID: channelID,
             failIfNotExists: false,
-            guildID: embedMsg.guildID
+            guildID: embedMsg.guildID!
           }
         });
       };
