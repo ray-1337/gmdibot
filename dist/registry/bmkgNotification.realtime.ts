@@ -39,8 +39,9 @@ export default async (client: GMDIExtension) => {
       const earthquakeID = parsedTime.getTime();
       if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
       
-      // at least >= 3.0
-      if (Number(latestEQ.mag._text) < 3.0) {
+      // at least >= {specified}
+      let limitMagnitudeToPost = 3.0;
+      if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
@@ -55,7 +56,7 @@ export default async (client: GMDIExtension) => {
       .setFooter("Powered by InaTEWS", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
       .setTitle("Early Earthquake Alert")
-      .setDescription("Every earthquake with magnitude above >= 3.5 will be posted here.")
+      .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
       
       embed
       .addField("Location (Latitude / Longitude)", `${latestEQ.lintang._text} / ${latestEQ.bujur._text}`)
