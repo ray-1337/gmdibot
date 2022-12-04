@@ -126,7 +126,7 @@ export default async (client: GMDIExtension) => {
   return console.log("GMDI & BMKG (Exclusive): Ready.");
 };
 
-function mercalliIntensityScale(magnitude: number) {
+export function mercalliIntensityScale(magnitude: number) {
   // research
   // https://en.wikipedia.org/wiki/Modified_Mercalli_intensity_scale
   // https://www.bmkg.go.id/gempabumi/skala-mmi.bmkg
