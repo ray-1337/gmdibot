@@ -42,6 +42,7 @@ export default async (client: GMDIExtension) => {
       // at least >= {specified}
       let limitMagnitudeToPost = 3.0;
       if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
+        await redis.set(cachedEQKey, earthquakeID);
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
