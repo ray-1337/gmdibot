@@ -62,7 +62,7 @@ export default async (client: GMDIExtension) => {
       embed
       .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${latestEQ.lintang._text} / ${latestEQ.bujur._text})`)
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
-      .addField("Depth", latestEQ.dalam._text, true)
+      .addField("Depth", `${latestEQ.dalam._text} km`, true)
       .addField("Time Detected", localizedTime.toString())
       .addField("Disclaimer", disclaimer)
 
