@@ -64,7 +64,8 @@ export default async (client: GMDIExtension) => {
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
       .addField("Depth", latestEQ.dalam._text, true)
       .addField("Time Detected", localizedTime.toString())
-      .addField("Disclaimer", disclaimer);
+      .addField("Disclaimer", disclaimer)
+      .addField("Current Event", `[Click here for more information about the event](https://inatews.bmkg.go.id/web/detail2?name=${latestEQ.eventid._text})`)
 
       await client.rest.channels.createMessage(generalChannel, {
         content: contentTemplate,
