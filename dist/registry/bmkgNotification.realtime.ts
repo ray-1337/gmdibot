@@ -60,7 +60,7 @@ export default async (client: GMDIExtension) => {
       .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
       
       embed
-      .addField("Location (Latitude / Longitude)", `${latestEQ.lintang._text} / ${latestEQ.bujur._text}`)
+      .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${latestEQ.lintang._text} / ${latestEQ.bujur._text})`)
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
       .addField("Depth", latestEQ.dalam._text, true)
       .addField("Time Detected", localizedTime.toString())

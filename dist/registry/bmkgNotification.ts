@@ -95,8 +95,7 @@ export default async (client: GMDIExtension) => {
 
         // embed fields
         embed
-          .addField("Current Region", shortenBMKGData.Wilayah)
-          .addField("Location (Latitude / Longitude)", `${shortenBMKGData.Lintang} / ${shortenBMKGData.Bujur}`)
+          .addField("Location (Latitude / Longitude)", `${shortenBMKGData.Wilayah} (${shortenBMKGData.Lintang} / ${shortenBMKGData.Bujur})`)
           .addField("Magnitude / Mercalli Intensity Scale", `${shortenBMKGData.Magnitude} / ${mercalliIntensityScale(Number(shortenBMKGData.Magnitude))}`, true)
           .addField("Depth", shortenBMKGData.Kedalaman, true)
           .addField("Affected", shortenBMKGData.Dirasakan)
