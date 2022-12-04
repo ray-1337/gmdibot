@@ -39,8 +39,8 @@ export default async (client: GMDIExtension) => {
       const earthquakeID = parsedTime.getTime();
       if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
       
-      // at least >= 3.5
-      if (Number(latestEQ.mag._text) < 3.5) {
+      // at least >= 3.0
+      if (Number(latestEQ.mag._text) < 3.0) {
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
