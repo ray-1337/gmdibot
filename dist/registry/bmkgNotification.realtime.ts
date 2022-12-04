@@ -55,7 +55,7 @@ export default async (client: GMDIExtension) => {
       .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
       .setFooter("Powered by InaTEWS", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
-      .setTitle("Early Earthquake Alert")
+      .setTitle(`Early Earthquake Alert for: ${latestEQ.area._text}`)
       .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
       
       embed

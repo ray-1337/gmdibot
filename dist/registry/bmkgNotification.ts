@@ -90,15 +90,16 @@ export default async (client: GMDIExtension) => {
           .setImage(BMKGendpoint + shortenBMKGData.Shakemap)
           .setFooter("Powered by data.bmkg.go.id", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
           .setTimestamp(new Date())
-          .setTitle("Earthquake Warning")
+          .setTitle(`Earthquake Warning`)
           .setDescription("An earthquake magnitude scale with >= 5.0 will be alerted.")
 
         // embed fields
         embed
+          .addField("Current Region", shortenBMKGData.Wilayah)
           .addField("Location (Latitude / Longitude)", `${shortenBMKGData.Lintang} / ${shortenBMKGData.Bujur}`)
           .addField("Magnitude / Mercalli Intensity Scale", `${shortenBMKGData.Magnitude} / ${mercalliIntensityScale(Number(shortenBMKGData.Magnitude))}`, true)
           .addField("Depth", shortenBMKGData.Kedalaman, true)
-          .addField("Affected Regions", shortenBMKGData.Dirasakan)
+          .addField("Affected", shortenBMKGData.Dirasakan)
           .addField("Time Detected", dayjs(shortenBMKGData.DateTime).tz("Asia/Jakarta").utc(true).toString())
           .addField("Disclaimer", disclaimer);
 
