@@ -86,7 +86,7 @@ export default async (client: GMDIExtension) => {
 
         const embed = new RichEmbed()
           .setColor(0xf50925)
-          .setAuthor("Badan Meteorologi, Klimatologi, dan Geofisika", bmkgLogo, "https://warning.bmkg.go.id")
+          .setAuthor("Badan Meteorologi, Klimatologi, dan Geofisika (Official Platform)", bmkgLogo, "https://warning.bmkg.go.id")
           .setImage(BMKGendpoint + shortenBMKGData.Shakemap)
           .setFooter("Powered by data.bmkg.go.id", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
           .setTimestamp(new Date())
