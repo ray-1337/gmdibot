@@ -46,6 +46,11 @@ export default async (client: GMDIExtension) => {
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
+      if (!latestEQ.area._text.toLowerCase().match(/(indonesia)/gim)) {
+        await redis.set(cachedEQKey, earthquakeID);
+        return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not indonesia; ${latestEQ.area._text}`);
+      };
+
       // host
       const generalChannel = "190826809896468480";
       const contentTemplate = "Stay safe, kawan-kawan. ⚠";
