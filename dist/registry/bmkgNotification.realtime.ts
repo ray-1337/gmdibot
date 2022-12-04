@@ -1,6 +1,6 @@
 // old-fashioned checking state of BMKG notification (alternative)
 // retrieved via INDONESIA TSUNAMI EARLY WARNING SYSTEM
-import { GMDIExtension, Constants } from "oceanic.js";
+import { GMDIExtension, Constants, File } from "oceanic.js";
 import redis from "../Cache";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
@@ -54,21 +54,41 @@ export default async (client: GMDIExtension) => {
       const embed = new RichEmbed()
       .setColor(0xf56009)
       .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
-      .setFooter("Powered by InaTEWS", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
+      .setFooter("Powered by InaTEWS, Map preview provided by Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
       .setTitle(`Early Earthquake Alert for: ${latestEQ.area._text}`)
       .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
       
+      const lintang = latestEQ.lintang._text;
+      const bujur = latestEQ.bujur._text;
       embed
-      .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${latestEQ.lintang._text} / ${latestEQ.bujur._text})`)
+      .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${lintang} / ${bujur})`)
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
       .addField("Depth", `${latestEQ.dalam._text} km`, true)
       .addField("Time Detected", localizedTime.toString())
-      .addField("Disclaimer", disclaimer)
+      .addField("Disclaimer", disclaimer);
+
+      // mapbox
+      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${lintang},${bujur})/${lintang},${bujur},7,0/1000x1000?access_token=${process.env.MAPBOX_TOKEN}`;
+      const mapboxFetch = await request(mapboxEndpoint, {method: "GET"});
+
+      let files: File[] = [];
+
+      if (mapboxFetch.statusCode >= 400) {
+        console.error(await mapboxFetch.body.text());
+        console.warn(`GMDI & BMKG (realtime alternative): Failed to fetch mapbox`);
+      } else {
+        embed.setImage(`attachment://gmdi_attitude_eq_${earthquakeID}.png`);
+        files.push({
+          name: `gmdi_attitude_eq_${earthquakeID}.png`,
+          contents: Buffer.from(await mapboxFetch.body.arrayBuffer())
+        });
+      };
 
       await client.rest.channels.createMessage(generalChannel, {
         content: contentTemplate,
         embeds: embed.toJSON(true),
+        files,
         components: [{
           type: Constants.ComponentTypes.ACTION_ROW,
           components: [{
