@@ -1,6 +1,6 @@
 // old-fashioned checking state of BMKG notification (alternative)
 // retrieved via INDONESIA TSUNAMI EARLY WARNING SYSTEM
-import { GMDIExtension } from "oceanic.js";
+import { GMDIExtension, Constants } from "oceanic.js";
 import redis from "../Cache";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
@@ -65,11 +65,20 @@ export default async (client: GMDIExtension) => {
       .addField("Depth", latestEQ.dalam._text, true)
       .addField("Time Detected", localizedTime.toString())
       .addField("Disclaimer", disclaimer)
-      .addField("Current Event", `[Click here for more information about the event](https://inatews.bmkg.go.id/web/detail2?name=${latestEQ.eventid._text})`)
 
       await client.rest.channels.createMessage(generalChannel, {
         content: contentTemplate,
-        embeds: embed.toJSON(true)
+        embeds: embed.toJSON(true),
+        components: [{
+          type: Constants.ComponentTypes.ACTION_ROW,
+          components: [{
+            type: Constants.ComponentTypes.BUTTON,
+            style: Constants.ButtonStyles.LINK,
+            emoji: {id: null, name: "📑"},
+            label: "More information",
+            url: `https://inatews.bmkg.go.id/web/detail2?name=${latestEQ.eventid._text}`
+          }]
+        }]
       });
 
       await redis.set(cachedEQKey, earthquakeID);
