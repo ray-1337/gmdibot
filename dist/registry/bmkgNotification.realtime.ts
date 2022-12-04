@@ -40,7 +40,9 @@ export default async (client: GMDIExtension) => {
       if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
       
       // at least >= 3.5
-      if (Number(latestEQ.mag._text) < 3.5) return;
+      if (Number(latestEQ.mag._text) < 3.5) {
+        return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
+      };
 
       // host
       const generalChannel = "190826809896468480";
