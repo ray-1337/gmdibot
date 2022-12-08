@@ -114,7 +114,7 @@ export default async (client: GMDIExtension) => {
     } catch (error) {
       return console.error(error);
     };
-  }, ms("2m"), ms("5m"));
+  }, ms("1m"), ms("5m"));
 
   __ = true;
   console.log(`GMDI & BMKG (realtime alternative): Ready.`);
