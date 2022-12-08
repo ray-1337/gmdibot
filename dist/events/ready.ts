@@ -25,7 +25,7 @@ export default async (client: GMDIExtension) => {
     try {
       await redis.connect();
 
-      await bmkgNotification(client);
+      // await bmkgNotification(client);
 
       await bmkgNotificationRealtime(client);
     } catch (error) {
