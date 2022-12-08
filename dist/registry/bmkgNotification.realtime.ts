@@ -33,10 +33,12 @@ export default async (client: GMDIExtension) => {
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
       const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta").utc(true);
+
+      if (parsedTime.getTime() <= 1670457056000) return;
       
       const cachedEQKey = "earthquakeAcute_realtimeINA";
       const cachedEarthQuake = await redis.get(cachedEQKey); // prevent replay
-      const earthquakeID = parsedTime.getTime();
+      const earthquakeID = latestEQ.eventid._text; // parsedTime.getTime();
       if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
       
       // at least >= {specified}
@@ -106,9 +108,9 @@ export default async (client: GMDIExtension) => {
         }]
       });
 
-      await redis.set(cachedEQKey, earthquakeID);
+      await redis.set(cachedEQKey, latestEQ.eventid._text);
 
-      console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID}`);
+      console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${latestEQ.eventid._text}`);
 
       return;
     } catch (error) {
