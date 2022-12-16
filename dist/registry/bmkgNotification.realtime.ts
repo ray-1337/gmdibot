@@ -76,7 +76,7 @@ export default async (client: GMDIExtension) => {
       .addField("Disclaimer", disclaimer);
 
       // mapbox
-      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${bujur},${lintang})/${bujur},${lintang},7,0/1000x1000?access_token=${process.env.MAPBOX_TOKEN}`;
+      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${bujur},${lintang})/${bujur},${lintang},7,0/1280x540?access_token=${process.env.MAPBOX_TOKEN}`;
       const mapboxFetch = await request(mapboxEndpoint, {method: "GET"});
 
       let files: File[] = [];
