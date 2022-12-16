@@ -56,7 +56,7 @@ export default async (client: GMDIExtension) => {
       // host
       const generalChannel = "190826809896468480";
       const contentTemplate = "Stay safe, kawan-kawan. ⚠";
-      const disclaimer = "Dalam beberapa menit pertama setelah gempa, parameter gempa dapat berubah dan tidak akurat, kecuali dianalisis ulang oleh seismologist.";
+      const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
       const embed = new RichEmbed()
       .setColor(0xf56009)
