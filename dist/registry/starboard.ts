@@ -1,7 +1,8 @@
-import {Constants, ActionRowBase, GMDIExtension, Message, AnyGuildTextChannel, PartialEmoji, Member, Uncached, User, EmbedOptions, File, MessageActionRow} from "oceanic.js";
+import {Constants, GMDIExtension, Message, AnyGuildTextChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
 import * as Util from "../handler/Util";
+import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
 export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
@@ -64,26 +65,31 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
         client.database.set("postedStarboard", [message.id]);
       };
 
-      let embed: EmbedOptions = {
-        color: 0xffac33,
-        timestamp: new Date(message.timestamp).toISOString(),
-        description: Util.truncate(message.content, 4096),
-        footer: {
-          text: ""
-        },
-        image: {
-          url: ""
-        },
-        author: {
-          name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-          iconURL: message.author.avatarURL("png", 16)
-        }
-      };
+      // let embed: EmbedOptions = {
+      //   color: 0xffac33,
+      //   timestamp: new Date(message.timestamp).toISOString(),
+      //   description: Util.truncate(message.content, 4096),
+      //   footer: {
+      //     text: ""
+      //   },
+      //   image: {
+      //     url: ""
+      //   },
+      //   author: {
+      //     name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+      //     iconURL: message.author.avatarURL("png", 16)
+      //   }
+      // };
+
+      let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
+      .setDescription(Util.truncate(message.content, 1024))
+      .setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL("png", 16))
 
       if (starterQuery) {
         let starterUser = client.users.get(starterQuery) || await client.rest.users.get(starterQuery).catch(() => { });
         if (starterUser) {
-          embed = {...embed, ...{footer: {text: `Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`}}};
+          // embed = {...embed, ...{footer: {text: `Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`}}};
+          embed.setFooter(`Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`)
         };
       };
 
@@ -105,7 +111,8 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
         // attachments
         if (message.attachments.size == 1) {
           if (message.attachments.toArray()[0].contentType?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
-            embed = {...embed, ...{image: {url: normalizeURL(message.attachments.toArray()[0].url)}}};
+            // embed = {...embed, ...{image: {url: normalizeURL(message.attachments.toArray()[0].url)}}};
+            embed.setImage(normalizeURL(message.attachments.toArray()[0].url));
           }
 
           else if (message.attachments.toArray()[0].contentType?.match(/^(video)/gi)) {
@@ -126,7 +133,8 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
         // embeds
         if (message.embeds.length == 1) {
           if (message.embeds[0].type == "image" && message.embeds[0].url) {
-            embed = {...embed, ...{image: {url: normalizeURL(message.attachments.toArray()[0].url)}}};
+            // embed = {...embed, ...{image: {url: normalizeURL(message.attachments.toArray()[0].url)}}};
+            embed.setImage(normalizeURL(message.attachments.toArray()[0].url));
           }
 
           else if (message.embeds[0].type == "video" && message.embeds[0].url) {
@@ -154,7 +162,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
       }];
 
       const embedMsg = await client.rest.channels.createMessage(channelID, {
-        embeds: [embed],
+        embeds: embed.toJSON(true),
         components: embeddings.length ? undefined : redirectButton,
         files: file ? [file] : undefined
       });

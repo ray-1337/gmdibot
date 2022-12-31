@@ -1,6 +1,7 @@
-import { Member, GMDIExtension, JSONMember, EmbedOptions } from "oceanic.js";
+import { Member, GMDIExtension, JSONMember } from "oceanic.js";
 import config from "../config/config";
 import {stripIndents} from "common-tags";
+import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
   if (member.guild.id !== config.guildID || member.bot) return;
@@ -16,16 +17,20 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
       Semoga betah, dan jangan lupa baca ${client.getChannel("274351350656139265")?.mention || "<#274351350656139265>"} sebelum ngobrol.`
   
       // Embed
-      let embed: EmbedOptions = {
-        title: `Halo, ${member.user.username}#${member.user.discriminator} 👋`,
-        description: returnMemberMessage,
-        color: 0x24C86E,
-        timestamp: new Date().toISOString()
-      };
+      // let embed: EmbedOptions = {
+      //   title: `Halo, ${member.user.username}#${member.user.discriminator} 👋`,
+      //   description: returnMemberMessage,
+      //   color: 0x24C86E,
+      //   timestamp: new Date().toISOString()
+      // };
+
+      const embed = new RichEmbed().setTimestamp(new Date()).setColor(0x24C86E)
+      .setTitle(`Halo, ${member.user.username}#${member.user.discriminator} 👋`)
+      .setDescription(returnMemberMessage)
   
       await client.rest.guilds.addMemberRole(member.guild.id, member.id, "312868594549653514");
       
-      return client.rest.channels.createMessage(config.channel.general, {content: member.mention, embeds: [embed]});
+      return client.rest.channels.createMessage(config.channel.general, {content: member.mention, embeds: embed.toJSON(true)});
     };
   } catch (error) {
     return console.error(error);
