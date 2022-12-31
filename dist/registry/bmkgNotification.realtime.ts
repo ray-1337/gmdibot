@@ -32,13 +32,13 @@ export default async (client: GMDIExtension) => {
 
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
-      // const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta", true)// .utc(true);
+      const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta", true);
 
-      if (parsedTime.getTime() <= 1670457056000) return;
+      if (localizedTime.valueOf() <= 1670457056000) return;
       
       const cachedEQKey = "earthquakeAcute_realtimeINA";
       const cachedEarthQuake = await redis.get(cachedEQKey); // prevent replay
-      const earthquakeID = latestEQ.eventid._text; // parsedTime.getTime();
+      const earthquakeID = latestEQ.eventid._text;
       if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
       
       // at least >= {specified}
@@ -72,7 +72,7 @@ export default async (client: GMDIExtension) => {
       .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${lintang} / ${bujur})`)
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
       .addField("Depth", `${latestEQ.dalam._text} km`, true)
-      .addField("Time Detected", `<t:${Math.round(parsedTime.valueOf() / 1000)}>`)
+      .addField("Time Detected", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`)
       .addField("Disclaimer", disclaimer);
 
       // mapbox
