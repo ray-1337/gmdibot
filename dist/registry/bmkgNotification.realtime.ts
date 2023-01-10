@@ -32,7 +32,7 @@ export default async (client: GMDIExtension) => {
 
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
-      const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta", true);
+      const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta");
 
       if (localizedTime.valueOf() <= 1670457056000) return;
       
@@ -54,7 +54,7 @@ export default async (client: GMDIExtension) => {
       };
 
       // host
-      const generalChannel = "190826809896468480";
+      const generalChannel = "1062203494691520522";
       const contentTemplate = "Stay safe, kawan-kawan. ⚠";
       const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
