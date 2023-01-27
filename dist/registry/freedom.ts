@@ -33,7 +33,8 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     // delete the message
     async function deleteContent() {
       try {
-        console.log("Deleted ", message.content)
+        console.log(`Deleted ${message.content} on ${message.channelID}`);
+        
         await client.rest.channels.deleteMessage(message.channelID, message.id);
 
         // add punishment count
