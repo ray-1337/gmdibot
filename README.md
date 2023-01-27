@@ -4,7 +4,8 @@ Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://n
 
 ## Purposes
 One of our reckless server moderator is often being overreactive. <br>
-This repo branch is intended to make the Discord server even more strict, therefore creating an uncomfortable environment for the server members.
+This repo branch is intended to make the Discord server even more strict, therefore creating an uncomfortable environment for the server members. <br>
+Well, if you all really care about kids on Discord, who cares? It's internet, it's their choice.
 
 ## Current
 - **TypeScript:** v4.9.x
