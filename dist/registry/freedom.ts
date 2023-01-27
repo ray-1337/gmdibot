@@ -88,13 +88,13 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     };
 
     // replace bypass
-    message.content = message.content.toLowerCase();
-    if (message.content.match(/[^\d\w]/gim)) {
-      message.content = replaceSpecial(message.content);
+    let content = message.content.toLowerCase();
+    if (content.match(/[^\d\w]/gim)) {
+      content = replaceSpecial(content);
     };
 
     // replace numbers if bypass
-    message.content = message.content
+    content = content
     .replace(/[1]/gim, "i").replace(/[\+]/gim, "t")
     .replace(/[2]/gim, "z")
     .replace(/[3]/gim, "e")
@@ -107,12 +107,12 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     .replace(/[0]/gim, "o");
 
     // check by whitespace
-    if (message.content.split(/\s/gim).find(val => cache.array.includes(val))) {
+    if (content.split(/\s/gim).find(val => cache.array.includes(val))) {
       return deleteContent();
     };
 
     // check by regex (removing whitespace and check by keyword)
-    if (message.content.replace(/\s/gim, "").match(cache.regex)) {
+    if (content.replace(/\s/gim, "").match(cache.regex)) {
       return deleteContent();
     };
   } catch (error) {
