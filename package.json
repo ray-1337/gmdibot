@@ -58,6 +58,7 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
+    "replace-special-characters": "^1.2.7",
     "tslib": "^2.5.0"
   }
 }
