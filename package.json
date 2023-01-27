@@ -14,12 +14,12 @@
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
     "ms": "^2.1.3",
-    "node-schedule": "^2.1.0",
+    "node-schedule": "^2.1.1",
     "string-similarity": "^4.0.4",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "4.7.4",
-    "undici": "^5.13.0"
+    "undici": "^5.16.0"
   },
   "dependencies": {
     "@oceanicjs/builders": "^1.1.7",
@@ -58,6 +58,6 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
-    "tslib": "^2.4.1"
+    "tslib": "^2.5.0"
   }
 }
