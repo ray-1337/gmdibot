@@ -22,7 +22,7 @@
     "allowUnusedLabels": false,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
-    "types": ["@types/jest"],
+    "types": [],
     "typeRoots": ["./dist/typings/"],
     "declaration": true,
     "outDir": "./build"
