@@ -58,6 +58,9 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
             allowedMentions: { users: true, repliedUser: true }
           });
 
+          // reset punishment counting
+          cachedPunishment.set(message.author.id, 0);
+
           return;
         };
 
