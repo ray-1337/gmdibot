@@ -4,10 +4,17 @@ vault.config();
 
 import GMDIBot from "./handler/Client";
 import GMDIEvent from "./handler/Event";
-import "./server/Server";
+
+let auth = "";
+
+if (process.env.npm_lifecycle_event === "start") {
+  auth = process.env.DISCORD_BOT_TOKEN!
+} else if (!process.env.npm_lifecycle_event || process.env.npm_lifecycle_event === "dev") {
+  auth = process.env.DEV_DISCORD_TOKEN!
+};
 
 const client = new GMDIBot({
-  auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+  auth: `Bot ${auth}`,
   gateway: {
     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "MESSAGE_CONTENT"],
     guildCreateTimeout: 30000
