@@ -113,9 +113,9 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     };
 
     // check by regex (removing whitespace and check by keyword)
-    if (content.replace(/\s/gim, "").match(cache.regex)) {
-      return deleteContent();
-    };
+    // if (content.replace(/\s/gim, "").match(cache.regex)) {
+    //   return deleteContent();
+    // };
   } catch (error) {
     console.error(error);
     return;
