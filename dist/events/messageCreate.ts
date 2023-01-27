@@ -7,12 +7,17 @@ import forgottenMemberRole from "../registry/forgottenMemberRole";
 // command
 import EvalFactory from "../registry/eval";
 
+// freedom
+import Freedom from "../registry/freedom";
+
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
   if (
     message.author.bot ||
     message.channel instanceof PrivateChannel ||
     !(message.channel instanceof GuildChannel)
   ) return;
+
+  Freedom(client, message)
 
   forgottenMemberRole(message);
 
