@@ -1,18 +1,15 @@
-## Side-Project (GMDI Discord Bot, Oceanic.js Rebase)
-An advanced private Discord Bot, mostly for moderation purposes. <br>
+## Side-Project (GMDI Discord Bot, Freedom Rebase)
+An advanced private Discord Bot, made for Geometry Dash Indonesia.
 Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org).
 
-## Current
-- **TypeScript:** v4.7.4
-- **Node.js:** v18.12.1 / LTS
-- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.3.1
+## Purposes
+One of our reckless server moderator is often being overreactive. <br>
+This repo branch is intended to make the Discord server even more strict, therefore creating an uncomfortable environment for the server members.
 
-## How To Setup
-- Type `npm i` or `npm install`, basically the same.
-- Create an `.env` file.
-- Rename `.env.example` to `.env`
-- Replace `DISCORD_BOT_TOKEN` value with your Discord Bot token.
-- And, start it. Type `yarn start`
+## Current
+- **TypeScript:** v4.9.x
+- **Node.js:** v18.13.x / LTS
+- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.4.x
 
 ## LICENSE
-[MIT](LICENSE)
+[WTFPL](http://www.wtfpl.net/)
