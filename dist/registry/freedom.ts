@@ -78,7 +78,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     };
 
     // requirements
-    if (message.author.bot || message.content.length < 4) return;
+    if (message.author.bot || message.content.length < 4 || message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("ADMINISTRATOR")) return;
 
     // test on dev server first
     if (process.env.npm_lifecycle_event === "dev" && message.guildID !== "861938470841745459") return;
