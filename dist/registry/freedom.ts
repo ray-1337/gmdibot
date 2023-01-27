@@ -65,7 +65,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
           content: `<@!${message.author.id}> ${lame[Math.floor(Math.random() * lame.length)]}`,
           allowedMentions: { users: true, repliedUser: true }
         })
-        .then(x => setTimeout(() => x.delete(), getRandomInt(ms("10s"), ms("60s"))));
+        .then(x => setTimeout(() => x.delete(), getRandomInt(ms("5s"), ms("25s"))));
 
         return;
       } catch (error) {
