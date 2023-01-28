@@ -38,7 +38,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
         await client.rest.channels.deleteMessage(message.channelID, message.id);
 
         // add punishment count
-        if (!message.member.permissions.has("MANAGE_MESSAGES")) {
+        if (!message.member.permissions.has("MANAGE_MESSAGES") || message.author.id !== "331265944363991042") {
           cachedPunishment.set(
             message.author.id,
             (cachedPunishment?.get(message.author.id) ?? 0) + 1
