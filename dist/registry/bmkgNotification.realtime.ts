@@ -55,8 +55,8 @@ export default async (client: GMDIExtension) => {
 
       // host
       const generalChannel = "1062203494691520522";
-      const contentTemplate = "Stay safe, kawan-kawan. ⚠";
-      const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
+      // const contentTemplate = "Stay safe, kawan-kawan. ⚠";
+      // const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
       const embed = new RichEmbed()
       .setColor(0xf56009)
@@ -73,10 +73,10 @@ export default async (client: GMDIExtension) => {
       .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
       .addField("Depth", `${latestEQ.dalam._text} km`, true)
       .addField("Time Detected", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`)
-      .addField("Disclaimer", disclaimer);
+      // .addField("Disclaimer", disclaimer);
 
       // mapbox
-      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${bujur},${lintang})/${bujur},${lintang},7,0/1280x540?access_token=${process.env.MAPBOX_TOKEN}`;
+      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${bujur},${lintang})/${bujur},${lintang},6,0/1280x800?access_token=${process.env.MAPBOX_TOKEN}`;
       const mapboxFetch = await request(mapboxEndpoint, {method: "GET"});
 
       let files: File[] = [];
@@ -93,7 +93,7 @@ export default async (client: GMDIExtension) => {
       };
 
       await client.rest.channels.createMessage(generalChannel, {
-        content: contentTemplate,
+        // content: contentTemplate,
         embeds: embed.toJSON(true),
         files,
         components: [{
