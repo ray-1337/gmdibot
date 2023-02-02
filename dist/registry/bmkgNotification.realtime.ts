@@ -32,7 +32,7 @@ export default async (client: GMDIExtension) => {
 
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
-      const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta");
+      const localizedTime = dayjs(parsedTime).tz("Asia/Jakarta").add(60, "minutes");
 
       if (localizedTime.valueOf() <= 1670457056000) return;
       
