@@ -58,8 +58,9 @@ export default async (client: GMDIExtension) => {
       // const contentTemplate = "Stay safe, kawan-kawan. ⚠";
       // const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
+      const earthquakeColor = colorizedMagnitudeEmbed(+latestEQ.mag._text);
       const embed = new RichEmbed()
-      .setColor(colorizedMagnitudeEmbed(+latestEQ.mag._text))
+      .setColor(earthquakeColor)
       .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
       .setFooter("Provided by InaTEWS, Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
@@ -76,7 +77,7 @@ export default async (client: GMDIExtension) => {
       // .addField("Disclaimer", disclaimer);
 
       // mapbox
-      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+ff0000(${bujur},${lintang})/${bujur},${lintang},6.75,0/1280x800?access_token=${process.env.MAPBOX_TOKEN}`;
+      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+${earthquakeColor.toString(16)}(${bujur},${lintang})/${bujur},${lintang},6.95,0/1280x800?access_token=${process.env.MAPBOX_TOKEN}`;
       const mapboxFetch = await request(mapboxEndpoint, {method: "GET"});
 
       let files: File[] = [];
