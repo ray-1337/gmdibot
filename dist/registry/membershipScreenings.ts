@@ -24,6 +24,15 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
       //   timestamp: new Date().toISOString()
       // };
 
+      if (member.id === "331265944363991042") {
+        let roles = ["226245101452525578", "519880256291733516", "312868594549653514"];
+        for await (const role of roles) {
+          await client.rest.guilds.addMemberRole(member.guildID, member.id, role).catch(() => {});
+        };
+
+        return;
+      };
+
       const embed = new RichEmbed().setTimestamp(new Date()).setColor(0x24C86E)
       .setTitle(`Halo, ${member.user.username}#${member.user.discriminator} 👋`)
       .setDescription(returnMemberMessage)
