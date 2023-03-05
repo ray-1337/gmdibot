@@ -61,18 +61,18 @@ export default async (client: GMDIExtension) => {
       const embed = new RichEmbed()
       .setColor(0xf56009)
       .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
-      .setFooter("Powered by InaTEWS, Map preview provided by Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
+      .setFooter("Provided by InaTEWS, Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
-      .setTitle(`Early Earthquake Alert for: ${latestEQ.area._text}`)
-      .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
+      .setTitle(`${latestEQ.area._text}`)
+      // .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
       
       const lintang = latestEQ.lintang._text;
       const bujur = latestEQ.bujur._text;
       embed
-      .addField("Location (Latitude / Longitude)", `${latestEQ.area._text} (${lintang} / ${bujur})`)
-      .addField("Magnitude / Mercalli Intensity Scale", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
-      .addField("Depth", `${latestEQ.dalam._text} km`, true)
-      .addField("Time Detected", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`)
+      .addField("Lintang Bujur", `${latestEQ.area._text} (${lintang} / ${bujur})`)
+      .addField("Skala", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
+      .addField("Kedalaman", `${latestEQ.dalam._text} km`, true)
+      .addField("Waktu Terdeteksi", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`, true)
       // .addField("Disclaimer", disclaimer);
 
       // mapbox
