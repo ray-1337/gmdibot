@@ -70,7 +70,7 @@ export default async (client: GMDIExtension) => {
       const bujur = latestEQ.bujur._text;
       embed
       .addField("Lintang Bujur", `${latestEQ.area._text} (${lintang} / ${bujur})`)
-      .addField("Skala", `${latestEQ.mag._text} / ${mercalliIntensityScale(Number(latestEQ.mag._text))}`, true)
+      .addField("Skala", `${latestEQ.mag._text} / ${mercalliIntensityScale(+latestEQ.mag._text)}`, true)
       .addField("Kedalaman", `${latestEQ.dalam._text} km`, true)
       .addField("Waktu Terdeteksi", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`, true)
       // .addField("Disclaimer", disclaimer);
