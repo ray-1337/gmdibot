@@ -59,7 +59,7 @@ export default async (client: GMDIExtension) => {
       // const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
       const embed = new RichEmbed()
-      .setColor(0xf56009)
+      .setColor(colorizedMagnitudeEmbed(+latestEQ.mag._text))
       .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
       .setFooter("Provided by InaTEWS, Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
       .setTimestamp(new Date())
@@ -170,5 +170,19 @@ function randomInterval(intervalFunction, minDelay: number, maxDelay: number) {
     clear(): void {
       clearTimeout(timeout);
     },
+  };
+};
+
+// improved from https://earthquake.usgs.gov/education/shakingsimulations/colors.php
+function colorizedMagnitudeEmbed(magnitude: number) {
+  // limit 4
+  switch (true) {
+    case magnitude >= 4 && magnitude <= 4.9: return 0xf69420;
+    case magnitude >= 5 && magnitude <= 5.9: return 0xf66f2a;
+    case magnitude >= 6 && magnitude <= 6.9: return 0xef452b;
+    case magnitude >= 7 && magnitude <= 7.9: return 0xeb1c28;
+    case magnitude >= 8 && magnitude <= 8.9: return 0xd6186e;
+    case magnitude >= 9: return 0xa11253;
+    default: return 0x121112;
   };
 };
