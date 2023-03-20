@@ -5,11 +5,11 @@ import nodeUtil from "util";
 
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>, args: any[]) => {
   if (!Config.botOwner.includes(message.author.id)) {
-    return client.rest.channels.createMessage(message.channel.id, {content: `Only the developer (${Config.botOwner.join(", ")}) can access this.`});
+    return;
   };
 
   if (args.length < 1) {
-    return client.rest.channels.createMessage(message.channel.id, {content: "Some content were missing. Please try again."});
+    return;
   };
 
   const embed: EmbedOptions = {};
