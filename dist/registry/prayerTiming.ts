@@ -1,4 +1,5 @@
-import Eris from "eris";
+import { GMDIExtension } from "oceanic.js";
+import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import undici from "undici";
 import nodeSchedule from "node-schedule";
 
@@ -15,7 +16,7 @@ dayjs.extend(dayjsLocalize);
 dayjs.extend(dayjsCustomParseFormat);
 dayjs.extend(dayjsSameBefore)
 
-async function initiatePrayingTime(client: Eris.GMDIExtension, addOneMoreDay?: boolean) {
+async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolean) {
   let capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   // gmdi majority is from Jabodetabek.
@@ -94,13 +95,16 @@ async function initiatePrayingTime(client: Eris.GMDIExtension, addOneMoreDay?: b
         nodeSchedule.scheduleJob(`${prayerTypeTime}_${prayerSupposeTime}_${currentTime.get("date")}`, prayTimeListed.toDate(), function() {
           const generalChannelID = "190826809896468480";
 
-          const embed = new Eris.RichEmbed()
+          const embed = new RichEmbed()
           .setColor(0xF8F8F8)
           .setTitle(capitalize(prayerTypeTime))
           .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:F>`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
-          client.createMessage(generalChannelID, {content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`, embeds: [embed]}).catch(() => {});
+          client.rest.channels.createMessage(generalChannelID, {
+            content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`,
+            embeds: embed.toJSON(true)
+          }).catch(() => {});
         });
       } else {
         // its last (isya)
@@ -115,7 +119,7 @@ async function initiatePrayingTime(client: Eris.GMDIExtension, addOneMoreDay?: b
   };
 };
 
-export default async (client: Eris.GMDIExtension) => {
+export default async (client: GMDIExtension) => {
   try {
     initiatePrayingTime(client);
     console.log("Praying Time Announcement: Ready.");
