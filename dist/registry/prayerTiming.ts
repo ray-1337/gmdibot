@@ -117,7 +117,8 @@ async function initiatePrayingTime(client: Eris.GMDIExtension, addOneMoreDay?: b
 
 export default async (client: Eris.GMDIExtension) => {
   try {
-    initiatePrayingTime(client)
+    initiatePrayingTime(client);
+    console.log("Praying Time Announcement: Ready.");
   } catch (error) {
     return console.error(error);
   };
