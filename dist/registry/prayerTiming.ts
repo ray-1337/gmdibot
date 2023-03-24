@@ -25,9 +25,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   let currentMonth = currentTime.get("month") + 1;
 
   // its not around april anymore
-  if (currentMonth != 4) return;
-  
-  let data: PrayerAPIConfig | null | undefined;
+  // if (currentMonth != 4) return;
 
   // appropriate message to say
   const sentencePrefix = ["jangan lupa", "selamat menunaikan ibadah"];
