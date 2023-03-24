@@ -29,7 +29,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
 
   // appropriate message to say
   const sentencePrefix = ["jangan lupa", "selamat menunaikan ibadah"];
-  const prayPostfix = ["adzan", "sholat"];
+  // const prayPostfix = ["adzan", "sholat"];
 
   let random = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
