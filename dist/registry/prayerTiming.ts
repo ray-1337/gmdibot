@@ -1,6 +1,6 @@
 import { GMDIExtension } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import undici from "undici";
+import { request } from "undici";
 import nodeSchedule from "node-schedule";
 
 import dayjs from "dayjs";
@@ -44,75 +44,66 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   };
 
   // picked from https://kemenag.go.id/
-  async function retrieveData() {
-    let apiEndpoint = `https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${String(addOneMoreDay ? currentTime.get("dates") + 1 : currentTime.get("date"))}`;
-    let apiFetch = await undici.request(apiEndpoint).catch(() => {});
-
-    if (apiFetch) {
-      data = (await apiFetch.body.json()).data;
-      return;
-    } else {
-      return;
-    };
+  const prayerAPIFetch = await request(`https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${String(addOneMoreDay ? currentTime.get("dates") + 1 : currentTime.get("date"))}`);
+  if (!prayerAPIFetch?.body || prayerAPIFetch.statusCode >= 400) {
+    return console.error(await prayerAPIFetch.body.text());
   };
 
-  await retrieveData();
+  const data = (await prayerAPIFetch.body.json()).data;
 
-  if (data) {
-    let prayerTiming = Object.entries(data.jadwal).filter(x => !x[0].match(/(tanggal|terbit|date)/gi)) as Array<[PrayerType, string]>;
+  let prayerTiming = Object.entries(data.jadwal).filter(x => !x[0].match(/(tanggal|terbit|date)/gi)) as Array<[PrayerType, string]>;
 
-    for (let i = 0; i < prayerTiming.length; i++) {
-      // thanks to Abdi#5670
-      let importancePrayerType: Array<PrayerType> = ["subuh", "maghrib", "dzuhur", "ashar"];
-      let prayerTypeTime = prayerTiming[i][0];
+  for (let i = 0; i < prayerTiming.length; i++) {
+    // thanks to Abdi#5670
+    let importancePrayerType: Array<PrayerType> = ["subuh", "maghrib", "dzuhur", "ashar", "isya"];
+    let prayerTypeTime = prayerTiming[i][0];
 
-      // skip the loop if its not a part of importancePrayerType
-      if (!importancePrayerType.includes(prayerTypeTime)) continue;
+    // skip the loop if its not a part of importancePrayerType
+    if (!importancePrayerType.includes(prayerTypeTime)) continue;
 
-      let timeFormat = "HH:mm";
-      let prayerSupposeTime = prayerTiming[i][1];
-      let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).set("date", currentTime.date()).tz(currentTimezone, true);
+    let timeFormat = "HH:mm";
+    let prayerSupposeTime = prayerTiming[i][1];
+    let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).set("date", currentTime.date()).tz(currentTimezone, true);
 
-      if (addOneMoreDay) {
-        prayTimeListed.add(24, "h")
+    if (addOneMoreDay) {
+      prayTimeListed.add(24, "h")
+    };
+
+    let inRegionOfPray =
+      currentTime.isBefore(addOneMoreDay ? currentTime.add(24, "h").startOf("date") : currentTime.startOf("date"), "ms") &&
+      currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).set("date", currentTime.date()).tz(currentTimezone, true), "ms");
+
+    if (currentTime.isSameOrBefore(prayTimeListed)) {
+      // prevent multiple announcement
+      // the times from its API may changed everytime
+      let prayersSchedule = nodeSchedule.scheduledJobs;
+      let existedSchedule = Object.keys(prayersSchedule);
+      if (existedSchedule.find(i => i.startsWith(prayerTypeTime) && i.endsWith(currentTime.get("date").toString()))) {
+        continue;
       };
 
-      let inRegionOfPray = 
-        currentTime.isBefore(addOneMoreDay ? currentTime.add(24, "h").startOf("date") : currentTime.startOf("date"), "ms") &&
-        currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).set("date", currentTime.date()).tz(currentTimezone, true), "ms");
-  
-      if (currentTime.isSameOrBefore(prayTimeListed)) {
-        // prevent multiple announcement
-        // the times from its API may changed everytime
-        let prayersSchedule = nodeSchedule.scheduledJobs;
-        let existedSchedule = Object.keys(prayersSchedule);
-        if (existedSchedule.find(i => i.startsWith(prayerTypeTime) && i.endsWith(currentTime.get("date").toString()))) {
-          continue;
-        };
+      nodeSchedule.scheduleJob(`${prayerTypeTime}_${prayerSupposeTime}_${currentTime.get("date")}`, prayTimeListed.toDate(), function () {
+        const generalChannelID = "190826809896468480";
 
-        nodeSchedule.scheduleJob(`${prayerTypeTime}_${prayerSupposeTime}_${currentTime.get("date")}`, prayTimeListed.toDate(), function() {
-          const generalChannelID = "190826809896468480";
-
-          const embed = new RichEmbed()
+        const embed = new RichEmbed()
           .setColor(0xF8F8F8)
           .setTitle(capitalize(prayerTypeTime))
           .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:F>`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
-          client.rest.channels.createMessage(generalChannelID, {
-            content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`,
-            embeds: embed.toJSON(true)
-          }).catch(() => {});
-        });
-      } else {
-        // its last (isya)
-        if (i == prayerTiming.length && !inRegionOfPray) {
-          initiatePrayingTime(client, true);
-          break;
-        };
-        
-        continue;
+        client.rest.channels.createMessage(generalChannelID, {
+          content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`,
+          embeds: embed.toJSON(true)
+        }).catch(() => { });
+      });
+    } else {
+      // its last (isya)
+      if (i == prayerTiming.length && !inRegionOfPray) {
+        initiatePrayingTime(client, true);
+        break;
       };
+
+      continue;
     };
   };
 };
