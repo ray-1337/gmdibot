@@ -95,6 +95,11 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
           content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`,
           embeds: embed.toJSON(true)
         }).catch(() => { });
+
+        // reinitiate if its reached
+        if (prayerTypeTime === importancePrayerType.pop()) {
+          initiatePrayingTime(client, true);
+        };
       });
     } else {
       // its last (isya)
