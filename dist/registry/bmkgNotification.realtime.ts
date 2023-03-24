@@ -93,7 +93,7 @@ export default async (client: GMDIExtension) => {
         });
       };
 
-      await client.rest.channels.createMessage(generalChannel, {
+      const postedBMKGMessage = await client.rest.channels.createMessage(generalChannel, {
         // content: contentTemplate,
         embeds: embed.toJSON(true),
         files,
@@ -108,6 +108,10 @@ export default async (client: GMDIExtension) => {
           }]
         }]
       });
+
+      if (postedBMKGMessage?.channel && postedBMKGMessage.channel.type === Constants.ChannelTypes.GUILD_ANNOUNCEMENT) {
+        postedBMKGMessage.crosspost();
+      };
 
       await redis.set(cachedEQKey, latestEQ.eventid._text);
 
