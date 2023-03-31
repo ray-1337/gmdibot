@@ -22,6 +22,11 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   // gmdi majority is from Jabodetabek.
   let currentTimezone = "Asia/Jakarta";
   let currentTime = dayjs().tz(currentTimezone);
+
+  if (addOneMoreDay) {
+    currentTime = currentTime.add(1, "day");
+  };
+
   let currentMonth = currentTime.get("month") + 1;
 
   // its not around april anymore
@@ -44,7 +49,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   };
 
   // picked from https://kemenag.go.id/
-  const prayerAPIFetch = await request(`https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${String(addOneMoreDay ? currentTime.get("dates") + 1 : currentTime.get("date"))}`);
+  const prayerAPIFetch = await request(`https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
   if (!prayerAPIFetch?.body || prayerAPIFetch.statusCode >= 400) {
     return console.error(await prayerAPIFetch.body.text());
   };
@@ -66,14 +71,14 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
     let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).set("date", currentTime.date()).tz(currentTimezone, true);
 
     if (addOneMoreDay) {
-      prayTimeListed.add(24, "h")
+      prayTimeListed.add(1, "day")
     };
 
     let inRegionOfPray =
-      currentTime.isBefore(addOneMoreDay ? currentTime.add(24, "h").startOf("date") : currentTime.startOf("date"), "ms") &&
+      currentTime.isBefore(currentTime.startOf("date"), "ms") &&
       currentTime.isAfter(dayjs(prayerTiming[0][1], timeFormat).set("date", currentTime.date()).tz(currentTimezone, true), "ms");
 
-    if (currentTime.isSameOrBefore(prayTimeListed)) {
+    if (addOneMoreDay || currentTime.isSameOrBefore(prayTimeListed)) {
       // prevent multiple announcement
       // the times from its API may changed everytime
       let prayersSchedule = nodeSchedule.scheduledJobs;
@@ -98,7 +103,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
 
         // reinitiate if its reached
         if (prayerTypeTime === importancePrayerType.pop()) {
-          initiatePrayingTime(client, true);
+          return initiatePrayingTime(client, true);
         };
       });
     } else {
