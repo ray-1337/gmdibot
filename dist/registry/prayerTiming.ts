@@ -2,6 +2,7 @@ import { GMDIExtension } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
 import nodeSchedule from "node-schedule";
+import { shuffle } from "../handler/Util";
 
 import dayjs from "dayjs";
 import dayjsUTC from "dayjs/plugin/utc";
@@ -32,21 +33,13 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   // its not around april anymore
   // if (currentMonth != 4) return;
 
-  // appropriate message to say
-  const sentencePrefix = ["jangan lupa", "selamat menunaikan ibadah"];
-  // const prayPostfix = ["adzan", "sholat"];
-
-  let random = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-
-  const appropriateMessage: Record<PrayerType, string> = {
-    "imsak": `yok guys, bentar lagi sholat subuh`,
-    "subuh": `${random(sentencePrefix)} sholat subuh`,
-    "dhuha": `${random(sentencePrefix)} sholat dhuha`,
-    "dzuhur": `${random(sentencePrefix)} sholat dzuhur`,
-    "ashar": `${random(sentencePrefix)} sholat ashar`,
-    "maghrib": `${random(sentencePrefix)} sholat maghrib, dan selamat berbuka puasa`,
-    "isya": `${random(sentencePrefix)} sholat isya`
-  };
+  const congratsMessage = [
+    "Selamat menunaikan ibadah $1, semoga Allah menerima amalan kita.",
+    "Selamat menunaikan ibadah $1, semoga malam ini kita diberi keberkahan dan perlindungan dari segala kejahatan.",
+    "Selamat menunaikan ibadah $1, semoga hari kita dipenuhi dengan keberkahan dan kebaikan.",
+    "Selamat menunaikan ibadah $1, semoga Allah memberi kelancaran dalam setiap urusan kita.",
+    "Selamat menunaikan ibadah $1, semoga Allah senantiasa melindungi kita dan memberikan keberkahan dalam hidup kita."
+  ];
 
   // picked from https://kemenag.go.id/
   const prayerAPIFetch = await request(`https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
@@ -71,7 +64,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
     let prayTimeListed = dayjs(prayerSupposeTime, timeFormat).set("date", currentTime.date()).tz(currentTimezone, true);
 
     if (addOneMoreDay) {
-      prayTimeListed.add(1, "day")
+      prayTimeListed.add(1, "day");
     };
 
     let inRegionOfPray =
@@ -89,15 +82,16 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
 
       nodeSchedule.scheduleJob(`${prayerTypeTime}_${prayerSupposeTime}_${currentTime.get("date")}`, prayTimeListed.toDate(), function () {
         const generalChannelID = "190826809896468480";
+        const prayerTypeCapitalize = capitalize(prayerTypeTime);
 
         const embed = new RichEmbed()
           .setColor(0xF8F8F8)
-          .setTitle(capitalize(prayerTypeTime))
+          .setTitle(prayerTypeCapitalize)
           .setDescription(`<t:${Math.round(prayTimeListed.valueOf() / 1000)}:F>`)
           .setFooter("Data diambil dari Kemenag Jakarta Pusat. Waktu mungkin bervariasi di setiap daerah.");
 
         client.rest.channels.createMessage(generalChannelID, {
-          content: `__Bagi yang beragama islam__, ${appropriateMessage[prayerTypeTime]}`,
+          content: `${shuffle(congratsMessage)[0].replace("$1", prayerTypeCapitalize)}`,
           embeds: embed.toJSON(true)
         }).catch(() => { });
 
