@@ -48,7 +48,7 @@ export default async (client: GMDIExtension) => {
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
-      if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|papua|bali)/gim)) {
+      if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali)/gim)) {
         await redis.set(cachedEQKey, earthquakeID);
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
       };
