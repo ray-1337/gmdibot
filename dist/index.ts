@@ -4,7 +4,7 @@ vault.config();
 
 import GMDIBot from "./handler/Client";
 import GMDIEvent from "./handler/Event";
-import "./server/Server";
+// import "./server/Server";
 
 const client = new GMDIBot({
   auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
