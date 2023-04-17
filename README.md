@@ -4,8 +4,8 @@ Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://n
 
 ## Current
 - **TypeScript:** v4.7.4
-- **Node.js:** v18.12.1 / LTS
-- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.3.1
+- **Node.js:** v18.15.x / LTS
+- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.6.x
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
