@@ -40,8 +40,7 @@
     "dotenv-vault-core": "^0.6.1",
     "node-cache": "^5.1.2",
     "oceanic.js": "^1.6.0",
-    "redis": "^4.6.5",
-    "sequelize": "^6.31.0"
+    "redis": "^4.6.5"
   },
   "author": {
     "name": "Hizkia Ray",
@@ -73,8 +72,6 @@
   },
   "optionalDependencies": {
     "helmet": "^6.1.5",
-    "tslib": "^2.5.0",
-    "twitter-api-sdk": "^1.2.1",
     "xml-js": "^1.6.11"
   }
 }
