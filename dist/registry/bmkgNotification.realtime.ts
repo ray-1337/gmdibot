@@ -6,7 +6,6 @@ import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
 import {xml2json} from "xml-js";
 import ms from "ms";
-import {mercalliIntensityScale} from "./bmkgNotification"
 
 import dayjs from "dayjs";
 import dayjsTZ from "dayjs/plugin/timezone";
@@ -201,5 +200,33 @@ function colorizedMagnitudeEmbed(magnitude: number) {
     case magnitude >= 8 && magnitude <= 8.9: return 0xd6186e;
     case magnitude >= 9: return 0xa11253;
     default: return 0x121112;
+  };
+};
+
+export function mercalliIntensityScale(magnitude: number) {
+  // research
+  // https://en.wikipedia.org/wiki/Modified_Mercalli_intensity_scale
+  // https://www.bmkg.go.id/gempabumi/skala-mmi.bmkg
+
+  // 1.0–3.0	I
+  // 3.0–3.9	II–III
+  // 4.0–4.9	IV–V
+  // 5.0–5.9	VI–VII
+  // 6.0–6.9	VII–VIII
+  // 7.0 and higher	VIII or higher
+
+  switch (true) {
+    case magnitude <= 2.9: return "I";
+    case magnitude >= 3.0 && magnitude <= 3.4: return "II";
+    case magnitude >= 3.5 && magnitude <= 3.9: return "III";
+
+    case magnitude >= 4.0 && magnitude <= 4.4: return "IV";
+    case magnitude >= 4.5 && magnitude <= 4.9: return "V";
+
+    case magnitude >= 5.0 && magnitude <= 5.4: return "VI";
+    case magnitude >= 5.5 && magnitude <= 6.4: return "VII";
+    case magnitude >= 6.5 && magnitude <= 6.9: return "VI";
+
+    case magnitude >= 7.0: return "VIII";
   };
 };
