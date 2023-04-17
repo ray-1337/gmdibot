@@ -15,6 +15,7 @@ dayjs.extend(dayjsTZ);
 dayjs.extend(dayjsUTC);
 
 let __ = false;
+let lastModified = "";
 
 export default async (client: GMDIExtension) => {
   if (__) return;
@@ -22,8 +23,19 @@ export default async (client: GMDIExtension) => {
   randomInterval(async () => {
     try {
       const endpoint = "https://bmkg-content-inatews.storage.googleapis.com/live30event.xml";
-      const data = await request(endpoint, { method: "GET" });
+      const checkHeader = await request(endpoint, { method: "HEAD" });
+      if (!checkHeader || checkHeader.statusCode >= 400) throw await checkHeader.body.text();
 
+      const lastModifiedHeader = String(checkHeader?.headers?.["last-modified"]);
+      if (lastModifiedHeader?.length) {
+        if (lastModifiedHeader === lastModified) {
+          return;
+        } else {
+          lastModified = lastModifiedHeader;
+        };
+      };
+
+      const data = await request(endpoint, { method: "GET" });
       if (data.statusCode >= 400) throw await data.body.text();
 
       const rawXML = await data.body.text();
