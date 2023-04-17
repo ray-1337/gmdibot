@@ -3,7 +3,7 @@ import redis from "../Cache";
 
 // bmkg features
 // import bmkgNotification from "../registry/bmkgNotification";
-import prayerTiming from "../registry/prayerTiming";
+// import prayerTiming from "../registry/prayerTiming";
 import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 
 // Moderation Registry
@@ -26,7 +26,7 @@ export default async (client: GMDIExtension) => {
     try {
       await redis.connect();
 
-      await prayerTiming(client);
+      // await prayerTiming(client);
 
       await bmkgNotificationRealtime(client);
     } catch (error) {
