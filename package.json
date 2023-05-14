@@ -36,8 +36,7 @@
     "common-tags": "^1.8.2",
     "dotenv-vault-core": "^0.6.1",
     "node-cache": "^5.1.2",
-    "oceanic.js": "^1.6.0",
-    "redis": "^4.6.6"
+    "oceanic.js": "^1.6.0"
   },
   "author": {
     "name": "Hizkia Ray",
