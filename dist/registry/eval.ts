@@ -1,7 +1,7 @@
 import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel} from "oceanic.js";
 import Config from "../config/config";
 import undici from "undici";
-import nodeUtil from "util";
+import { inspect } from "util";
 
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>, args: any[]) => {
   if (!Config.botOwner.includes(message.author.id)) {
@@ -21,16 +21,14 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     embed.color = 0x7289DA;
 
     if (output.toString().length >= 1024) {
-      const request = await undici.request("https://files.blob-project.com/bin", {
-        headers: {"content-type": "application/json"},
-        method: "POST",
-        body: JSON.stringify({ value: output })
+      return message.channel.createMessage({
+        files: [{
+          contents: Buffer.from(output, "utf-8"),
+          name: `eval_${Date.now()}.txt`
+        }]
       });
-
-      const resJSON = await request.body.json();
-      embed.description = resJSON.url;
     } else {
-      if (output?.length <= 0) {
+      if (output?.length <= 0 || output != "undefined") {
         return message.createReaction("🟢");
       } else {
         embed.description = "```js\n" + output + "```";
@@ -43,9 +41,12 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     embed.color = 0xFF0F46;
 
     if (String(error).length >= 1024) {
-      const request = await undici.request("https://files.blob-project.com/bin", {method: "POST", body: JSON.stringify({ value: error })});
-      const resJSON = await request.body.json();
-      embed.description = resJSON.url;
+      return message.channel.createMessage({
+        files: [{
+          contents: Buffer.from(String(error), "utf-8"),
+          name: `eval_${Date.now()}.txt`
+        }]
+      });
     } else {
       embed.description = "```js\n" + error + "```";
     };
@@ -54,20 +55,21 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
   return client.rest.channels.createMessage(message.channel.id, { embeds: [embed] });
 
   async function checkingEvaluation(content: any) {
-    let res: any;
     try {
-      res = eval(content);
-      if (res && res.constructor.name == "Promise") res = await res;
+      let res = eval(content);
+      if (res?.constructor.name == "Promise") {
+        return await res;
+      };
+      
+      if (typeof res !== "string") {
+        res = inspect(res, { depth: 0 });
+      };
+  
+      res = res.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  
+      return String(res);
     } catch (err) {
-      res = err;
+      return String(err);
     };
-
-    // if (new RegExp(`(token|secret|env)`, "gi").test(res)) return res = process.env["FAKETOKEN"];
-
-    if (typeof res !== "string") res = nodeUtil.inspect(res, { depth: 0 });
-
-    res = res.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-
-    return res;
   };
 };
