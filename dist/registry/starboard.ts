@@ -3,6 +3,7 @@ import ms from "ms";
 import normalizeURL from "normalize-url";
 import * as Util from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
+import { stripIndents } from "common-tags";
 
 export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
@@ -81,9 +82,10 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
       //   }
       // };
 
+      const userTag = `${message.author.username}#${message.author.discriminator}`;
       let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
       .setDescription(Util.truncate(message.content, 1024))
-      .setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL("png", 16))
+      .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16))
 
       if (starterQuery) {
         let starterUser = client.users.get(starterQuery) || await client.rest.users.get(starterQuery).catch(() => { });
@@ -161,22 +163,32 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
         }]
       }];
 
-      const embedMsg = await client.rest.channels.createMessage(channelID, {
-        embeds: embed.toJSON(true),
-        components: embeddings.length ? undefined : redirectButton,
-        files: file ? [file] : undefined
-      });
-
       if (embeddings.length) {
-        client.rest.channels.createMessage(channelID, {
-          content: embeddings.join("\n"),
-          components: embeddings.length ? redirectButton : undefined,
-          messageReference: {
-            messageID: embedMsg.id,
-            channelID: channelID,
-            failIfNotExists: false,
-            guildID: embedMsg.guildID!
-          }
+        return client.rest.channels.createMessage(channelID, {
+          components: [
+            ...redirectButton,
+            {
+              type: Constants.ComponentTypes.ACTION_ROW,
+              components: [{
+                type: Constants.ComponentTypes.BUTTON,
+                style: Constants.ButtonStyles.PRIMARY,
+                label: `By: ${userTag}`,
+                disabled: true,
+                customID: "_",
+                emoji: { name: "👥", id: null }
+              }]
+            }
+          ],
+          content: stripIndents`
+          > ${Util.truncate(message.content, 1024)}
+
+          ${embeddings.join("\n")}`,
+        });
+      } else {
+        return client.rest.channels.createMessage(channelID, {
+          embeds: embed.toJSON(true),
+          components: redirectButton,
+          files: file ? [file] : undefined
         });
       };
     };
