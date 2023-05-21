@@ -4,8 +4,7 @@
   "scripts": {
     "start": "ts-node --transpile-only ./dist/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only ./dist/index.ts dev",
-    "rspm": "pm2 reload gmdibot && pm2 logs gmdibot",
-    "test": "jest"
+    "rspm": "pm2 reload gmdibot && pm2 logs gmdibot"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
