@@ -1,8 +1,6 @@
-import {GMDIExtension, Constants} from "oceanic.js";
-import redis from "../Cache";
+import { GMDIExtension, Constants } from "oceanic.js";
 
 // bmkg features
-// import bmkgNotification from "../registry/bmkgNotification";
 // import prayerTiming from "../registry/prayerTiming";
 import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 
@@ -21,16 +19,8 @@ export default async (client: GMDIExtension) => {
 
   // cache (redis) startup
   try {
-    await redis?.ping();
-  } catch {
-    try {
-      await redis.connect();
-
-      // await prayerTiming(client);
-
-      await bmkgNotificationRealtime(client);
-    } catch (error) {
-      return console.error(error);
-    };
+    await bmkgNotificationRealtime(client);
+  } catch (error) {
+    return console.error(error);
   };
 };
