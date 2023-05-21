@@ -1,7 +1,6 @@
 // old-fashioned checking state of BMKG notification (alternative)
 // retrieved via INDONESIA TSUNAMI EARLY WARNING SYSTEM
 import { GMDIExtension, Constants, File } from "oceanic.js";
-import redis from "../Cache";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
 import {xml2json} from "xml-js";
@@ -12,6 +11,8 @@ import dayjsTZ from "dayjs/plugin/timezone";
 import dayjsUTC from "dayjs/plugin/utc";
 dayjs.extend(dayjsTZ);
 dayjs.extend(dayjsUTC);
+
+const cached = new Map<string, boolean>();
 
 let __ = false;
 let lastModified = "";
@@ -47,20 +48,19 @@ export default async (client: GMDIExtension) => {
 
       if (localizedTime.valueOf() <= 1670457056000) return;
       
-      const cachedEQKey = "earthquakeAcute_realtimeINA";
-      const cachedEarthQuake = await redis.get(cachedEQKey); // prevent replay
       const earthquakeID = latestEQ.eventid._text;
-      if (cachedEarthQuake && cachedEarthQuake === String(earthquakeID)) return;
+      const cachedEarthQuake = cached.get(earthquakeID); // prevent replay
+      if (cachedEarthQuake) return;
       
       // at least >= {specified}
       let limitMagnitudeToPost = 4;
       if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
-        await redis.set(cachedEQKey, earthquakeID);
+        cached.set(earthquakeID, true);
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
       };
 
       if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali)/gim)) {
-        await redis.set(cachedEQKey, earthquakeID);
+        cached.set(earthquakeID, true);
         return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
       };
 
@@ -124,7 +124,7 @@ export default async (client: GMDIExtension) => {
         postedBMKGMessage.crosspost();
       };
 
-      await redis.set(cachedEQKey, latestEQ.eventid._text);
+      cached.set(earthquakeID, true);
 
       console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${latestEQ.eventid._text}`);
 
