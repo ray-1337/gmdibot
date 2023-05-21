@@ -44,9 +44,16 @@ export default async (client: GMDIExtension) => {
 
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
-      const localizedTime = dayjs(parsedTime).utcOffset(1, true).tz("Asia/Jakarta").add(60, "minutes");
 
-      if (localizedTime.valueOf() <= 1670457056000) return;
+      const currentTime = dayjs().utcOffset(1, true).tz("Asia/Jakarta").add(60, "minutes");
+      const localizedTime = dayjs(parsedTime).utcOffset(1, true).tz("Asia/Jakarta").add(60, "minutes");
+      const late = ms("15m");
+
+      // check if its already late
+      if (currentTime.valueOf() - localizedTime.valueOf() > late) {
+        return;
+      };
+
       
       const earthquakeID = latestEQ.eventid._text;
       const cachedEarthQuake = cached.get(earthquakeID); // prevent replay
