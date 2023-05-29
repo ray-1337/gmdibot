@@ -9,11 +9,11 @@ import { randomInterval, customInaTime, colorizedMagnitudeEmbed, mercalliIntensi
 const timezone = "Asia/Jakarta";
 const cached = new Map<string, boolean>();
 
-let __ = false;
+let intervalStarted = false;
 let lastModified = "";
 
 export default async (client: GMDIExtension) => {
-  if (__) return;
+  if (intervalStarted) return;
 
   randomInterval(async () => {
     try {
@@ -136,7 +136,7 @@ export default async (client: GMDIExtension) => {
     };
   }, ms("1m"), ms("2m"));
 
-  __ = true;
+  intervalStarted = true;
   console.log(`GMDI & BMKG (realtime alternative): Ready.`);
   return
 };
