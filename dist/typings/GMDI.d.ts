@@ -17,7 +17,7 @@ interface WarningLastedOptions {
 interface DeletedMessage {
   id: string;
   guildID: string;
-  channel: import("eris").GuildTextableChannel | {
+  channel: import("oceanic.js").AnyTextableGuildChannel | {
     id: string;
     guild: {
       id: string;
