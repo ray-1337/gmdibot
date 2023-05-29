@@ -1,6 +1,5 @@
 import "dotenv/config";
-import vault from "dotenv-vault-core";
-vault.config();
+import "dotenv-vault-core/config";
 
 import GMDIBot from "./handler/Client";
 import GMDIEvent from "./handler/Event";
