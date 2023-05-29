@@ -1,12 +1,13 @@
 import { GMDIExtension, GuildChannel, AnyGuildTextChannel } from "oceanic.js";
 import Config from "../handler/Config";
+import { slowmodeChannel } from "./channelCooldown";
 
 export default async (client: GMDIExtension) => {
   if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");
 
   setInterval(() => {
     for (const channelID of Config.channel.watchChannelModeration) {
-      if (!client.cache.get(`slowmode.${channelID}`)) return;
+      if (!slowmodeChannel.has(channelID)) continue;
 
       if (client.getChannel(channelID) instanceof GuildChannel) {
         let messages = [...(client.getChannel(channelID) as AnyGuildTextChannel).messages.values()]
@@ -16,7 +17,8 @@ export default async (client: GMDIExtension) => {
 
         // removal
         if (messages.length <= limit) {
-          client.cache.del(`slowmode.${channelID}`);
+          slowmodeChannel.delete(channelID);
+          
           client.rest.channels.edit(channelID, { rateLimitPerUser: 0, reason: "Normal Traffic" });
 
           client.rest.channels.createMessage(Config.channel.modlog, {
