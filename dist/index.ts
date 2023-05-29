@@ -12,6 +12,9 @@ const client = new GMDIBot({
     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "MESSAGE_CONTENT"],
     guildCreateTimeout: 30000
   },
+  collectionLimits: {
+    messages: 40
+  }
 });
 
 GMDIEvent(client);
