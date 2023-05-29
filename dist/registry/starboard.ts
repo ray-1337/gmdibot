@@ -161,7 +161,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
             }
           ],
           content: stripIndents`
-          > ${Util.truncate(message.content, 1024)}
+          ${message?.content.length ? `> ${Util.truncate(message.content, 1024)}` : ""}
 
           ${embeddings.join("\n")}`,
         });
