@@ -5,6 +5,8 @@ import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { stripIndents } from "common-tags";
 
+const cachedStar = new Map<string, number>();
+
 export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
     // must be presented in guild
@@ -43,11 +45,11 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
 
     // star emoji validation
     let _maxR = 9, _minR = 6;
-    let limit = client.cache.get<number | null>(`sLC_${message.id}`);
+    let limit = cachedStar.get(message.id);
     if (!limit || isNaN(limit)) {
       let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
       limit = randLimit;
-      client.cache.set(`sLC_${message.id}`, randLimit, Math.round(ms("1h") / 1000));
+      cachedStar.set(message.id, randLimit);
     };
 
     // increment if same user reacted
