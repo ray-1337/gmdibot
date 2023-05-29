@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, PrivateChannel, GuildChannel} from "oceanic.js";
-import Config from "../handler/Config";
+import { mostCooldownRelevantTextChannelIDs } from "../handler/Config";
 
 // Moderation Registry
 import ChannelCooldown from "../registry/channelCooldown";
@@ -17,7 +17,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     !(message.channel instanceof GuildChannel)
   ) return;
 
-  if (Config.channel.watchChannelModeration.some(x => x === message.channel.id)) {
+  if (mostCooldownRelevantTextChannelIDs.some(channelID => channelID === message.channel.id)) {
     ChannelCooldown(client, message);
   };
 

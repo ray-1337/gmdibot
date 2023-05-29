@@ -1,27 +1,25 @@
 import { GMDIExtension, GuildChannel, AnyGuildTextChannel } from "oceanic.js";
-import Config from "../handler/Config";
+import { modlogChannelID, checkCooldownRemovalInterval, cooldownRangeCooling, mostCooldownRelevantTextChannelIDs, messagesCacheTimeRange, cooldownMessageCooling } from "../handler/Config";
 import { slowmodeChannel } from "./channelCooldown";
 
 export default async (client: GMDIExtension) => {
   if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");
 
   setInterval(() => {
-    for (const channelID of Config.channel.watchChannelModeration) {
+    for (const channelID of mostCooldownRelevantTextChannelIDs) {
       if (!slowmodeChannel.has(channelID)) continue;
 
       if (client.getChannel(channelID) instanceof GuildChannel) {
         let messages = [...(client.getChannel(channelID) as AnyGuildTextChannel).messages.values()]
-        .filter(m => new Date(m.timestamp).getTime() > (Date.now() - Config.cooldown.timerange));
-
-        let limit = Config.cooldown.limit.cooling;
+        .filter(m => new Date(m.timestamp).getTime() > (Date.now() - messagesCacheTimeRange));
 
         // removal
-        if (messages.length <= limit) {
+        if (messages.length <= cooldownRangeCooling) {
           slowmodeChannel.delete(channelID);
           
           client.rest.channels.edit(channelID, { rateLimitPerUser: 0, reason: "Normal Traffic" });
 
-          client.rest.channels.createMessage(Config.channel.modlog, {
+          client.rest.channels.createMessage(modlogChannelID, {
             embeds: [{
               description: `Removed from ${client.getChannel(channelID)?.mention}`,
               title: "Normalized Traffic",
@@ -30,12 +28,12 @@ export default async (client: GMDIExtension) => {
           });
 
           client.rest.channels.createMessage(channelID, {
-            content: Config.cooldown.message.cooling[Math.floor(Math.random() * Config.cooldown.message.cooling.length)]
+            content: cooldownMessageCooling[Math.floor(Math.random() * cooldownMessageCooling.length)]
           });
 
           return;
         };
       };
     };
-  }, Config.cooldown.intervalCheckingTimeout);
+  }, checkCooldownRemovalInterval);
 };
