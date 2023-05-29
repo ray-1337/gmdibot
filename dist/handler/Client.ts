@@ -1,17 +1,5 @@
 import {Client, ClientOptions} from "oceanic.js";
-// import pluris from "pluris";
 import jsoning from "jsoning";
-
-// pluris(Eris, {
-//   awaitMessages: true,
-//   awaitReactions: false,
-//   createDMMessage: false,
-//   embed: true,
-//   endpoints: false,
-//   messageGuild: false,
-//   roleList: false,
-//   webhooks: false
-// });
 
 export default class GMDIBot extends Client {
   database: jsoning;
