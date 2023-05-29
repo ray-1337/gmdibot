@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
-import * as Util from "../handler/Util";
+import { transformMessage } from "../handler/Util";
 import Config from "../handler/Config";
 import ms from "ms";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
@@ -13,7 +13,7 @@ let endeavour: Endeavour = [];
 export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMessage?: JSONMessage | null) => {
   try {
     // check message
-    let message = await Util.transformMessage(client, msg);
+    let message = await transformMessage(client, msg);
     if (!(message instanceof Message) || message.author.bot || message.guildID !== Config.guildID) return;
 
     // ignore category

@@ -1,6 +1,6 @@
 import {GMDIExtension, Message, AnyGuildTextChannel} from "oceanic.js";
 import Config from "../handler/Config";
-import * as Util from "../handler/Util";
+import { getRandomInt } from "../handler/Util";
 
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
   // cache limit
@@ -15,7 +15,7 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
   if (messages.length >= limit && !client.cache.get(`slowmode.${message.channel.id}`)) {
     client.cache.set(`slowmode.${message.channel.id}`, true);
     client.rest.channels.edit(message.channel.id, {
-      rateLimitPerUser: Util.getRandomInt(5, 15),
+      rateLimitPerUser: getRandomInt(5, 15),
       reason: "High Traffic"
     }).catch(() => {});
 

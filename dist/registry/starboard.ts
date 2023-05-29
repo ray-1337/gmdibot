@@ -1,7 +1,7 @@
 import {Constants, GMDIExtension, Message, AnyGuildTextChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
-import * as Util from "../handler/Util";
+import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { stripIndents } from "common-tags";
 
@@ -15,7 +15,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
     };
 
     // check message
-    let message = await Util.transformMessage(client, msg);
+    let message = await transformMessage(client, msg);
     if (!message) return;
 
     const starEmoji = "⭐";
@@ -68,7 +68,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
 
       const userTag = `${message.author.username}#${message.author.discriminator}`;
       let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
-      .setDescription(Util.truncate(message.content, 1024))
+      .setDescription(truncate(message.content, 1024))
       .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16))
 
       if (starterQuery) {
@@ -163,7 +163,7 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
             }
           ],
           content: stripIndents`
-          ${message?.content.length ? `> ${Util.truncate(message.content, 1024)}` : ""}
+          ${message?.content.length ? `> ${truncate(message.content, 1024)}` : ""}
 
           ${embeddings.join("\n")}`,
         });
