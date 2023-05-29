@@ -1,6 +1,5 @@
 import {Client, ClientOptions} from "oceanic.js";
 // import pluris from "pluris";
-import Cache from "node-cache";
 import jsoning from "jsoning";
 
 // pluris(Eris, {
@@ -16,11 +15,6 @@ import jsoning from "jsoning";
 
 export default class GMDIBot extends Client {
   database: jsoning;
-  cache = new Cache({deleteOnExpire: true, checkperiod: 30});
-  counter: {
-    state: Map<"prepping" | "previousUser", any>;
-    userError: Map<string, number>;
-  };
   userChat: {
     cooldown: Map<string, true>;
   };
@@ -29,13 +23,8 @@ export default class GMDIBot extends Client {
     super(options);
 
     this.database = new jsoning(process.cwd() + "/database/db.json");
-    this.cache = this.cache;
     this.userChat = {
       cooldown: new Map()
-    };
-    this.counter = {
-      state: new Map(),
-      userError: new Map()
     };
   };
 };
