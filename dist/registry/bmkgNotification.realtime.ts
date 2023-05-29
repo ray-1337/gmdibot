@@ -12,6 +12,7 @@ import dayjsUTC from "dayjs/plugin/utc";
 dayjs.extend(dayjsTZ);
 dayjs.extend(dayjsUTC);
 
+const timezone = "Asia/Jakarta";
 const cached = new Map<string, boolean>();
 
 let __ = false;
@@ -45,8 +46,8 @@ export default async (client: GMDIExtension) => {
       const latestEQ = parsed.Infogempa.gempa[0];
       const parsedTime = customInaTime(latestEQ.waktu._text);
 
-      const currentTime = dayjs().utcOffset(1, true).tz("Asia/Jakarta").add(60, "minutes");
-      const localizedTime = dayjs(parsedTime).utcOffset(1, true).tz("Asia/Jakarta").add(60, "minutes");
+      const currentTime = new Date(dayjs().tz(timezone).format());
+      const localizedTime = new Date(parsedTime.format());
       const late = ms("15m");
 
       // check if its already late
@@ -174,7 +175,7 @@ function randomNumber(min: number, max: number) {
 };
 
 function customInaTime(unparsedTime: string) {
-  return new Date(unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()!);
+  return dayjs(unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()!).tz(timezone);
 };
 
 function randomInterval(intervalFunction, minDelay: number, maxDelay: number) {
