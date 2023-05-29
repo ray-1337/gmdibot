@@ -1,10 +1,9 @@
 import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel} from "oceanic.js";
-import Config from "../handler/Config";
-import undici from "undici";
+import { botOwnerIDs } from "../handler/Config";
 import { inspect } from "util";
 
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>, args: any[]) => {
-  if (!Config.botOwner.includes(message.author.id)) {
+  if (!botOwnerIDs.includes(message.author.id)) {
     return;
   };
 

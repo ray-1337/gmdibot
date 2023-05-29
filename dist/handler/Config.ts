@@ -6,6 +6,8 @@ export const gmdiGuildID = "190826809896468480";
 
 export const firstGeneralTextChannelID = "190826809896468480";
 
+export const botOwnerIDs = ["331265944363991042"];
+
 export default {
   guildID: "190826809896468480",
   botOwner: ["929036943226990674", "331265944363991042"],
