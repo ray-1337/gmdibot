@@ -1,8 +1,8 @@
-import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel} from "oceanic.js";
+import {GMDIExtension, Message, EmbedOptions, AnyTextableGuildChannel} from "oceanic.js";
 import { botOwnerIDs } from "../handler/Config";
 import { inspect } from "util";
 
-export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>, args: any[]) => {
+export default async (client: GMDIExtension, message: Message<AnyTextableGuildChannel>, args: any[]) => {
   if (!botOwnerIDs.includes(message.author.id)) {
     return;
   };

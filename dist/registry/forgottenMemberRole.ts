@@ -1,8 +1,8 @@
-import { Message, AnyGuildTextChannel } from "oceanic.js";
+import { Message, AnyTextableGuildChannel } from "oceanic.js";
 import ms from "ms";
 import { gmdiGuildID } from "../handler/Config";
 
-export default async (message: Message<AnyGuildTextChannel>) => {
+export default async (message: Message<AnyTextableGuildChannel>) => {
   if (message.guildID !== gmdiGuildID) return;
 
   const memberRole = "312868594549653514";

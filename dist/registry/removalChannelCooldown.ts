@@ -1,4 +1,4 @@
-import { GMDIExtension, GuildChannel, AnyGuildTextChannel } from "oceanic.js";
+import { GMDIExtension, GuildChannel, AnyTextableGuildChannel } from "oceanic.js";
 import { modlogChannelID, checkCooldownRemovalInterval, cooldownRangeCooling, mostCooldownRelevantTextChannelIDs, messagesCacheTimeRange, cooldownMessageCooling } from "../handler/Config";
 import { slowmodeChannel } from "./channelCooldown";
 
@@ -8,7 +8,7 @@ export default async (client: GMDIExtension) => {
       if (!slowmodeChannel.has(channelID)) continue;
 
       if (client.getChannel(channelID) instanceof GuildChannel) {
-        let messages = [...(client.getChannel(channelID) as AnyGuildTextChannel).messages.values()]
+        let messages = [...(client.getChannel(channelID) as AnyTextableGuildChannel).messages.values()]
         .filter(m => new Date(m.timestamp).getTime() > (Date.now() - messagesCacheTimeRange));
 
         // removal

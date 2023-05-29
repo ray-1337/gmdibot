@@ -1,10 +1,10 @@
-import {GMDIExtension, Message, AnyGuildTextChannel} from "oceanic.js";
+import {GMDIExtension, Message, AnyTextableGuildChannel} from "oceanic.js";
 import { modlogChannelID, cooldownRangeExceed, messagesCacheTimeRange, cooldownMessageExceed } from "../handler/Config";
 import { getRandomInt } from "../handler/Util";
 
 export const slowmodeChannel = new Map<string, boolean>();
 
-export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {
+export default async (client: GMDIExtension, message: Message<AnyTextableGuildChannel>) => {
   let messages = [...message.channel.messages.values()].filter(m => new Date(m.timestamp).getTime() >= (Date.now() - messagesCacheTimeRange));
 
   // Applies

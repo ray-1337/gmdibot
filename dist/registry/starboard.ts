@@ -1,4 +1,4 @@
-import {Constants, GMDIExtension, Message, AnyGuildTextChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
+import {Constants, GMDIExtension, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
 import { transformMessage, truncate } from "../handler/Util";
@@ -7,7 +7,7 @@ import { stripIndents } from "common-tags";
 
 const cachedStar = new Map<string, number>();
 
-export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
+export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
     // must be presented in guild
     if (!msg?.channel?.guildID || !msg?.channel?.id) return;

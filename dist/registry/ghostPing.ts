@@ -1,4 +1,4 @@
-import {GMDIExtension, Message, AnyGuildTextChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
+import {GMDIExtension, Message, AnyTextableGuildChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
 import { transformMessage } from "../handler/Util";
 import { gmdiGuildID } from "../handler/Config";
 import ms from "ms";
@@ -114,7 +114,7 @@ function getDeletedMentionIds(oldMentionIds: string[], newMentionIds: string[]) 
   return oldMentionIds.filter(x => !newMentionIds.includes(x));
 };
 
-export async function checkMentions(client: GMDIExtension, message: Message<AnyGuildTextChannel>) {
+export async function checkMentions(client: GMDIExtension, message: Message<AnyTextableGuildChannel>) {
   let hasMentions: boolean = false;
   let variant: string[] = [];
 
