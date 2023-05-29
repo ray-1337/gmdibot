@@ -3,7 +3,7 @@ An advanced private Discord Bot, mostly for moderation purposes. <br>
 Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org).
 
 ## Current
-- **TypeScript:** v4.7.4
+- **TypeScript:** v5.0.x
 - **Node.js:** v18.15.x / LTS
 - [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.7.x
 
