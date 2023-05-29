@@ -31,6 +31,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
+    if (Date.now() - message.createdAt.getTime() >= ms("90d")) return;
 
     let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
 
