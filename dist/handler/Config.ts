@@ -2,6 +2,10 @@ const command = process.argv.slice(2);
 
 const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
 
+export const gmdiGuildID = "190826809896468480";
+
+export const firstGeneralTextChannelID = "190826809896468480";
+
 export default {
   guildID: "190826809896468480",
   botOwner: ["929036943226990674", "331265944363991042"],
@@ -74,5 +78,32 @@ export default {
     dedicated: ["331265944363991042"],
     limitError: 3,
     messageCacheLimit: 5
+  },
+
+  userChat: {
+    unnecessity: {
+      category: [
+        "712525103862120519",
+        "535466115459973120",
+        "460429581598588928",
+        "905064326187089941",
+        "769174984521547796",
+        "468266060987236352",
+        "627808236015190017",
+        "360450207386828810",
+        "759298776656510998",
+        "907309690264895529"
+      ],
+
+      channel: [
+        "459221138267176971", // bot command
+        // "459637978269220864" // bot staff
+      ]
+    },
+
+    meta: {
+      threshold: 25, // percentage
+      resetAfterInDay: 28
+    }
   }
 };

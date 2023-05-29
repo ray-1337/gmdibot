@@ -1,6 +1,6 @@
-import {EditMemberOptions, GMDIExtension, User, Member} from "oceanic.js";
-import {generateHash} from "../handler/Util";
-import Config from "../handler/Config";
+import { EditMemberOptions, GMDIExtension, User, Member } from "oceanic.js";
+import { generateHash } from "../handler/Util";
+import { gmdiGuildID } from "../handler/Config";
 
 export default async (client: GMDIExtension, user: User | Member) => {
   try {
@@ -11,7 +11,7 @@ export default async (client: GMDIExtension, user: User | Member) => {
     };
   
     if (user instanceof Member) {
-      if (user.bot || user.guild.id !== Config.guildID) return;
+      if (user.bot || user.guild.id !== gmdiGuildID) return;
 
       if (user?.nick) {
         if (!user.nick.match(regex)) {
@@ -22,7 +22,7 @@ export default async (client: GMDIExtension, user: User | Member) => {
       if (user.bot) return;
 
       if (!user.username.match(regex)) {
-        await client.rest.guilds.editMember(Config.guildID, user.id, memberOptions)
+        await client.rest.guilds.editMember(gmdiGuildID, user.id, memberOptions)
       };
     };
 

@@ -1,6 +1,6 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
 import { transformMessage } from "../handler/Util";
-import Config from "../handler/Config";
+import { gmdiGuildID } from "../handler/Config";
 import ms from "ms";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 
@@ -14,7 +14,7 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
   try {
     // check message
     let message = await transformMessage(client, msg);
-    if (!(message instanceof Message) || message.author.bot || message.guildID !== Config.guildID) return;
+    if (!(message instanceof Message) || message.author.bot || message.guildID !== gmdiGuildID) return;
 
     // ignore category
     let ignoredCategory = ["759298776656510998", "360450207386828810", "627808236015190017", "954290819886612480", "535466115459973120"];

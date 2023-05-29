@@ -1,5 +1,5 @@
 import { Member, GMDIExtension, JSONMember, Constants } from "oceanic.js";
-import config from "../handler/Config";
+import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
@@ -28,7 +28,7 @@ const buttonConcernText = [
 ];
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
-  if (member.guild.id !== config.guildID || member.bot) return;
+  if (member.guild.id !== gmdiGuildID || member.bot) return;
   
   try {
     if (oldMember?.pending && !member?.pending) {
@@ -51,7 +51,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
   
       await client.rest.guilds.addMemberRole(member.guild.id, member.id, "312868594549653514");
       
-      return client.rest.channels.createMessage(config.channel.general, {
+      return client.rest.channels.createMessage(firstGeneralTextChannelID, {
         content: member.mention,
         embeds: embed.toJSON(true),
         components: [{
