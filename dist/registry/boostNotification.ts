@@ -1,5 +1,5 @@
 import { Member, GMDIExtension, JSONMember } from "oceanic.js";
-import Config from "../handler/Config";
+import { firstGeneralTextChannelID } from "../handler/Config";
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
   if (member.bot || !oldMember) return;
@@ -8,7 +8,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
   if (!oldMember?.premiumSince && member?.premiumSince && !oldMember.roles.includes(boostRole)) {
     const userTag = `${member.username}#${member.discriminator}`;
 
-    return client.rest.channels.createMessage(Config.channel.general, {embeds: [{
+    return client.rest.channels.createMessage(firstGeneralTextChannelID, {embeds: [{
       color: 0xf47fff,
       timestamp: new Date().toISOString(),
       author: {
