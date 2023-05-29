@@ -14,18 +14,6 @@ interface WarningLastedOptions {
   warningLogID: string
 }
 
-interface UserChatInterface {
-  probability: number;
-  sum: {
-    week?: number[];
-    today: number;
-  };
-  warning?: {
-    current: boolean;
-    since: Date | null;
-  }
-}
-
 interface DeletedMessage {
   id: string;
   guildID: string;

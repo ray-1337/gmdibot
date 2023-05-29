@@ -15,16 +15,10 @@ import jsoning from "jsoning";
 
 export default class GMDIBot extends Client {
   database: jsoning;
-  userChat: {
-    cooldown: Map<string, true>;
-  };
 
   constructor(options: ClientOptions) {
     super(options);
 
     this.database = new jsoning(process.cwd() + "/database/db.json");
-    this.userChat = {
-      cooldown: new Map()
-    };
   };
 };
