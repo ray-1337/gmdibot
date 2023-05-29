@@ -29,6 +29,8 @@ export const cooldownMessageCooling = [
   "kata mamah jangan ribut"
 ];
 
+export const evalPrefix = ".";
+
 export default {
   guildID: "190826809896468480",
   botOwner: ["929036943226990674", "331265944363991042"],

@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, PrivateChannel, GuildChannel} from "oceanic.js";
-import { mostCooldownRelevantTextChannelIDs } from "../handler/Config";
+import { mostCooldownRelevantTextChannelIDs, evalPrefix } from "../handler/Config";
 
 // Moderation Registry
 import ChannelCooldown from "../registry/channelCooldown";
@@ -23,10 +23,10 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
 
   forgottenMemberRole(message);
 
-  let args = message.content.slice(Config.prefix.length).trim().split(/ +/g);
-  let cmd = args.shift()?.toLowerCase();
+  if (message.content.startsWith(evalPrefix + "eval")) {
+    let args = message.content.slice(evalPrefix.length).trim().split(/ +/g);
+    args.shift()?.toLowerCase();
 
-  if (message.content.startsWith(Config.prefix + "eval")) {
     return EvalFactory(client, message, args);
   };
 };
