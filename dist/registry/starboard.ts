@@ -147,17 +147,19 @@ export default async (client: GMDIExtension, msg: Message<AnyGuildTextChannel>, 
       if (embeddings.length) {
         return client.rest.channels.createMessage(channelID, {
           components: [
-            ...redirectButton,
             {
               type: Constants.ComponentTypes.ACTION_ROW,
-              components: [{
-                type: Constants.ComponentTypes.BUTTON,
-                style: Constants.ButtonStyles.PRIMARY,
-                label: `By: ${userTag}`,
-                disabled: true,
-                customID: "_",
-                emoji: { name: "👥", id: null }
-              }]
+              components: [
+                ...redirectButton[0].components,
+                {
+                  type: Constants.ComponentTypes.BUTTON,
+                  style: Constants.ButtonStyles.PRIMARY,
+                  label: `By: ${userTag}`,
+                  disabled: true,
+                  customID: "_",
+                  emoji: { name: "👥", id: null }
+                }
+              ]
             }
           ],
           content: stripIndents`
