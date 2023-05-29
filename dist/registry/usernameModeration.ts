@@ -1,6 +1,6 @@
 import {EditMemberOptions, GMDIExtension, User, Member} from "oceanic.js";
 import {generateHash} from "../handler/Util";
-import Config from "../config/config";
+import Config from "../handler/Config";
 
 export default async (client: GMDIExtension, user: User | Member) => {
   try {

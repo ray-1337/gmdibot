@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, PrivateChannel, GuildChannel} from "oceanic.js";
-import Config from "../config/config";
+import Config from "../handler/Config";
 
 // Moderation Registry
 import ChannelCooldown from "../registry/channelCooldown";

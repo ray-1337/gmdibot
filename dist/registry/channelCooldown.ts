@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, AnyGuildTextChannel} from "oceanic.js";
-import Config from "../config/config";
+import Config from "../handler/Config";
 import * as Util from "../handler/Util";
 
 export default async (client: GMDIExtension, message: Message<AnyGuildTextChannel>) => {

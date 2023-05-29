@@ -1,6 +1,6 @@
 import { Message, AnyGuildTextChannel } from "oceanic.js";
 import ms from "ms";
-import config from "../config/config";
+import config from "../handler/Config";
 
 export default async (message: Message<AnyGuildTextChannel>) => {
   if (message.guildID !== config.guildID) return;

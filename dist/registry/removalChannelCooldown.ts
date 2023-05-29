@@ -1,5 +1,5 @@
 import { GMDIExtension, GuildChannel, AnyGuildTextChannel } from "oceanic.js";
-import Config from "../config/config";
+import Config from "../handler/Config";
 
 export default async (client: GMDIExtension) => {
   if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");

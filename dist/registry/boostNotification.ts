@@ -1,5 +1,5 @@
 import { Member, GMDIExtension, JSONMember } from "oceanic.js";
-import Config from "../config/config";
+import Config from "../handler/Config";
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
   if (member.bot || !oldMember) return;

@@ -1,5 +1,5 @@
 import {GMDIExtension, Message, EmbedOptions, AnyGuildTextChannel} from "oceanic.js";
-import Config from "../config/config";
+import Config from "../handler/Config";
 import undici from "undici";
 import { inspect } from "util";
 

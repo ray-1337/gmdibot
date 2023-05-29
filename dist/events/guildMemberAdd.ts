@@ -1,5 +1,5 @@
 import { GMDIExtension, Member } from "oceanic.js";
-import config from "../config/config";
+import config from "../handler/Config";
 import newMemberValidation from "../registry/newMemberValidation";
 import altPrevention from "../registry/altPrevention";
 

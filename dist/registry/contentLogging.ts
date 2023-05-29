@@ -2,7 +2,7 @@ import {GMDIExtension, Message, EmbedOptions, EmbedVideo, EmbedImage} from "ocea
 import * as Util from "../handler/Util";
 import {request} from "undici";
 import { stripIndents } from "common-tags";
-import config from "../config/config";
+import config from "../handler/Config";
 import fs from "fs";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 

@@ -1,5 +1,5 @@
 import { GMDIExtension, Member } from "oceanic.js";
-import config from "../config/config";
+import config from "../handler/Config";
 import usernameModeration from "./usernameModeration";
 
 export default async (client: GMDIExtension, member: Member) => {

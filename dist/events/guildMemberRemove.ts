@@ -1,5 +1,5 @@
 import { GMDIExtension, Guild, Member, User, EmbedOptions } from "oceanic.js";
-import config from "../config/config";
+import config from "../handler/Config";
 import ms from "ms";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 

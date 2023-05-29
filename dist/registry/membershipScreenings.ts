@@ -1,5 +1,5 @@
 import { Member, GMDIExtension, JSONMember, Constants } from "oceanic.js";
-import config from "../config/config";
+import config from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 

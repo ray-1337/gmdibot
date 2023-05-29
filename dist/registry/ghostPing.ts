@@ -1,6 +1,6 @@
 import {GMDIExtension, Message, AnyGuildTextChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
 import * as Util from "../handler/Util";
-import Config from "../config/config";
+import Config from "../handler/Config";
 import ms from "ms";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 
