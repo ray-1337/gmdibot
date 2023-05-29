@@ -3,8 +3,6 @@ import { modlogChannelID, checkCooldownRemovalInterval, cooldownRangeCooling, mo
 import { slowmodeChannel } from "./channelCooldown";
 
 export default async (client: GMDIExtension) => {
-  if (process.argv.slice(2)[0] === "--dev") console.log("removalGeneralCooldown ready");
-
   setInterval(() => {
     for (const channelID of mostCooldownRelevantTextChannelIDs) {
       if (!slowmodeChannel.has(channelID)) continue;
