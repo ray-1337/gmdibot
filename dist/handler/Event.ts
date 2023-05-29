@@ -1,10 +1,19 @@
-import fs from "fs";
+import { readdir } from "node:fs/promises";
 import { GMDIExtension, ClientEvents } from "oceanic.js";
+import { resolve, join } from "node:path";
 
 export default async (client: GMDIExtension) => {
-  const events = await fs.promises.readdir("./dist/events/");
+  let path = resolve(__dirname, "..", "events");
+  const eventList = await readdir(path);
 
-  for (const evt of events) {
-    client.on(evt.split(".")[0] as keyof ClientEvents, (...args) => require(`../events/${evt}`).default(client, ...args));
-  };
+	for (let event of eventList) {
+		try {
+      const eventImport = await import(join(path, event));
+      if (typeof eventImport.default !== "function" || !eventImport?.default) continue;
+      
+      client.on(event.split('.')[0] as keyof ClientEvents, (...args) => eventImport.default(client, ...args));
+    } catch {
+      continue;
+    };
+	};
 };
