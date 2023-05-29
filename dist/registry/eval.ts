@@ -20,15 +20,17 @@ export default async (client: GMDIExtension, message: Message<AnyGuildTextChanne
     embed.title = "Output";
     embed.color = 0x7289DA;
 
-    if (output.toString().length >= 1024) {
+    const stringifiedOutput = output.toString();
+
+    if (stringifiedOutput.length >= 1024) {
       return message.channel.createMessage({
         files: [{
-          contents: Buffer.from(output, "utf-8"),
+          contents: Buffer.from(stringifiedOutput, "utf-8"),
           name: `eval_${Date.now()}.txt`
         }]
       });
     } else {
-      if (output?.length <= 0 || output != "undefined") {
+      if (stringifiedOutput?.length <= 0 || stringifiedOutput == "undefined") {
         return message.createReaction("🟢");
       } else {
         embed.description = "```js\n" + output + "```";
