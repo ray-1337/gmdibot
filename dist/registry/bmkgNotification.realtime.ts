@@ -42,14 +42,14 @@ export default async (client: GMDIExtension) => {
 
       const currentTime = new Date(dayjs().tz(timezone).format());
       const localizedTime = new Date(parsedTime.format());
-      const late = ms("15m");
+      const late = ms("45m");
 
       // check if its already late
       if (currentTime.valueOf() - localizedTime.valueOf() > late) {
+        // console.log(currentTime.valueOf(), localizedTime.valueOf(), currentTime.valueOf() - localizedTime.valueOf() > late)
         return;
       };
 
-      
       const earthquakeID = latestEQ.eventid._text;
       const cachedEarthQuake = cached.get(earthquakeID); // prevent replay
       if (cachedEarthQuake) return;
