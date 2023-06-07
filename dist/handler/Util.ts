@@ -80,8 +80,8 @@ export function randomNumber(min: number, max: number) {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
 };
 
-export function customInaTime(unparsedTime: string, timezone: string) {
-  return dayjs(unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()!).tz(timezone);
+export function customInaTime(unparsedTime: string) {
+  return `${unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()} + Z`;
 };
 
 export function randomInterval(intervalFunction, minDelay: number, maxDelay: number) {

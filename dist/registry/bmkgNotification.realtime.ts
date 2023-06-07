@@ -38,11 +38,11 @@ export default async (client: GMDIExtension) => {
       if (!parsed?.Infogempa?.gempa?.[0]) return;
 
       const latestEQ = parsed.Infogempa.gempa[0];
-      const parsedTime = customInaTime(latestEQ.waktu._text, timezone);
+      const parsedTime = customInaTime(latestEQ.waktu._text);
 
-      const currentTime = new Date(dayjs().tz(timezone).format());
-      const localizedTime = new Date(parsedTime.format());
-      const late = ms("45m");
+      const currentTime = dayjs().tz(timezone);
+      const localizedTime = dayjs(parsedTime).tz(timezone);
+      const late = ms("15m");
 
       // check if its already late
       if (currentTime.valueOf() - localizedTime.valueOf() > late) {
