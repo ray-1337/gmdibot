@@ -81,7 +81,7 @@ export function randomNumber(min: number, max: number) {
 };
 
 export function customInaTime(unparsedTime: string) {
-  return `${unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()} + Z`;
+  return `${unparsedTime.replace(/\//gi, "-").replace("  ", "T").split(".").shift()}Z`;
 };
 
 export function randomInterval(intervalFunction, minDelay: number, maxDelay: number) {
