@@ -9,7 +9,7 @@
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.16.16",
+    "@types/node": "^18.16.18",
     "@types/node-schedule": "^2.1.0",
     "dayjs": "^1.11.8",
     "dotenv": "^16.1.4",
