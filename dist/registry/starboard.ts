@@ -69,7 +69,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         client.database.set("postedStarboard", [message.id]);
       };
 
-      const userTag = `${message.author.username}#${message.author.discriminator}`;
+      const userTag = `${client.utility.usernameHandle(message.author)}`;
       let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
       .setDescription(truncate(message.content, 1024))
       .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16))
@@ -77,7 +77,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       if (starterQuery) {
         let starterUser = client.users.get(starterQuery) || await client.rest.users.get(starterQuery).catch(() => { });
         if (starterUser) {
-          embed.setFooter(`Si Pemulai: ${starterUser.username}#${starterUser.discriminator}`)
+          embed.setFooter(`Si Pemulai: ${client.utility.usernameHandle(starterUser)}`)
         };
       };
 

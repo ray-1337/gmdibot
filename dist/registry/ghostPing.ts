@@ -66,7 +66,7 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
     const embed: EmbedOptions = {
       timestamp: new Date().toISOString(),
       author: {
-        name: `Ghost Ping dari: ${message.author.username}#${message.author.discriminator}`,
+        name: `Ghost Ping dari: ${client.utility.usernameHandle(message.author)}`,
         iconURL: message.author.avatarURL("png", 32)
       }
     };

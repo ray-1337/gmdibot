@@ -23,13 +23,11 @@ export default async (client: GMDIExtension, member: User | Member, guild: Guild
   // };
 
   if (member instanceof Member && Math.floor(Date.now() - new Date(member.joinedAt!).getTime()) < ms("5m")) {
-    // embed = {...embed, ...{title: "Dadah...", description: `**${member.username}#${member.discriminator}** langsung keluar dari server.`}};
-    embed.setTitle("Dadah...").setDescription(`**${member.username}#${member.discriminator}** langsung keluar dari server.`);
+    embed.setTitle("Dadah...").setDescription(`**${client.utility.usernameHandle(member)}** langsung keluar dari server.`);
   }
 
   else {
-    // embed = {...embed, ...{title: "Farewell...", description: `**${member.username}#${member.discriminator}** keluar dari server.`}};
-    embed.setTitle("Farewell...").setDescription(`**${member.username}#${member.discriminator}** keluar dari server.`);
+    embed.setTitle("Farewell...").setDescription(`**${client.utility.usernameHandle(member)}** keluar dari server.`);
   };
   
   return client.rest.channels.createMessage(firstGeneralTextChannelID, {embeds: embed.toJSON(true)});

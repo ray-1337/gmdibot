@@ -1,4 +1,4 @@
-import { GMDIExtension, Message, AnyTextableGuildChannel } from "oceanic.js";
+import { GMDIExtension, Message, AnyTextableGuildChannel, Member } from "oceanic.js";
 import {randomBytes} from "crypto";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 
@@ -29,6 +29,10 @@ export async function transformMessage(client: GMDIExtension, message: PossiblyU
   } else {
     return null;
   };
+};
+
+export function usernameHandle(user: Member | Member["user"]) {
+  return user.discriminator === "0" ? `@${user.username}` : `${user.username}#${user.discriminator}`;
 };
 
 export function countString(string: string) {

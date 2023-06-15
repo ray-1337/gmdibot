@@ -6,13 +6,11 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
 
   const boostRole = "589643758564540417";
   if (!oldMember?.premiumSince && member?.premiumSince && !oldMember.roles.includes(boostRole)) {
-    const userTag = `${member.username}#${member.discriminator}`;
-
     return client.rest.channels.createMessage(firstGeneralTextChannelID, {embeds: [{
       color: 0xf47fff,
       timestamp: new Date().toISOString(),
       author: {
-        name: `${userTag} barusan ngeboost server GMDI`,
+        name: `${client.utility.usernameHandle(member)} barusan ngeboost server GMDI`,
         iconURL: member.avatarURL("png", 32)
       }
     }]});

@@ -46,7 +46,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
       };
 
       const embed = new RichEmbed().setTimestamp(new Date()).setColor(0x24C86E)
-      .setTitle(`Halo, ${member.user.username}#${member.user.discriminator} 👋`)
+      .setTitle(`Halo, ${client.utility.usernameHandle(member)} 👋`)
       .setDescription(shuffle(pregeneratedWelcomeText)[0])
   
       await client.rest.guilds.addMemberRole(member.guild.id, member.id, "312868594549653514");
