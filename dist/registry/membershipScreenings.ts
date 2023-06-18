@@ -1,4 +1,4 @@
-import { Member, GMDIExtension, JSONMember, Constants } from "oceanic.js";
+import { Member, GMDIExtension, JSONMember, ComponentTypes, ButtonStyles } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
@@ -18,13 +18,6 @@ const pregeneratedWelcomeText = [
   "Hai! Selamat datang di server Discord kami yang hangat dan ramah. Kami berharap kamu bisa merasa seperti di rumah di sini.",
   "Selamat datang di server Discord kami yang bersemangat dan penuh kehidupan. Kami harap kamu bisa merasa termotivasi dan menginspirasi di sini.",
   "Selamat datang di server Discord kami! Kami senang bisa memiliki kamu di sini dan berharap kamu bisa menemukan komunitas yang menyenangkan dan mendukung di sini."
-];
-
-const buttonConcernText = [
-  "Bro, ini teks welcome nya...",
-  "Ini kenapa teksnya goofy sekali yah?",
-  "What the heck is this?",
-  "goofy ahh welcome"
 ];
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
@@ -55,13 +48,12 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
         content: member.mention,
         embeds: embed.toJSON(true),
         components: [{
-          type: Constants.ComponentTypes.ACTION_ROW,
+          type: ComponentTypes.ACTION_ROW,
           components: [{
-            type: Constants.ComponentTypes.BUTTON,
+            type: ComponentTypes.BUTTON,
             customID: goofyButtonID,
-            style: Constants.ButtonStyles.PRIMARY,
-            emoji: {id: null, name: "❓"},
-            label: shuffle(buttonConcernText)[0]
+            style: ButtonStyles.SECONDARY,
+            emoji: {id: null, name: "ℹ"}
           }]
         }]
       });
