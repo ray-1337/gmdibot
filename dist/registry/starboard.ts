@@ -148,6 +148,8 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       }];
 
       if (embeddings.length) {
+        const filteredURLFromMessageContent = message.content.split(/\s/gi).filter(content => embeddings.includes(content)).join(" ");
+
         return client.rest.channels.createMessage(channelID, {
           components: [
             {
@@ -166,7 +168,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
             }
           ],
           content: stripIndents`
-          ${message?.content.length ? `> ${truncate(message.content, 1024)}` : ""}
+          ${filteredURLFromMessageContent.length ? `> ${truncate(filteredURLFromMessageContent, 1024)}` : ""}
 
           ${embeddings.join("\n")}`,
         });
