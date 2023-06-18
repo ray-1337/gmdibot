@@ -1,7 +1,8 @@
 import { Member, GMDIExtension, JSONMember } from "oceanic.js";
 
 import membershipScreenings from "../registry/membershipScreenings";
-import boostNotification from "../registry/boostNotification"
+import boostNotification from "../registry/boostNotification";
+import usernameModeration from "../registry/usernameModeration";
 
 export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
   // passed Membership Screenings
@@ -9,4 +10,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
 
   // boost notification
   boostNotification(client, member, oldMember);
+
+  // guild nickname moderation
+  usernameModeration(client, member, oldMember);
 };
