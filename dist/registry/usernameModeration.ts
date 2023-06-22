@@ -13,7 +13,7 @@ export default async function(client: GMDIExtension, user: Member | Member["user
       if (user.nick !== null && user.nick !== oldUser?.nick) {
         if (!user.nick.match(regex)) {
           return user.edit({
-            nick: random
+            nick: `biar bisa ditag ${random}`
           });
         };
       };
