@@ -27,7 +27,7 @@
   "dependencies": {
     "@oceanicjs/builders": "^1.1.7",
     "common-tags": "^1.8.2",
-    "oceanic.js": "^1.7.0"
+    "oceanic.js": "^1.7.1"
   },
   "engines": {
     "node": ">=18"
