@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node --transpile-only ./dist/index.ts",
-    "dev": "ts-node-dev --respawn --transpile-only ./dist/index.ts dev",
-    "rspm": "pm2 reload gmdibot && pm2 logs gmdibot"
+    "dev": "ts-node-dev --respawn --transpile-only ./dist/index.ts dev"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
