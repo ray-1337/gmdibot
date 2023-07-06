@@ -20,6 +20,8 @@
     "useUnknownInCatchVariables": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
     "typeRoots": ["./dist/typings/"],
