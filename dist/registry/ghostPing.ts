@@ -1,4 +1,4 @@
-import {GMDIExtension, Message, AnyTextableGuildChannel, Uncached, JSONMessage, EmbedOptions, CreateMessageOptions, User} from "oceanic.js";
+import {GMDIExtension, Message, AnyTextableGuildChannel, JSONMessage, CreateMessageOptions, User} from "oceanic.js";
 import { transformMessage } from "../handler/Util";
 import { gmdiGuildID, ignoredCategoryToPerformGhostPing } from "../handler/Config";
 import ms from "ms";
