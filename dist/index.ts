@@ -11,7 +11,17 @@ const client = new GMDIBot({
     guildCreateTimeout: 30000
   },
   collectionLimits: {
-    messages: 40
+    messages: 40,
+    auditLogEntries: 0,
+    autoModerationRules: 0,
+    channelThreads: 0,
+    groupChannels: 0,
+    guildThreads: 0,
+    integrations: 0,
+    privateChannels: 0,
+    scheduledEvents: 0,
+    stageInstances: 0,
+    unavailableGuilds: 0
   }
 });
 
