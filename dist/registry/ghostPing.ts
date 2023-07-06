@@ -102,10 +102,15 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
       ctx.content = result.userAnnouncedIds.map(userID => `<@!${userID}>`).join(" ");
     };
 
-    await client.rest.channels.createMessage(message.channel.id, {
+    const deletedMessage = await client.rest.channels.createMessage(message.channel.id, {
       ...ctx,
       embeds: embed.toJSON(true)
     });
+
+    if (deletedMessage) {
+      const timeout = ms("15m");
+      setTimeout(() => deletedMessage.delete("Tidak diperlukan lagi."), timeout);
+    };
 
   } catch (error) {
     return console.error(error);
