@@ -91,11 +91,11 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
 
     if (message?.attachments?.size) {
       const firstAttachment = message.attachments.first();
-      if (firstAttachment?.proxyURL && firstAttachment?.contentType?.startsWith("image")) {
-        embed.setImage(firstAttachment.proxyURL);
+      if (firstAttachment?.url && firstAttachment?.contentType?.startsWith("image")) {
+        embed.setImage(firstAttachment.url);
       }
-    } else if (oldMessage?.attachments?.[0]?.proxyURL && oldMessage.attachments[0].contentType?.startsWith("image")) {
-      embed.setImage(oldMessage.attachments[0].proxyURL);
+    } else if (oldMessage?.attachments?.[0]?.url && oldMessage.attachments[0].contentType?.startsWith("image")) {
+      embed.setImage(oldMessage.attachments[0].url);
     };
 
     if (result.userAnnouncedIds.length) {
