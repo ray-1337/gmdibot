@@ -3,6 +3,7 @@ import { transformMessage } from "../handler/Util";
 import { gmdiGuildID } from "../handler/Config";
 import ms from "ms";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
+import { EmbedBuilder } from "@oceanicjs/builders";
 
 const standardOldMessageTime = ms("5m");
 const ignoreCheckingKey = "ignoreChecking";
@@ -63,17 +64,11 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
       return;
     };
 
-    const embed: EmbedOptions = {
-      timestamp: new Date().toISOString(),
-      author: {
-        name: `Ghost Ping dari: ${client.utility.usernameHandle(message.author)}`,
-        iconURL: message.author.avatarURL("png", 32)
-      }
-    };
+    const embed = new EmbedBuilder()
+    .setTimestamp(new Date)
+    .setAuthor(`Ghost Ping dari: ${client.utility.usernameHandle(message.author)}`, message.author.avatarURL("png", 32))
 
     let ctx: CreateMessageOptions = {
-      embeds: [embed],
-
       messageReference: {
         messageID: message.id,
         failIfNotExists: false
@@ -88,18 +83,21 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
     };
 
     if (oldMessage) {
-      embed.color = 0xF29C3F;
-      if (oldMessage.content) embed.description = oldMessage.content;
+      embed.setColor(0xF29C3F);
+      if (oldMessage.content) embed.setDescription(oldMessage.content);
     } else {
-      embed.color = 0xF53131;
-      if (message.content) embed.description = message.content;
+      embed.setColor(0xF53131);
+      if (message.content) embed.setDescription(message.content);
     };
 
     if (result.userAnnouncedIds.length) {
       ctx.content = result.userAnnouncedIds.map(userID => `<@!${userID}>`).join(" ");
     };
 
-    await client.rest.channels.createMessage(message.channel.id, ctx);
+    await client.rest.channels.createMessage(message.channel.id, {
+      ...ctx,
+      embeds: embed.toJSON(true)
+    });
 
   } catch (error) {
     return console.error(error);
