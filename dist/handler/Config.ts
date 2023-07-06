@@ -12,6 +12,8 @@ export const modlogChannelID = "900578330858905601";
 
 export const botOwnerIDs = ["331265944363991042"];
 
+export const ignoredCategoryToPerformGhostPing = ["759298776656510998", "360450207386828810", "627808236015190017", "954290819886612480", "535466115459973120"]
+
 // channel cooldown related
 export const mostCooldownRelevantTextChannelIDs = ["190826809896468480", "460816462941126666", "460420164551442432"];
 
