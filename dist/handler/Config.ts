@@ -2,6 +2,8 @@ import ms from "ms";
 
 const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
 
+export const coblosChannelID = "905076614042370088";
+
 export const gmdiGuildID = "190826809896468480";
 
 export const firstGeneralTextChannelID = "190826809896468480";
