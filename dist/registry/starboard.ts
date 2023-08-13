@@ -153,11 +153,13 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         }]
       }];
 
-      return client.rest.channels.createMessage(channelID, {
+      await client.rest.channels.createMessage(channelID, {
         embeds: embed.toJSON(true),
         components: redirectButton,
         files: file ? [file] : undefined
       });
+
+      return await table.set(message.id, true);
     };
   } catch (error) {
     return console.error(error);
