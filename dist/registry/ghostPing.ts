@@ -4,9 +4,14 @@ import { gmdiGuildID, ignoredCategoryToPerformGhostPing } from "../handler/Confi
 import ms from "ms";
 import {PossiblyUncachedMessage} from "../events/messageDelete";
 import { EmbedBuilder } from "@oceanicjs/builders";
+import { QuickDB } from "quick.db";
+import path from "node:path";
 
 const standardOldMessageTime = ms("5m");
-const ignoreCheckingKey = "ignoreChecking";
+
+const ghostPingStorage = new QuickDB({
+  filePath: path.join(process.cwd(), "database", "ghostping.sqlite")
+});
 
 export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
@@ -27,11 +32,11 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
       return;
     };
 
-    let ignored = await immediateIgnore(client, message.id);
+    let ignored = await immediateIgnore(message.id);
     if (ignored) return;
 
     if (oldMessage && isOldMessageEditedAndNoTag(oldMessage)) {
-      return await client.database.push(ignoreCheckingKey, message.id);
+      return await ghostPingStorage.set(message.id, true);
     };
 
     const mentionableRoleIds = (message.channel?.guild?.roles || await client.rest.guilds.getRoles(message.guildID)).filter(val => val.mentionable).map(role => role.id);
@@ -148,13 +153,9 @@ export async function checkMentions(client: GMDIExtension, message: Message<AnyT
   return { hasMentions, variant };
 };
 
-export async function immediateIgnore(client: GMDIExtension, messageID: string) {
-  const check = await client.database.get(ignoreCheckingKey) as string[] | null;
-  if (!check?.find(val => val == messageID)) {
-    return false;
-  } else {
-    return true;
-  };
+export async function immediateIgnore(messageID: string) {
+  const check = await ghostPingStorage.has(messageID);
+  return check;
 };
 
 function isOldMessageEditedAndNoTag(oldMessage: JSONMessage | null) {
