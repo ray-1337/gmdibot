@@ -126,7 +126,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         // embeds
         if (message.embeds.length == 1) {
           if (message.embeds[0].type == "image" && message.embeds[0].url) {
-            embed.setImage(normalizeURL(message.attachments.toArray()[0].url));
+            embed.setImage(normalizeURL(message.embeds[0].url));
           }
 
           else if (message.embeds[0].type == "video" && message.embeds[0].url) {
