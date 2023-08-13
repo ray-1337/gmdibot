@@ -14,7 +14,6 @@ const client = new GMDIBot({
     messages: 40,
     auditLogEntries: 0,
     autoModerationRules: 0,
-    channelThreads: 0,
     groupChannels: 0,
     guildThreads: 0,
     integrations: 0,
