@@ -31,9 +31,9 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     const starEmoji = "⭐";
     const channelID = "954291153203769354";
 
-    // message older than Jan 1 2022 will be ignored
-    // let _2022 = new Date("Jan 1 2022").getTime();
-    // if (message.createdAt < _2022) return;
+    // message older than Aug 13, 2023 will be ignored
+    let breakingChangesDate = new Date("Aug 13 2023").getTime();
+    if (message.createdAt.getTime() < breakingChangesDate) return;
 
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
