@@ -7,6 +7,8 @@ import dayjsUTC from "dayjs/plugin/utc";
 dayjs.extend(dayjsTZ);
 dayjs.extend(dayjsUTC);
 
+export const isDevMode = process.env.npm_lifecycle_event === "dev";
+
 export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | null) {
   if (message) {
     if (message instanceof Message) {
