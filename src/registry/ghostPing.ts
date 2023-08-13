@@ -113,7 +113,7 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
 
     if (deletedMessage) {
       const timeout = ms("15m");
-      setTimeout(() => deletedMessage.delete("Tidak diperlukan lagi."), timeout);
+      setTimeout(() => deletedMessage.delete("Tidak diperlukan lagi.").catch(() => {}), timeout);
     };
 
   } catch (error) {
