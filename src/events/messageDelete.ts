@@ -1,8 +1,6 @@
-import {GMDIExtension, Message, Uncached, AnyTextableGuildChannel} from "oceanic.js";
+import {GMDIExtension, PossiblyUncachedMessage} from "oceanic.js";
 
-export type PossiblyUncachedMessage = Message<AnyTextableGuildChannel> | { channel: AnyTextableGuildChannel | Uncached; id: string };
-
-// import contentLogging from "../registry/contentLogging";
+import contentLogging from "../registry/deletedMessageLogging";
 import ghostPing from "../registry/ghostPing";
 
 export default async (client: GMDIExtension, message: PossiblyUncachedMessage) => {
