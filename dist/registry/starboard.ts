@@ -3,11 +3,17 @@ import ms from "ms";
 import normalizeURL from "normalize-url";
 import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
+import { QuickDB } from "quick.db";
+import path from "node:path";
 
 const cachedStar = new Map<string, number>();
 
 const minStar: number = 6;
 const maxStar: number = 9;
+
+export const starboardStorage = new QuickDB({
+  filePath: path.join(process.cwd(), "database", "starboard.sqlite")
+});
 
 export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
@@ -37,12 +43,16 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
 
     // starboard starter
-    let starterQueryKey = `starboardStarter_${message.id}`;
-    let starterQuery = await client.database.get(starterQueryKey);
+    const firstReactedTable = await starboardStorage.tableAsync("first_reaction");
+    let starterQuery = await firstReactedTable.has(message.id);
     if (reactions.length == 1) {
-      if (!starterQuery) await client.database.set(starterQueryKey, reactions[0].id);
+      if (!starterQuery) {
+        await firstReactedTable.set(message.id, reactions[0].id);
+      };
     } else if (reactions.length <= 0) {
-      if (starterQuery) await client.database.delete(starterQueryKey);
+      if (starterQuery) {
+        await firstReactedTable.delete(message.id);
+      };
     };
 
     // star emoji validation
@@ -56,20 +66,12 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     // increment if same user reacted
     if (reactions.find(val => message && (message.author.id == val.id))) ++limit;
 
+    // check if the starboard has been posted before or nah
     if (message.reactions[starEmoji].count >= limit) {
-      if (client.database.has("postedStarboard")) {
-        let check = client.database.get("postedStarboard") as string[] | null;
-        if (check) {
-          if (check.includes(message.id)) {
-            return;
-          } else {
-            client.database.push("postedStarboard", message.id);
-          };
-        } else {
-          return;
-        };
-      } else {
-        client.database.set("postedStarboard", [message.id]);
+      const table = await starboardStorage.tableAsync("posted");
+
+      if ((await table.has(message.id))) {
+        return;
       };
 
       const userTag = `${client.utility.usernameHandle(message.author)}`;
@@ -78,7 +80,8 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16))
 
       if (starterQuery) {
-        let starterUser = client.users.get(starterQuery) || await client.rest.users.get(starterQuery).catch(() => { });
+        const firstReactUserID = await firstReactedTable.get(message.id);
+        const starterUser = client.users.get(firstReactUserID) || await client.rest.users.get(firstReactUserID).catch(() => { });
         if (starterUser) {
           embed.setFooter(`Si Pemulai: ${client.utility.usernameHandle(starterUser)}`)
         };
