@@ -20,7 +20,11 @@ const client = new GMDIBot({
     privateChannels: 0,
     scheduledEvents: 0,
     stageInstances: 0,
-    unavailableGuilds: 0
+    unavailableGuilds: 0,
+    voiceStates: 0,
+    voiceMembers: 0,
+    stickers: 0,
+    invites: 0
   }
 });
 
