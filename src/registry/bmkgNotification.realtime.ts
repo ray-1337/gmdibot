@@ -58,16 +58,22 @@ export default async (client: GMDIExtension) => {
       let limitMagnitudeToPost = 4;
       if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
         cached.set(earthquakeID, true);
+        
         if (isDevMode) {
-          return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
+          console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
         };
+
+        return;
       };
 
       if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali)/gim)) {
         cached.set(earthquakeID, true);
+        
         if (isDevMode) {
-          return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
+          console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
         };
+
+        return;
       };
 
       // host
