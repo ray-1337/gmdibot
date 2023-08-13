@@ -4,7 +4,7 @@ import { request } from "undici";
 import {xml2json} from "xml-js";
 import ms from "ms";
 import dayjs from "dayjs";
-import { randomInterval, customInaTime, colorizedMagnitudeEmbed, mercalliIntensityScale } from "../handler/Util";
+import { randomInterval, customInaTime, colorizedMagnitudeEmbed, mercalliIntensityScale, isDevMode } from "../handler/Util";
 
 const timezone = "Asia/Jakarta";
 const cached = new Map<string, boolean>();
@@ -58,12 +58,16 @@ export default async (client: GMDIExtension) => {
       let limitMagnitudeToPost = 4;
       if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
         cached.set(earthquakeID, true);
-        return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
+        if (isDevMode) {
+          return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
+        };
       };
 
       if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali)/gim)) {
         cached.set(earthquakeID, true);
-        return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
+        if (isDevMode) {
+          return console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
+        };
       };
 
       // host
@@ -128,7 +132,9 @@ export default async (client: GMDIExtension) => {
 
       cached.set(earthquakeID, true);
 
-      console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${latestEQ.eventid._text}`);
+      if (isDevMode) {
+        console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${latestEQ.eventid._text}`);
+      };
 
       return;
     } catch (error) {
