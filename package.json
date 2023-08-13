@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts dev"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
