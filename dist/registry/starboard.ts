@@ -3,11 +3,13 @@ import ms from "ms";
 import normalizeURL from "normalize-url";
 import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import { stripIndents } from "common-tags";
 
 const cachedStar = new Map<string, number>();
 
-export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, emoji: PartialEmoji, reactor: Uncached | User | Member) => {
+const minStar: number = 6;
+const maxStar: number = 9;
+
+export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
     // must be presented in guild
     if (!msg?.channel?.guildID || !msg?.channel?.id) return;
@@ -27,7 +29,6 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     // let _2022 = new Date("Jan 1 2022").getTime();
     // if (message.createdAt < _2022) return;
 
-    // if (message.content.replace(/[a-zA-Z]/g, "").length < totalCharLengthMinimum) return;
     if (message.channel.id == channelID) return; // star in the same channel
     if (!message.reactions[starEmoji]) return; // not star emoji
     if (message.reactions[starEmoji].me) return; // bot
@@ -45,10 +46,9 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     };
 
     // star emoji validation
-    let _maxR = 9, _minR = 6;
     let limit = cachedStar.get(message.id);
     if (!limit || isNaN(limit)) {
-      let randLimit = Math.floor(Math.random() * (_maxR - _minR) + _minR);
+      let randLimit = Math.floor(Math.random() * (maxStar - minStar) + minStar);
       limit = randLimit;
       cachedStar.set(message.id, randLimit);
     };
@@ -60,8 +60,11 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       if (client.database.has("postedStarboard")) {
         let check = client.database.get("postedStarboard") as string[] | null;
         if (check) {
-          if (check.includes(message.id)) return;
-          else client.database.push("postedStarboard", message.id);
+          if (check.includes(message.id)) {
+            return;
+          } else {
+            client.database.push("postedStarboard", message.id);
+          };
         } else {
           return;
         };
@@ -147,38 +150,11 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         }]
       }];
 
-      if (embeddings.length) {
-        const filteredURLFromMessageContent = message.content.split(/\s/gi).filter(content => embeddings.includes(content)).join(" ");
-
-        return client.rest.channels.createMessage(channelID, {
-          components: [
-            {
-              type: Constants.ComponentTypes.ACTION_ROW,
-              components: [
-                ...redirectButton[0].components,
-                {
-                  type: Constants.ComponentTypes.BUTTON,
-                  style: Constants.ButtonStyles.PRIMARY,
-                  label: `By: ${userTag}`,
-                  disabled: true,
-                  customID: "_",
-                  emoji: { name: "👥", id: null }
-                }
-              ]
-            }
-          ],
-          content: stripIndents`
-          ${filteredURLFromMessageContent.length ? `> ${truncate(filteredURLFromMessageContent, 1024)}` : ""}
-
-          ${embeddings.join("\n")}`,
-        });
-      } else {
-        return client.rest.channels.createMessage(channelID, {
-          embeds: embed.toJSON(true),
-          components: redirectButton,
-          files: file ? [file] : undefined
-        });
-      };
+      return client.rest.channels.createMessage(channelID, {
+        embeds: embed.toJSON(true),
+        components: redirectButton,
+        files: file ? [file] : undefined
+      });
     };
   } catch (error) {
     return console.error(error);
