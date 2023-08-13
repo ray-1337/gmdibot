@@ -1,6 +1,7 @@
 import { Message, PossiblyUncachedMessage, GMDIExtension, Embed } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
+import { randomNumber } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 import { request } from "undici";
 
@@ -146,7 +147,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
     const availableExtension = extension?.[contentType];
     if (!availableExtension?.length) return null;
 
-    const randomFileID = pseudoRandomBytes(16).toString("hex");
+    const randomFileID = pseudoRandomBytes(randomNumber(8, 16)).toString("hex");
 
     const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
 
