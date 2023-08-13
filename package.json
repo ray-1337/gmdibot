@@ -42,6 +42,8 @@
     "url": "https://github.com/ray-1337/gmdi-private-bot.git"
   },
   "optionalDependencies": {
+    "better-sqlite3": "^8.5.0",
+    "quick.db": "^9.1.7",
     "xml-js": "^1.6.11"
   }
 }
