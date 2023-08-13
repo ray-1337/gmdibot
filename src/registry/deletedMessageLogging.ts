@@ -6,7 +6,7 @@ import { request } from "undici";
 
 // cdn
 import BunnyCDN from "bunnycdn-storage";
-const { upload: bunnyUpload } = new BunnyCDN(process.env.BUNNYCDN_PASSWORD!, process.env.BUNNYCDN_USERNAME!, "sg");
+const bunnyCDN = new BunnyCDN(process.env.BUNNYCDN_PASSWORD!, process.env.BUNNYCDN_USERNAME!, "sg");
 
 export default async function (client: GMDIExtension, message: PossiblyUncachedMessage) {
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
@@ -149,7 +149,8 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
     const randomFileID = pseudoRandomBytes(16).toString("hex");
 
     const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
-    const upload = await bunnyUpload(Buffer.from(await data.body.arrayBuffer()), urlEndpoint);
+
+    const upload = await bunnyCDN.upload(Buffer.from(await data.body.arrayBuffer()), urlEndpoint);
     if (upload.status >= 400) {
       console.error(`bunnyCDN upload error [${upload.status}]`, upload.data);
       return null;
