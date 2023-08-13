@@ -1,6 +1,5 @@
-import { GMDIExtension, Message, AnyTextableGuildChannel, Member } from "oceanic.js";
+import { GMDIExtension, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
 import {randomBytes} from "crypto";
-import {PossiblyUncachedMessage} from "../events/messageDelete";
 
 import dayjs from "dayjs";
 import dayjsTZ from "dayjs/plugin/timezone";
@@ -8,19 +7,15 @@ import dayjsUTC from "dayjs/plugin/utc";
 dayjs.extend(dayjsTZ);
 dayjs.extend(dayjsUTC);
 
-export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | DeletedMessage | null): Promise<Message<AnyTextableGuildChannel> | null> {
+export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | null) {
   if (message) {
     if (message instanceof Message) {
-      return message;
+      return message as Message<Uncached | AnyTextableGuildChannel>;
     } else {
       try {
-        let restMessage = await client.rest.channels.getMessage(message.channel.id, message.id).catch(() => {});
+        let restMessage = await client.rest.channels.getMessage<AnyTextableGuildChannel>(message.channel.id, message.id).catch(() => {});
 
-        if (restMessage) {
-          return message = restMessage as Message<AnyTextableGuildChannel>;
-        } else {
-          return null;
-        };
+        return restMessage || null;
       } catch (error) {
         console.error(error);
         return null;

@@ -26,7 +26,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
 
     // check message
     let message = await transformMessage(client, msg);
-    if (!message) return;
+    if (!message?.channel) return;
 
     const starEmoji = "⭐";
     const channelID = "954291153203769354";

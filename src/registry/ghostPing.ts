@@ -1,8 +1,7 @@
-import {GMDIExtension, Message, AnyTextableGuildChannel, JSONMessage, CreateMessageOptions, User} from "oceanic.js";
+import {GMDIExtension, Message, AnyTextableGuildChannel, JSONMessage, PossiblyUncachedMessage, CreateMessageOptions, User} from "oceanic.js";
 import { transformMessage } from "../handler/Util";
 import { gmdiGuildID, ignoredCategoryToPerformGhostPing } from "../handler/Config";
 import ms from "ms";
-import {PossiblyUncachedMessage} from "../events/messageDelete";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { QuickDB } from "quick.db";
 import path from "node:path";
@@ -20,7 +19,7 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
   try {
     // check message
     let message = await transformMessage(client, msg);
-    if (!(message instanceof Message) || message.author.bot || message.guildID !== gmdiGuildID) return;
+    if (!(message instanceof Message) || !message?.channel || message.author.bot || message.guildID !== gmdiGuildID) return;
 
     // ignore category
     if (message.channel.parentID && ignoredCategoryToPerformGhostPing.includes(message.channel.parentID)) {
