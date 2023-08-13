@@ -24,7 +24,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
-    "typeRoots": ["./dist/typings/"],
+    "typeRoots": ["src/typings"],
     "declaration": true,
     "outDir": "./build"
   },
