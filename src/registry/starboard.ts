@@ -68,7 +68,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
 
     // check if the starboard has been posted before or nah
     if (message.reactions[starEmoji].count < limit) return;
-    
+
     const table = await starboardStorage.tableAsync("posted");
 
     if ((await table.has(message.id))) {
@@ -150,7 +150,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         type: Constants.ComponentTypes.BUTTON,
         style: Constants.ButtonStyles.LINK,
         label: "Dokumen Asli",
-        url: `https://discord.com/channels/${message.channel.guildID}/${message.channel.id}/${message.id}`
+        url: message.jumpLink
       }]
     }];
 
