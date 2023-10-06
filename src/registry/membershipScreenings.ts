@@ -3,8 +3,6 @@ import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
-export const goofyButtonID = "gmdi_wwtiw";
-
 const rules = "274351350656139265";
 
 const pregeneratedWelcomeText = [
@@ -25,10 +23,6 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
   
   try {
     if (oldMember?.pending && !member?.pending) {
-      // let returnMemberMessage = stripIndents`
-      // Selamat datang di Discord server, **${member.guild.name}**!
-      // Semoga betah, dan jangan lupa baca ${client.getChannel("274351350656139265")?.mention || "<#274351350656139265>"} sebelum ngobrol.`
-
       if (member.id === "331265944363991042") {
         let roles = ["226245101452525578", "519880256291733516", "312868594549653514"];
         for await (const role of roles) {
@@ -46,16 +40,7 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
       
       return client.rest.channels.createMessage(firstGeneralTextChannelID, {
         content: member.mention,
-        embeds: embed.toJSON(true),
-        components: [{
-          type: ComponentTypes.ACTION_ROW,
-          components: [{
-            type: ComponentTypes.BUTTON,
-            customID: goofyButtonID,
-            style: ButtonStyles.SECONDARY,
-            emoji: {id: null, name: "ℹ"}
-          }]
-        }]
+        embeds: embed.toJSON(true)
       });
     };
   } catch (error) {
