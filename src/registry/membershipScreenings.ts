@@ -1,4 +1,4 @@
-import { Member, GMDIExtension, JSONMember, ComponentTypes, ButtonStyles } from "oceanic.js";
+import { Member, GMDIExtension, JSONMember } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
@@ -23,15 +23,6 @@ export default async (client: GMDIExtension, member: Member, oldMember: JSONMemb
   
   try {
     if (oldMember?.pending && !member?.pending) {
-      if (member.id === "331265944363991042") {
-        let roles = ["226245101452525578", "519880256291733516", "312868594549653514"];
-        for await (const role of roles) {
-          await client.rest.guilds.addMemberRole(member.guildID, member.id, role).catch(() => {});
-        };
-
-        return;
-      };
-
       const embed = new RichEmbed().setTimestamp(new Date()).setColor(0x24C86E)
       .setTitle(`Halo, ${client.utility.usernameHandle(member)} 👋`)
       .setDescription(shuffle(pregeneratedWelcomeText)[0])
