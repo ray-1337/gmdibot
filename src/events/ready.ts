@@ -7,13 +7,19 @@ import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 // Moderation Registry
 import removalChannelCooldown from "../registry/removalChannelCooldown";
 
+let isReady: boolean = false;
+
 export default async (client: GMDIExtension) => {
   client.editStatus("idle", [{
     type: Constants.ActivityTypes.COMPETING,
     name: "Comifuro"
   }]);
 
-  console.log("Ready.");
+  if (!isReady) {
+    console.log("Ready.");
+  } else {
+    isReady = true;
+  };
 
   removalChannelCooldown(client);
 
