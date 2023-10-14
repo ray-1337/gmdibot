@@ -10,6 +10,8 @@ const cachedStar = new Map<string, number>();
 
 const minStar: number = 6;
 const maxStar: number = 9;
+const starEmoji = "⭐";
+const channelID = "954291153203769354";
 
 export const starboardStorage = new QuickDB({
   filePath: path.join(process.cwd(), "database", "starboard.sqlite")
@@ -27,9 +29,6 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     // check message
     let message = await transformMessage(client, msg);
     if (!message?.channel) return;
-
-    const starEmoji = "⭐";
-    const channelID = "954291153203769354";
 
     // message older than Aug 13, 2023 will be ignored
     let breakingChangesDate = new Date("Aug 13 2023").getTime();
