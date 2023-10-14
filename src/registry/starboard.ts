@@ -34,6 +34,9 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     let breakingChangesDate = new Date("Aug 13 2023").getTime();
     if (message.createdAt.getTime() < breakingChangesDate) return;
 
+    // star in the same channel
+    if (message.channel.id == channelID) return;
+
     // check if the star reaction is in the message
     const starReaction = message.reactions.find(({emoji}) => emoji.name === starEmoji);
     if (!starReaction || starReaction.me) return;
