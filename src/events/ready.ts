@@ -11,8 +11,8 @@ let isReady: boolean = false;
 
 export default async (client: GMDIExtension) => {
   client.editStatus("idle", [{
-    type: Constants.ActivityTypes.COMPETING,
-    name: "Comifuro"
+    type: Constants.ActivityTypes.LISTENING,
+    name: "Dosen"
   }]);
 
   if (!isReady) {
