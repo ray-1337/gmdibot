@@ -35,9 +35,10 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     let breakingChangesDate = new Date("Aug 13 2023").getTime();
     if (message.createdAt.getTime() < breakingChangesDate) return;
 
-    if (message.channel.id == channelID) return; // star in the same channel
-    if (!message.reactions[starEmoji]) return; // not star emoji
-    if (message.reactions[starEmoji].me) return; // bot
+    // check if the star reaction is in the message
+    const starReaction = message.reactions.find(({emoji}) => emoji.name === starEmoji);
+    if (!starReaction || starReaction.me) return;
+
     if (Date.now() - message.createdAt.getTime() >= ms("90d")) return;
 
     let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
@@ -66,11 +67,11 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     // increment if same user reacted
     if (reactions.find(val => message && (message.author.id == val.id))) ++limit;
 
+    // check if the star reaction below threshold
+    if (starReaction.count < limit) return;
+
     // check if the starboard has been posted before or nah
-    if (message.reactions[starEmoji].count < limit) return;
-
     const table = await starboardStorage.tableAsync("posted");
-
     if ((await table.has(message.id))) {
       return;
     };
