@@ -17,8 +17,9 @@ export default async (client: GMDIExtension) => {
 
   if (!isReady) {
     console.log("Ready.");
-  } else {
     isReady = true;
+  } else {
+    return;
   };
 
   removalChannelCooldown(client);
