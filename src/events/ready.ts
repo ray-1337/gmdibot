@@ -10,17 +10,17 @@ import removalChannelCooldown from "../registry/removalChannelCooldown";
 let isReady: boolean = false;
 
 export default async (client: GMDIExtension) => {
-  client.editStatus("idle", [{
-    type: Constants.ActivityTypes.LISTENING,
-    name: "Dosen"
-  }]);
-
   if (!isReady) {
     console.log("Ready.");
     isReady = true;
   } else {
     return;
   };
+
+  client.editStatus("idle", [{
+    type: Constants.ActivityTypes.LISTENING,
+    name: "Dosen"
+  }]);
 
   removalChannelCooldown(client);
 
