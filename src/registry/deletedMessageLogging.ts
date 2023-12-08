@@ -5,10 +5,6 @@ import { randomNumber } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 import { request } from "undici";
 
-// cdn
-import BunnyCDN from "bunnycdn-storage";
-const bunnyCDN = new BunnyCDN(process.env.BUNNYCDN_PASSWORD!, process.env.BUNNYCDN_USERNAME!, "sg");
-
 export default async function (client: GMDIExtension, message: PossiblyUncachedMessage) {
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
 
@@ -151,9 +147,17 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
 
     const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
 
-    const upload = await bunnyCDN.upload(Buffer.from(await data.body.arrayBuffer()), urlEndpoint);
-    if (upload.status >= 400) {
-      console.error(`bunnyCDN upload error [${upload.status}]`, upload.data);
+    const upload = await request(`https://${process.env.BUNNYCDN_HOSTNAME}/${process.env.BUNNYCDN_USERNAME}` + urlEndpoint, {
+      method: "PUT",
+      body: Buffer.from(await data.body.arrayBuffer()),
+      headers: {
+        "AccessKey": process.env.BUNNYCDN_PASSWORD,
+        "content-type": "application/octet-stream"
+      }
+    });
+
+    if (upload.statusCode >= 400) {
+      console.error(`bunnyCDN upload error [${upload.statusCode}]`, await upload.body.text());
       return null;
     };
 

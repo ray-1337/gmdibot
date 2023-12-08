@@ -43,7 +43,6 @@
   },
   "optionalDependencies": {
     "better-sqlite3": "^8.7.0",
-    "bunnycdn-storage": "^1.0.4",
     "quick.db": "^9.1.7",
     "xml-js": "^1.6.11"
   }
