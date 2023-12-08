@@ -22,7 +22,7 @@ export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMe
       return;
     };
 
-    // ignore old message more than an hour
+    // ignore old message more than 5 mins
     if (Math.floor(Date.now() - new Date(message.timestamp).getTime()) > standardOldMessageTime) {
       return;
     };
