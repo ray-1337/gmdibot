@@ -1,8 +1,8 @@
 import {GMDIExtension, Message, AnyTextableGuildChannel, PrivateChannel, GuildChannel} from "oceanic.js";
-import { mostCooldownRelevantTextChannelIDs, evalPrefix } from "../handler/Config";
+import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/Config";
 
 // Moderation Registry
-import ChannelCooldown from "../registry/channelCooldown";
+// import ChannelCooldown from "../registry/channelCooldown";
 
 // Forgotten Member Role
 import forgottenMemberRole from "../registry/forgottenMemberRole";
@@ -17,9 +17,9 @@ export default async (client: GMDIExtension, message: Message<AnyTextableGuildCh
     !(message.channel instanceof GuildChannel)
   ) return;
 
-  if (mostCooldownRelevantTextChannelIDs.some(channelID => channelID === message.channel.id)) {
-    ChannelCooldown(client, message);
-  };
+  // if (mostCooldownRelevantTextChannelIDs.some(channelID => channelID === message.channel.id)) {
+  //   ChannelCooldown(client, message);
+  // };
 
   forgottenMemberRole(message);
 
