@@ -1,6 +1,5 @@
 json.sqlite
 .vscode
-app.config.json
 /database/*
 /server/content/*
 .archived/*
