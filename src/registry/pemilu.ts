@@ -21,7 +21,7 @@ export default async function(client: GMDIExtension) {
     const embed = new EmbedBuilder()
     .setColor(0xFF0000)
     .setTitle("Hasil hitung suara Pemilu Presiden & Wakil Presiden RI 2024 (Resmi)")
-    .setFooter("Data diambil langsung dari website kpu.go.id. Di update setiap 60 detik.")
+    .setFooter("Data diambil langsung dari website kpu.go.id. Di update setiap 5 menit.")
     .setTimestamp(new Date())
     .setImage(promotionalImage)
     .setURL("https://pemilu2024.kpu.go.id/")

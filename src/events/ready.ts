@@ -30,7 +30,7 @@ export default async (client: GMDIExtension) => {
 
   setInterval(() => {
     pemilu(client);
-  }, ms("1m"));
+  }, ms("5m"));
 
   // cache (redis) startup
   try {
