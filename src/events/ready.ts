@@ -1,4 +1,6 @@
 import { GMDIExtension, Constants } from "oceanic.js";
+import ms from "ms";
+import pemilu from "../registry/pemilu";
 
 // bmkg features
 // import prayerTiming from "../registry/prayerTiming";
@@ -23,6 +25,12 @@ export default async (client: GMDIExtension) => {
   }]);
 
   removalChannelCooldown(client);
+
+  pemilu(client);
+
+  setInterval(() => {
+    pemilu(client);
+  }, ms("1m"));
 
   // cache (redis) startup
   try {
