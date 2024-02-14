@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-    "dockerbuild": "docker build -t gmdi-discord-bot ."
+    "build": "docker build -t gmdibot:latest . && docker create --name gmdibot gmdibot:latest && docker start gmdibot",
+    "drebuild": "docker rm -f gmdibot && docker image rm gmdibot:latest && pnpm build"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.4",
