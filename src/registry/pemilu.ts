@@ -15,7 +15,8 @@ export default async function(client: GMDIExtension) {
     const data = await req.json() as OfficialPemiluPartialData;
     if (!data?.chart) return;
 
-    const allVoters = data.chart["100025"] + data.chart["100026"] + data.chart["100027"];
+    const allVotersInArray = [data.chart["100025"], data.chart["100026"], data.chart["100027"]]
+    const allVoters = allVotersInArray.reduce((acc, num) => acc + num, 0);
 
     const embed = new EmbedBuilder()
     .setColor(0xFF0000)
@@ -25,9 +26,9 @@ export default async function(client: GMDIExtension) {
     .setImage(promotionalImage)
     .setURL("https://pemilu2024.kpu.go.id/")
 
-    .addField("01. Anies Baswedan/Muhaimin Iskandar", `${data.chart[100025].toLocaleString()} voted (**${((data.chart["100025"] / allVoters) * 100).toFixed(2)}%**)`)
-    .addField("02. Prabowo Subianto/Gibran Rakabuming", `${data.chart[100026].toLocaleString()} voted (**${((data.chart["100026"] / allVoters) * 100).toFixed(2)}%**)`)
-    .addField("03. Ganjar Pranowo/Mahfud MD", `${data.chart[100027].toLocaleString()} voted (**${((data.chart["100027"] / allVoters) * 100).toFixed(2)}%**)`)
+    .addField(`01. Anies Baswedan/Muhaimin Iskandar ${Math.max(...allVotersInArray) === allVotersInArray[0] ? "🔼" : ""}`, `${data.chart[100025].toLocaleString()} voted (**${((data.chart["100025"] / allVoters) * 100).toFixed(2)}%**)`)
+    .addField(`02. Prabowo Subianto/Gibran Rakabuming ${Math.max(...allVotersInArray) === allVotersInArray[1] ? "🔼" : ""}`, `${data.chart[100026].toLocaleString()} voted (**${((data.chart["100026"] / allVoters) * 100).toFixed(2)}%**)`)
+    .addField(`03. Ganjar Pranowo/Mahfud MD ${Math.max(...allVotersInArray) === allVotersInArray[2] ? "🔼" : ""}`, `${data.chart[100027].toLocaleString()} voted (**${((data.chart["100027"] / allVoters) * 100).toFixed(2)}%**)`)
     
     .addBlankField()
     
