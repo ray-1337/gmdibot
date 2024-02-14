@@ -23,6 +23,7 @@ export default async function(client: GMDIExtension) {
     .setFooter("Data diambil langsung dari ketiga handler diatas. Di update setiap 60 detik.")
     .setTimestamp(new Date())
     .setImage(promotionalImage)
+    .setURL("https://pemilu2024.kpu.go.id/")
 
     .addField("01. Anies Baswedan/Muhaimin Iskandar", `${data.pilpresData.lsi.anies}% / ${data.pilpresData.populi.anies}% / ${data.pilpresData.charta.anies}%`)
     .addField("02. Prabowo Subianto/Gibran Rakabuming", `${data.pilpresData.lsi.prabowo}% / ${data.pilpresData.populi.prabowo}% / ${data.pilpresData.charta.prabowo}%`)
