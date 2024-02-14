@@ -3,36 +3,36 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 import { fetch } from "undici";
 
 const channelID: string = "1207271115546951700";
-let messageID: string | null = null;
-const endpoint: string = "https://news.files.bbci.co.uk/include/vjeastasia/1473-indonesia-election-2024-live-data/data-transformed.json";
+let messageID: string = "1207276695967760467";
+
+const endpoint: string = "https://sirekap-obj-data.kpu.go.id/pemilu/hhcw/ppwp.json";
 const promotionalImage: string = "https://diskominfo.sukoharjokab.go.id/storage/Aw0VeYJEVDAtH7XlZxfvoDoRFT0nj2lXolkn87dO.jpeg";
 
 export default async function(client: GMDIExtension) {
   try {
-    const req = await fetch(endpoint, {
-      method: "GET"
-    });
+    const req = await fetch(endpoint, { method: "GET" });
 
-    const data = await req.json() as PemiluPartialData;
-    if (!data?.pilpresData) return;
+    const data = await req.json() as OfficialPemiluPartialData;
+    if (!data?.chart) return;
+
+    const allVoters = data.chart["100025"] + data.chart["100026"] + data.chart["100027"];
 
     const embed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setTitle("Hasil hitung cepat sementara Pilpres 2024")
-    .setDescription("**Format:** Lembaga Survei Indonesia / Populi Center / Charta Politika")
-    .setFooter("Data diambil langsung dari ketiga handler diatas. Di update setiap 60 detik.")
+    .setTitle("Hasil hitung suara Pemilu Presiden & Wakil Presiden RI 2024 (Resmi)")
+    .setFooter("Data diambil langsung dari website kpu.go.id. Di update setiap 60 detik.")
     .setTimestamp(new Date())
     .setImage(promotionalImage)
     .setURL("https://pemilu2024.kpu.go.id/")
 
-    .addField("01. Anies Baswedan/Muhaimin Iskandar", `${data.pilpresData.lsi.anies}% / ${data.pilpresData.populi.anies}% / ${data.pilpresData.charta.anies}%`)
-    .addField("02. Prabowo Subianto/Gibran Rakabuming", `${data.pilpresData.lsi.prabowo}% / ${data.pilpresData.populi.prabowo}% / ${data.pilpresData.charta.prabowo}%`)
-    .addField("03. Ganjar Pranowo/Mahfud MD", `${data.pilpresData.lsi.ganjar}% / ${data.pilpresData.populi.ganjar}% / ${data.pilpresData.charta.ganjar}%`)
+    .addField("01. Anies Baswedan/Muhaimin Iskandar", `${data.chart[100025].toLocaleString()} voted (**${((data.chart["100025"] / allVoters) * 100).toFixed(2)}%**)`)
+    .addField("02. Prabowo Subianto/Gibran Rakabuming", `${data.chart[100026].toLocaleString()} voted (**${((data.chart["100026"] / allVoters) * 100).toFixed(2)}%**)`)
+    .addField("03. Ganjar Pranowo/Mahfud MD", `${data.chart[100027].toLocaleString()} voted (**${((data.chart["100027"] / allVoters) * 100).toFixed(2)}%**)`)
     
     .addBlankField()
     
-    .addField("Progress (penghitungan voting sejauh ini)", `${data.pilpresData.lsi.progress}% / ${data.pilpresData.populi.progress}% / ${data.pilpresData.charta.progress}%`, true)
-    .addField("Turnout", `${data.pilpresData.lsi.turnout}% / ${data.pilpresData.populi.turnout}% / ${data.pilpresData.charta.turnout}%`, true)
+    .addField("Progress (penghitungan voting sejauh ini)",`${data.progres.progres.toLocaleString()} TPS terhitung dari total ${data.progres.total.toLocaleString()} (**${((data.progres.progres / data.progres.total) * 100).toFixed(2)}%**)`, true)
+    .addField("Voters", allVoters.toLocaleString(), true)
 
     if (!messageID) {
       const message = await client.rest.channels.getMessages(channelID, {
@@ -60,10 +60,9 @@ export default async function(client: GMDIExtension) {
   };
 };
 
-type CurrentCaleg = "anies" | "prabowo" | "ganjar";
+type OfficialPemiluPartialDataKey = 100025 | 100026 | 100027 | "persen";
 
-type CalegWithPartialProgress = Record<CurrentCaleg | "progress" | "turnout", string>
-
-interface PemiluPartialData {
-  pilpresData: Record<"charta" | "populi" | "lsi", CalegWithPartialProgress>;
+interface OfficialPemiluPartialData {
+  chart: Record<OfficialPemiluPartialDataKey, number>;
+  progres: Record<"progres" | "total", number>;
 }
