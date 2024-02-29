@@ -45,9 +45,9 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     const starboardMessageDoc = starboardCollection.doc(message.id);
     const currentStarboardMessage = await starboardMessageDoc.get();
 
-    if (reactions.length == 1) {
+    if (reactions.length >= 1) {
       if (!currentStarboardMessage.exists) {
-        await starboardMessageDoc.set({ "reactorID": reactions[0].id, "posted": false }, { merge: true })
+        await starboardMessageDoc.set({ "reactorID": reactions[0].id, "posted": false }, { merge: true });
       };
     } else if (reactions.length <= 0) {
       if (currentStarboardMessage.exists) {
