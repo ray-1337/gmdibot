@@ -93,7 +93,36 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
 
     let file: File | undefined;
 
+    let redirectButton: MessageActionRow[] = [{
+      type: Constants.ComponentTypes.ACTION_ROW,
+      components: [{
+        type: Constants.ComponentTypes.BUTTON,
+        style: Constants.ButtonStyles.LINK,
+        label: "Dokumen Asli",
+        url: message.jumpLink
+      }]
+    }];
+
     let embeddings: string[] = [];
+
+    // bypass videos into a layered discord custom embed
+    if (
+      message.attachments.toArray()[0].contentType?.match(/^(video)/gi) ||
+      message.embeds[0].type == "video" && message.embeds[0].url
+    ) {
+      const url = new URL("https://dce.cdn.13373333.one");
+
+      url.searchParams.append("description", `${userTag} (${message.author.id})`);
+      
+      url.searchParams.append("title", truncate(message.content, 512));
+
+      url.searchParams.append("embedColor", `#FFAC33`);
+
+      return await client.rest.channels.createMessage(channelID, {
+        components: redirectButton,
+        content: `[Embed](${url.toString()})`
+      });
+    };
 
     if (message.attachments.size || message.embeds.length) {
       let ext = {
@@ -146,16 +175,6 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
         };
       };
     };
-
-    let redirectButton: MessageActionRow[] = [{
-      type: Constants.ComponentTypes.ACTION_ROW,
-      components: [{
-        type: Constants.ComponentTypes.BUTTON,
-        style: Constants.ButtonStyles.LINK,
-        label: "Dokumen Asli",
-        url: message.jumpLink
-      }]
-    }];
 
     await client.rest.channels.createMessage(channelID, {
       embeds: embed.toJSON(true),
