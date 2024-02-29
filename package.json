@@ -1,6 +1,6 @@
 {
   "name": "gmdibot",
-  "packageManager": "pnpm@8.11.0",
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
   "private": true,
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
