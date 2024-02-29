@@ -3,8 +3,7 @@ import ms from "ms";
 import normalizeURL from "normalize-url";
 import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import { QuickDB } from "quick.db";
-import path from "node:path";
+import { firestore } from "../handler/Firebase";
 
 const cachedStar = new Map<string, number>();
 
@@ -12,10 +11,6 @@ const minStar: number = 6;
 const maxStar: number = 9;
 const starEmoji = "⭐";
 const channelID = "954291153203769354";
-
-export const starboardStorage = new QuickDB({
-  filePath: path.join(process.cwd(), "database", "starboard.sqlite")
-});
 
 export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
@@ -30,8 +25,8 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     let message = await transformMessage(client, msg);
     if (!message?.channel) return;
 
-    // message older than Aug 13, 2023 will be ignored
-    let breakingChangesDate = new Date("Aug 13 2023").getTime();
+    // message older than Feb 28, 2024 will be ignored
+    let breakingChangesDate = new Date("Feb 28 2024").getTime();
     if (message.createdAt.getTime() < breakingChangesDate) return;
 
     // star in the same channel
@@ -46,15 +41,17 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
 
     // starboard starter
-    const firstReactedTable = await starboardStorage.tableAsync("first_reaction");
-    let starterQuery = await firstReactedTable.has(message.id);
+    const starboardCollection = firestore.collection("starboard");
+    const starboardMessageDoc = starboardCollection.doc(message.id);
+    const currentStarboardMessage = await starboardMessageDoc.get();
+
     if (reactions.length == 1) {
-      if (!starterQuery) {
-        await firstReactedTable.set(message.id, reactions[0].id);
+      if (!currentStarboardMessage.exists) {
+        await starboardMessageDoc.set({ "reactorID": reactions[0].id, "posted": false }, { merge: true })
       };
     } else if (reactions.length <= 0) {
-      if (starterQuery) {
-        await firstReactedTable.delete(message.id);
+      if (currentStarboardMessage.exists) {
+        await starboardMessageDoc.delete();
       };
     };
 
@@ -73,19 +70,18 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     if (starReaction.count < limit) return;
 
     // check if the starboard has been posted before or nah
-    const table = await starboardStorage.tableAsync("posted");
-    if ((await table.has(message.id))) {
+    const starboardMessageData = currentStarboardMessage.data() as Partial<Record<"reactorID", string> & { posted?: boolean }>;
+    if (starboardMessageData?.posted) {
       return;
     };
 
     const userTag = `${client.utility.usernameHandle(message.author)}`;
     let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
       .setDescription(truncate(message.content, 1024))
-      .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16))
+      .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16));
 
-    if (starterQuery) {
-      const firstReactUserID = await firstReactedTable.get(message.id);
-      const starterUser = client.users.get(firstReactUserID) || await client.rest.users.get(firstReactUserID).catch(() => { });
+    if (starboardMessageData?.reactorID?.length) {
+      const starterUser = client.users.get(starboardMessageData.reactorID) || await client.rest.users.get(starboardMessageData.reactorID).catch(() => { });
       if (starterUser) {
         embed.setFooter(`Si Pemulai: ${client.utility.usernameHandle(starterUser)}`)
       };
@@ -188,7 +184,9 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       files: file ? [file] : undefined
     });
 
-    return await table.set(message.id, true);
+    await starboardMessageDoc.update({posted: true});
+
+    return;
   } catch (error) {
     return console.error(error);
   }
