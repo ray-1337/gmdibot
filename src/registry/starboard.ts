@@ -118,10 +118,16 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
 
       url.searchParams.append("embedColor", `#FFAC33`);
 
-      return await client.rest.channels.createMessage(channelID, {
-        components: redirectButton,
-        content: `[Embed](${url.toString()})`
-      });
+      const videoURL = message.attachments.toArray()?.[0]?.url || message.embeds?.[0]?.url;
+      
+      if (videoURL) {
+        url.searchParams.append("videoURL", videoURL);
+
+        return await client.rest.channels.createMessage(channelID, {
+          components: redirectButton,
+          content: `[Embed](${url.toString()})`
+        });
+      };
     };
 
     if (message.attachments.size || message.embeds.length) {
