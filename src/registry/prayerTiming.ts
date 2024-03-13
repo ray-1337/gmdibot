@@ -49,7 +49,10 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
     return console.error(await prayerAPIFetch.body.text());
   };
 
-  const data = (await prayerAPIFetch.body.json()).data;
+  const rawData = await prayerAPIFetch.body.json() as { data?: PrayerAPIConfig };
+
+  const data = rawData?.data;
+  if (!data?.jadwal) return;
 
   let prayerTiming = Object.entries(data.jadwal).filter(x => !x[0].match(/(tanggal|terbit|date)/gi)) as Array<[PrayerType, string]>;
 
@@ -123,7 +126,7 @@ export default async (client: GMDIExtension) => {
   };
 };
 
-type PrayerType = Exclude<keyof PrayerAPIConfig["jadwal"], "tanggal" | "terbit" | "date">;
+type PrayerType = "ashar" | "dhuha" | "dzuhur" | "imsak" | "isya" | "maghrib" | "subuh";
 
 interface PrayerAPIConfig {
   daerah: string;
@@ -133,18 +136,7 @@ interface PrayerAPIConfig {
   lintang: string;
   lon: number;
   lokasi: string;
-  jadwal: {
-    ashar: string;
-    date: string;
-    dhuha: string;
-    dzuhur: string;
-    imsak: string;
-    isya: string;
-    maghrib: string;
-    subuh: string;
-    tanggal: string;
-    terbit: string;
-  };
+  jadwal?: Record<PrayerType, string>;
   koordinat: {
     bujur: string;
     lat: number;
