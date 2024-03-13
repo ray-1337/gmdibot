@@ -15,7 +15,9 @@ dayjs.extend(dayjsTimezone);
 dayjs.extend(dayjsUTC);
 dayjs.extend(dayjsLocalize);
 dayjs.extend(dayjsCustomParseFormat);
-dayjs.extend(dayjsSameBefore)
+dayjs.extend(dayjsSameBefore);
+
+const endpointVersion: number = 2;
 
 async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolean) {
   let capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -42,7 +44,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   ];
 
   // picked from https://kemenag.go.id/
-  const prayerAPIFetch = await request(`https://api.myquran.com/v1/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
+  const prayerAPIFetch = await request(`https://api.myquran.com/v${endpointVersion}/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
   if (!prayerAPIFetch?.body || prayerAPIFetch.statusCode >= 400) {
     return console.error(await prayerAPIFetch.body.text());
   };
