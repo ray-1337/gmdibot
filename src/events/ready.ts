@@ -1,7 +1,7 @@
 import { GMDIExtension, Constants } from "oceanic.js";
 
 // bmkg features
-// import prayerTiming from "../registry/prayerTiming";
+import prayerTiming from "../registry/prayerTiming";
 import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 
 // Moderation Registry
@@ -23,6 +23,8 @@ export default async (client: GMDIExtension) => {
   }]);
 
   removalChannelCooldown(client);
+
+  prayerTiming(client);
 
   // cache (redis) startup
   try {
