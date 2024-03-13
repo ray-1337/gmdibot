@@ -131,16 +131,6 @@ type PrayerType = "ashar" | "dhuha" | "dzuhur" | "imsak" | "isya" | "maghrib" | 
 interface PrayerAPIConfig {
   daerah: string;
   id: string;
-  bujur: string;
-  lat: number;
-  lintang: string;
-  lon: number;
   lokasi: string;
   jadwal?: Record<PrayerType, string>;
-  koordinat: {
-    bujur: string;
-    lat: number;
-    lintang: string;
-    lon: number;
-  };
 };
