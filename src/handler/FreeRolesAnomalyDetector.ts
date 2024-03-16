@@ -3,6 +3,7 @@ import { freeRolesAnomalyDetectorConfig as detectorConfig } from "./Config";
 
 type FreeRolesAnomalyDetectorInfo = {
     status: boolean;
+    memberId: string;
     detail: {
         maxAnomalyMs: number;
         startTimestamp: number;
@@ -59,22 +60,24 @@ class FreeRolesAnomalyDetector {
             }
         }
         // All free roles have been taken.
+        
+        const memberId = member.id;
+        const startTimestamp = this.startTimeMap[memberId];
+        delete this.startTimeMap[memberId];
 
-        const startTimestamp = this.startTimeMap[member.id];
-        delete this.startTimeMap[member.id];
-
-        const info = this.makeInfo(startTimestamp);
+        const { durationMs, maxAnomalyMs, detail } = this.makeDetail(startTimestamp);
+        const status = (durationMs < maxAnomalyMs);
+        const info = { memberId, status, detail };
         this.detectCallback(info);
     }
 
-    private makeInfo(startTimestamp: number) {
+    private makeDetail(startTimestamp: number) {
         const stopTimestamp = Date.now();
         const durationMs = stopTimestamp - startTimestamp;
         const maxAnomalyMs = this.maxAnomalyMs;
 
-        const status = (durationMs < maxAnomalyMs);
         const detail = { startTimestamp, stopTimestamp, durationMs, maxAnomalyMs };
-        return { status, detail };
+        return { durationMs, maxAnomalyMs, detail };
     }
 };
 
@@ -91,6 +94,8 @@ Promise.all([
         const frad = new FreeRolesAnomalyDetector(config, info => {
             if (dummyMember.roles.length < config.freeRoleIds.length) {
                 reject("FreeRolesAnomalyDetector - Test 1 failed - unsufficient member roles");
+            } else if (info.memberId != "Member1") {
+                reject("FreeRolesAnomalyDetector - Test 1 failed - memberId should be from Member1");
             } else if (info.status != true) {
                 reject("FreeRolesAnomalyDetector - Test 1 failed - status should be true");
             } else if (info.detail.maxAnomalyMs != config.maxAnomalyMs) {
@@ -103,7 +108,9 @@ Promise.all([
             clearTimeout(waitCallTimeout);
         });
 
+        frad.startDetect({ id: "OtherMemberA", roles: [] as string[] } as Member);
         frad.startDetect(dummyMember);
+        frad.startDetect({ id: "OtherMemberB", roles: [] as string[] } as Member);
         setTimeout(() => {
             dummyMember.roles.push("Role1");
             frad.memberUpdated(dummyMember);
@@ -128,6 +135,8 @@ Promise.all([
         const frad = new FreeRolesAnomalyDetector(config, info => {
             if (info.status != false) {
                 reject("FreeRolesAnomalyDetector - Test 2 failed - status should be false");
+            } else if (info.memberId != "Member1") {
+                reject("FreeRolesAnomalyDetector - Test 2 failed - memberId should be from Member1");
             } else if (info.detail.maxAnomalyMs != config.maxAnomalyMs) {
                 reject("FreeRolesAnomalyDetector - Test 2 failed - detail.durationMs should be same as given");
             } else if (info.detail.durationMs < info.detail.maxAnomalyMs) {
