@@ -34,3 +34,8 @@ export const cooldownMessageCooling = [
 ];
 
 export const evalPrefix = ".";
+
+export const freeRolesAnomalyDetectorConfig = {
+  maxAnomalyMs: 2 * 60 * 1000,
+  freeRoleIds: ["1234"] // TODO: Fill with the correct roles.
+};
