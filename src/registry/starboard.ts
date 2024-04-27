@@ -108,7 +108,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     // bypass videos into a layered discord custom embed
     if (
       message.attachments.toArray()[0].contentType?.match(/^(video)/gi) ||
-      message.embeds[0].type == "video" && message.embeds[0].url
+      (message?.embeds?.[0]?.type == "video" && message.embeds[0].url)
     ) {
       const url = new URL("https://dce.cdn.13373333.one");
 
