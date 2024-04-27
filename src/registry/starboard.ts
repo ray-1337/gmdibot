@@ -5,8 +5,7 @@ import { transformMessage, truncate, getRandomInt } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
 
-const minStar: number = 6;
-const maxStar: number = 9;
+const [minStar, maxStar] = [6, 9];
 const starEmoji = "⭐";
 const channelID = "954291153203769354";
 
