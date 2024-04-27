@@ -1,4 +1,5 @@
 import { Client, Constants } from "oceanic.js";
+import { version } from "../../package.json";
 
 // bmkg features
 // import prayerTiming from "../registry/prayerTiming";
@@ -11,7 +12,7 @@ let isReady: boolean = false;
 
 export default async (client: Client) => {
   if (!isReady) {
-    console.log("Ready.");
+    console.log(`The bot is ready with version (v${version})`);
     isReady = true;
   } else {
     return;
