@@ -1,5 +1,6 @@
 import { Member, Client, JSONMember } from "oceanic.js";
 import { firstGeneralTextChannelID } from "../handler/Config";
+import { usernameHandle } from "../handler/Util";
 
 export default async (client: Client, member: Member, oldMember: JSONMember | null) => {
   if (member.bot || !oldMember) return;
@@ -10,7 +11,7 @@ export default async (client: Client, member: Member, oldMember: JSONMember | nu
       color: 0xf47fff,
       timestamp: new Date().toISOString(),
       author: {
-        name: `${client.utility.usernameHandle(member)} barusan ngeboost server GMDI`,
+        name: `${usernameHandle(member)} barusan ngeboost server GMDI`,
         iconURL: member.avatarURL("png", 32)
       }
     }]});

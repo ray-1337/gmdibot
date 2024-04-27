@@ -1,7 +1,7 @@
 import { Message, PossiblyUncachedMessage, Client, Embed } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
-import { randomNumber } from "../handler/Util";
+import { randomNumber, truncate } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 import { request } from "undici";
 
@@ -12,7 +12,7 @@ export default async function (client: Client, message: PossiblyUncachedMessage)
     const embed = new EmbedBuilder().setColor(0x7289DA).setTimestamp(new Date());
 
     if (message?.content.length) {
-      embed.addField("Caption", client.utility.truncate(message.content, 1024))
+      embed.addField("Caption", truncate(message.content, 1024))
     };
 
     let videoRegexMimeType = /^(video)\/.*/gi;

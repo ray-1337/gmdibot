@@ -1,5 +1,5 @@
 import {Client, Message, AnyTextableGuildChannel, JSONMessage, PossiblyUncachedMessage, CreateMessageOptions, User} from "oceanic.js";
-import { transformMessage } from "../handler/Util";
+import { transformMessage, usernameHandle } from "../handler/Util";
 import { gmdiGuildID, ignoredCategoryToPerformGhostPing } from "../handler/Config";
 import ms from "ms";
 import { EmbedBuilder } from "@oceanicjs/builders";
@@ -66,7 +66,7 @@ export default async (client: Client, msg: PossiblyUncachedMessage, oldMessage?:
 
     const embed = new EmbedBuilder()
     .setTimestamp(new Date)
-    .setAuthor(`Ghost Ping dari: ${client.utility.usernameHandle(message.author)}`, message.author.avatarURL("png", 32))
+    .setAuthor(`Ghost Ping dari: ${usernameHandle(message.author)}`, message.author.avatarURL("png", 32))
 
     let ctx: CreateMessageOptions = {
       messageReference: {
@@ -126,7 +126,7 @@ function getDeletedMentionIds(oldMentionIds: string[], newMentionIds: string[]) 
   return oldMentionIds.filter(x => !newMentionIds.includes(x));
 };
 
-export async function checkMentions(client: GMDIExtension, message: Message<AnyTextableGuildChannel>) {
+export async function checkMentions(client: Client, message: Message<AnyTextableGuildChannel>) {
   let hasMentions: boolean = false;
   let variant: string[] = [];
 

@@ -1,6 +1,7 @@
 import { Client, Guild, Member, User } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
+import { usernameHandle } from "../handler/Util";
 
 export default async (client: Client, member: User | Member, guild: Guild) => {
   if (guild.id !== gmdiGuildID || member.bot) return;
@@ -13,7 +14,7 @@ export default async (client: Client, member: User | Member, guild: Guild) => {
   .setColor(0xC82427)
   .setTimestamp(new Date())
   .setTitle("Farewell...")
-  .setDescription(`**${client.utility.usernameHandle(member)}** keluar dari server.`);
+  .setDescription(`**${usernameHandle(member)}** keluar dari server.`);
   
   return client.rest.channels.createMessage(firstGeneralTextChannelID, {
     embeds: embed.toJSON(true)

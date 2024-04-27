@@ -1,6 +1,6 @@
 import { Member, Client, JSONMember } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
-import { shuffle } from "../handler/Util";
+import { shuffle, usernameHandle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
 const rules = "274351350656139265";
@@ -24,7 +24,7 @@ export default async (client: Client, member: Member, oldMember: JSONMember | nu
   try {
     if (oldMember?.pending && !member?.pending) {
       const embed = new RichEmbed().setTimestamp(new Date()).setColor(0x24C86E)
-      .setTitle(`Halo, ${client.utility.usernameHandle(member)} 👋`)
+      .setTitle(`Halo, ${usernameHandle(member)} 👋`)
       .setDescription(shuffle(pregeneratedWelcomeText)[0])
   
       await client.rest.guilds.addMemberRole(member.guild.id, member.id, "312868594549653514");

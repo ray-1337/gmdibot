@@ -1,7 +1,7 @@
 import {Constants, Client, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
-import { transformMessage, truncate, getRandomInt } from "../handler/Util";
+import { transformMessage, truncate, getRandomInt, usernameHandle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
 
@@ -78,7 +78,7 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
     // check if the star reaction below threshold
     if (starReaction.count < limit) return;
 
-    const userTag = `${client.utility.usernameHandle(message.author)}`;
+    const userTag = `${usernameHandle(message.author)}`;
     let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
       .setDescription(truncate(message.content, 1024))
       .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16));
@@ -86,7 +86,7 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
     if (starboardMessageData?.reactorID?.length) {
       const starterUser = client.users.get(starboardMessageData.reactorID) || await client.rest.users.get(starboardMessageData.reactorID).catch(() => { });
       if (starterUser) {
-        embed.setFooter(`Si Pemulai: ${client.utility.usernameHandle(starterUser)}`)
+        embed.setFooter(`Si Pemulai: ${usernameHandle(starterUser)}`)
       };
     };
 
