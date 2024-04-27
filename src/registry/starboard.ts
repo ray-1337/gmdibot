@@ -1,7 +1,7 @@
 import {Constants, GMDIExtension, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
-import { transformMessage, truncate } from "../handler/Util";
+import { transformMessage, truncate, getRandomInt } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
 
@@ -43,7 +43,7 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     const starboardMessageDoc = starboardCollection.doc(message.id);
     const currentStarboardMessage = await starboardMessageDoc.get();
 
-    const starThreshold = Math.floor(Math.random() * (maxStar - minStar) + minStar);
+    const starThreshold = getRandomInt(minStar, maxStar);
 
     if (reactions.length >= 1) {
       if (!currentStarboardMessage.exists) {
