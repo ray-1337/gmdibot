@@ -1,4 +1,4 @@
-import {GMDIExtension, Message, AnyTextableGuildChannel, JSONMessage, PossiblyUncachedMessage, CreateMessageOptions, User} from "oceanic.js";
+import {Client, Message, AnyTextableGuildChannel, JSONMessage, PossiblyUncachedMessage, CreateMessageOptions, User} from "oceanic.js";
 import { transformMessage } from "../handler/Util";
 import { gmdiGuildID, ignoredCategoryToPerformGhostPing } from "../handler/Config";
 import ms from "ms";
@@ -11,7 +11,7 @@ const ghostPings = new Set<string>();
 export type Endeavour = Array<{ messageID: string, mentioned: string[] }>;
 let endeavour: Endeavour = [];
 
-export default async (client: GMDIExtension, msg: PossiblyUncachedMessage, oldMessage?: JSONMessage | null) => {
+export default async (client: Client, msg: PossiblyUncachedMessage, oldMessage?: JSONMessage | null) => {
   try {
     // check message
     let message = await transformMessage(client, msg);

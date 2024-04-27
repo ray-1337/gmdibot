@@ -1,4 +1,4 @@
-import { Member, GMDIExtension, JSONMember } from "oceanic.js";
+import { Member, Client, JSONMember } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { shuffle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
@@ -18,7 +18,7 @@ const pregeneratedWelcomeText = [
   "Selamat datang di server Discord kami! Kami senang bisa memiliki kamu di sini dan berharap kamu bisa menemukan komunitas yang menyenangkan dan mendukung di sini."
 ];
 
-export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
+export default async (client: Client, member: Member, oldMember: JSONMember | null) => {
   if (member.guild.id !== gmdiGuildID || member.bot) return;
   
   try {

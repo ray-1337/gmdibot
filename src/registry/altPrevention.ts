@@ -1,7 +1,7 @@
-import {GMDIExtension, Guild, Member} from "oceanic.js";
+import {Client, Guild, Member} from "oceanic.js";
 import ms from "ms";
 
-export default async (client: GMDIExtension, guild: Guild, member: Member) => {
+export default async (client: Client, guild: Guild, member: Member) => {
   try {
     const day = ms("1d");
     const age = Date.now() - new Date(member.createdAt).getTime();

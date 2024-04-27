@@ -1,4 +1,4 @@
-import { GMDIExtension, Constants, File } from "oceanic.js";
+import { Client, Constants, File } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
 import {xml2json} from "xml-js";
@@ -12,7 +12,7 @@ const cached = new Map<string, boolean>();
 let intervalStarted = false;
 let lastModified = "";
 
-export default async (client: GMDIExtension) => {
+export default async (client: Client) => {
   if (intervalStarted) return;
 
   randomInterval(async () => {

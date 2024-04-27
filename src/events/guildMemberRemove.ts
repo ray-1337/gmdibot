@@ -1,8 +1,8 @@
-import { GMDIExtension, Guild, Member, User } from "oceanic.js";
+import { Client, Guild, Member, User } from "oceanic.js";
 import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 
-export default async (client: GMDIExtension, member: User | Member, guild: Guild) => {
+export default async (client: Client, member: User | Member, guild: Guild) => {
   if (guild.id !== gmdiGuildID || member.bot) return;
 
   // skip if member still on verification pending

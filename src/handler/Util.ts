@@ -1,4 +1,4 @@
-import { GMDIExtension, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
+import { Client, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
 import {randomBytes} from "crypto";
 
 import dayjs from "dayjs";
@@ -9,7 +9,7 @@ dayjs.extend(dayjsUTC);
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
-export async function transformMessage(client: GMDIExtension, message: PossiblyUncachedMessage | null) {
+export async function transformMessage(client: Client, message: PossiblyUncachedMessage | null) {
   if (message) {
     if (message instanceof Message) {
       return message as Message<Uncached | AnyTextableGuildChannel>;

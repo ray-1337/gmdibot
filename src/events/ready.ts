@@ -1,4 +1,4 @@
-import { GMDIExtension, Constants } from "oceanic.js";
+import { Client, Constants } from "oceanic.js";
 
 // bmkg features
 // import prayerTiming from "../registry/prayerTiming";
@@ -9,7 +9,7 @@ import removalChannelCooldown from "../registry/removalChannelCooldown";
 
 let isReady: boolean = false;
 
-export default async (client: GMDIExtension) => {
+export default async (client: Client) => {
   if (!isReady) {
     console.log("Ready.");
     isReady = true;

@@ -1,8 +1,8 @@
-import { GMDIExtension, GuildChannel, AnyTextableGuildChannel } from "oceanic.js";
+import { Client, GuildChannel, AnyTextableGuildChannel } from "oceanic.js";
 import { modlogChannelID, checkCooldownRemovalInterval, cooldownRangeCooling, mostCooldownRelevantTextChannelIDs, messagesCacheTimeRange, cooldownMessageCooling } from "../handler/Config";
 import { slowmodeChannel } from "./channelCooldown";
 
-export default async (client: GMDIExtension) => {
+export default async (client: Client) => {
   setInterval(() => {
     for (const channelID of mostCooldownRelevantTextChannelIDs) {
       if (!slowmodeChannel.has(channelID)) continue;

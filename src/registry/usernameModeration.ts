@@ -1,8 +1,8 @@
-import type { Member, JSONMember, GMDIExtension } from "oceanic.js";
+import type { Member, JSONMember, Client } from "oceanic.js";
 import { randomBytes } from "node:crypto";
 import { gmdiGuildID } from "../handler/Config";
 
-export default async function(client: GMDIExtension, user: Member | Member["user"], oldUser: JSONMember | JSONMember["user"] | null) {
+export default async function(client: Client, user: Member | Member["user"], oldUser: JSONMember | JSONMember["user"] | null) {
   try {
     if (!oldUser) return;
 

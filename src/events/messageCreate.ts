@@ -1,4 +1,4 @@
-import {GMDIExtension, Message, AnyTextableGuildChannel, PrivateChannel, GuildChannel} from "oceanic.js";
+import {Client, Message, AnyTextableGuildChannel, PrivateChannel, GuildChannel} from "oceanic.js";
 import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/Config";
 
 // Moderation Registry
@@ -10,7 +10,7 @@ import forgottenMemberRole from "../registry/forgottenMemberRole";
 // command
 import EvalFactory from "../registry/eval";
 
-export default async (client: GMDIExtension, message: Message<AnyTextableGuildChannel>) => {
+export default async (client: Client, message: Message<AnyTextableGuildChannel>) => {
   if (
     message.author.bot ||
     message.channel instanceof PrivateChannel ||

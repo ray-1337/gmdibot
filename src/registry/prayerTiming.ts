@@ -1,4 +1,4 @@
-import { GMDIExtension } from "oceanic.js";
+import { Client } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { request } from "undici";
 import nodeSchedule from "node-schedule";
@@ -19,7 +19,7 @@ dayjs.extend(dayjsSameBefore);
 
 const endpointVersion: number = 2;
 
-async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolean) {
+async function initiatePrayingTime(client: Client, addOneMoreDay?: boolean) {
   let capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   // gmdi majority is from Jabodetabek.
@@ -117,7 +117,7 @@ async function initiatePrayingTime(client: GMDIExtension, addOneMoreDay?: boolea
   };
 };
 
-export default async (client: GMDIExtension) => {
+export default async (client: Client) => {
   try {
     initiatePrayingTime(client);
     console.log("Praying Time Announcement: Ready.");

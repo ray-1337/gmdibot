@@ -1,4 +1,4 @@
-import {Constants, GMDIExtension, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
+import {Constants, Client, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
 import { transformMessage, truncate, getRandomInt } from "../handler/Util";
@@ -9,7 +9,7 @@ const [minStar, maxStar] = [6, 9];
 const starEmoji = "⭐";
 const channelID = "954291153203769354";
 
-export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
+export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
     // must be presented in guild
     if (!msg?.channel?.guildID || !msg?.channel?.id) return;

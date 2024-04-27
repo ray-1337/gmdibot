@@ -1,7 +1,7 @@
-import { Member, GMDIExtension, JSONMember } from "oceanic.js";
+import { Member, Client, JSONMember } from "oceanic.js";
 import { firstGeneralTextChannelID } from "../handler/Config";
 
-export default async (client: GMDIExtension, member: Member, oldMember: JSONMember | null) => {
+export default async (client: Client, member: Member, oldMember: JSONMember | null) => {
   if (member.bot || !oldMember) return;
 
   const boostRole = "589643758564540417";

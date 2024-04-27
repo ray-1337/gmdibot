@@ -1,11 +1,11 @@
-import { Message, PossiblyUncachedMessage, GMDIExtension, Embed } from "oceanic.js";
+import { Message, PossiblyUncachedMessage, Client, Embed } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
 import { randomNumber } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 import { request } from "undici";
 
-export default async function (client: GMDIExtension, message: PossiblyUncachedMessage) {
+export default async function (client: Client, message: PossiblyUncachedMessage) {
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
 
   try {

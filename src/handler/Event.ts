@@ -1,8 +1,8 @@
 import { readdir } from "node:fs/promises";
-import { GMDIExtension, ClientEvents } from "oceanic.js";
+import { Client, ClientEvents } from "oceanic.js";
 import { resolve, join } from "node:path";
 
-export default async (client: GMDIExtension) => {
+export default async (client: Client) => {
   let path = resolve(__dirname, "..", "events");
   const eventList = await readdir(path);
 
