@@ -5,8 +5,6 @@ import { transformMessage, truncate } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
 
-const cachedStar = new Map<string, number>();
-
 const minStar: number = 6;
 const maxStar: number = 9;
 const starEmoji = "⭐";
@@ -45,9 +43,15 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
     const starboardMessageDoc = starboardCollection.doc(message.id);
     const currentStarboardMessage = await starboardMessageDoc.get();
 
+    const starThreshold = Math.floor(Math.random() * (maxStar - minStar) + minStar);
+
     if (reactions.length >= 1) {
       if (!currentStarboardMessage.exists) {
-        await starboardMessageDoc.set({ "reactorID": reactions[0].id, "posted": false }, { merge: true });
+        await starboardMessageDoc.set({
+          "reactorID": reactions[0].id,
+          "posted": false,
+          "starCount": starThreshold
+        }, { merge: true });
       };
     } else if (reactions.length <= 0) {
       if (currentStarboardMessage.exists) {
@@ -55,12 +59,18 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       };
     };
 
+    // check if the starboard has been posted before or nah
+    const starboardMessageData = currentStarboardMessage.data() as Partial<Record<"reactorID", string> & { posted?: boolean; starCount?: number; }>;
+    if (starboardMessageData?.posted) {
+      return;
+    };
+
     // star emoji validation
-    let limit = cachedStar.get(message.id);
-    if (!limit || isNaN(limit)) {
-      let randLimit = Math.floor(Math.random() * (maxStar - minStar) + minStar);
-      limit = randLimit;
-      cachedStar.set(message.id, randLimit);
+    let limit = starboardMessageData?.starCount;
+    if (typeof limit !== "number") {
+      await starboardMessageDoc.set({"starCount": starThreshold}, { merge: true });
+
+      limit = starThreshold;
     };
 
     // increment if same user reacted
@@ -68,12 +78,6 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
 
     // check if the star reaction below threshold
     if (starReaction.count < limit) return;
-
-    // check if the starboard has been posted before or nah
-    const starboardMessageData = currentStarboardMessage.data() as Partial<Record<"reactorID", string> & { posted?: boolean }>;
-    if (starboardMessageData?.posted) {
-      return;
-    };
 
     const userTag = `${client.utility.usernameHandle(message.author)}`;
     let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
