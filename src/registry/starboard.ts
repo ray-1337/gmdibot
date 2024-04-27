@@ -123,12 +123,14 @@ export default async (client: GMDIExtension, msg: Message<AnyTextableGuildChanne
       if (videoURL) {
         url.searchParams.append("videoURL", videoURL);
 
-        await starboardMessageDoc.update({posted: true});
-
-        return await client.rest.channels.createMessage(channelID, {
+        await client.rest.channels.createMessage(channelID, {
           components: redirectButton,
           content: `[Embed](${url.toString()})`
         });
+
+        await starboardMessageDoc.update({posted: true});
+
+        return;
       };
     };
 
