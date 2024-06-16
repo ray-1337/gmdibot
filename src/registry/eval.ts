@@ -56,21 +56,23 @@ export default async (client: Client, message: Message<AnyTextableGuildChannel>,
   return client.rest.channels.createMessage(message.channel.id, { embeds: [embed] });
 
   async function checkingEvaluation(content: any) {
+    let res: any;
+  
     try {
-      let res = eval(content);
-      if (res?.constructor.name == "Promise") {
-        return await res;
+      res = eval(content);
+      if (res && res.constructor.name == "Promise") {
+        res = await res;
       };
-      
-      if (typeof res !== "string") {
-        res = inspect(res, { depth: 0 });
-      };
-  
-      res = res.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-  
-      return String(res);
     } catch (err) {
-      return String(err);
+      res = err;
     };
+  
+    if (typeof res !== "string") {
+      res = inspect(res, { depth: 0 });
+    };
+  
+    res = res.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  
+    return res;
   };
 };
