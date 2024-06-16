@@ -104,22 +104,22 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
 
     let embeddings: string[] = [];
 
+    // listing
+    const attachments = message.attachments.toArray();
+
     // bypass videos into a layered discord custom embed
     if (
-      (message.attachments.size >= 1 && message.attachments.toArray()[0].contentType?.match(/^(video)/gi)) ||
-      (message?.embeds?.[0]?.type == "video" && message.embeds[0].url)
+      (attachments.length >= 1 && attachments[0].contentType?.match(/^(video)/gi)) ||
+      (message.embeds.length >= 1 && (message.embeds[0].type === "video" || message.embeds[0].type === "gifv"))
     ) {
       const url = new URL("https://dce.cdn.13373333.one");
-
       url.searchParams.append("description", `${userTag} (${message.author.id})`);
-      
       url.searchParams.append("title", truncate(message.content, 512));
-
       url.searchParams.append("embedColor", `#FFAC33`);
 
-      const videoURL = message.attachments.toArray()?.[0]?.url || message.embeds?.[0]?.url;
+      const videoURL = attachments?.[0]?.url || message.embeds?.[0]?.video?.url || message.embeds?.[0]?.url;
       
-      if (videoURL) {
+      if (typeof videoURL === "string") {
         url.searchParams.append("videoURL", videoURL);
 
         await client.rest.channels.createMessage(channelID, {
@@ -146,8 +146,8 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
 
       // attachments
       if (message.attachments.size == 1) {
-        if (message.attachments.toArray()[0].contentType?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
-          embed.setImage(normalizeURL(message.attachments.toArray()[0].url));
+        if (attachments[0].contentType?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
+          embed.setImage(normalizeURL(attachments[0].url));
         };
       } else if (message.attachments.size > 1) {
         for (let data of message.attachments) {
