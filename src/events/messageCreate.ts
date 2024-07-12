@@ -7,6 +7,9 @@ import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/C
 // Forgotten Member Role
 import forgottenMemberRole from "../registry/forgottenMemberRole";
 
+// invite link trigger word
+import inviteLinkTriggerWord from "../registry/inviteLinkTriggerWord";
+
 // command
 import EvalFactory from "../registry/eval";
 
@@ -22,6 +25,8 @@ export default async (client: Client, message: Message<AnyTextableGuildChannel>)
   // };
 
   forgottenMemberRole(message);
+
+  inviteLinkTriggerWord(message);
 
   if (message.content.startsWith(evalPrefix + "eval")) {
     let args = message.content.slice(evalPrefix.length).trim().split(/ +/g);
