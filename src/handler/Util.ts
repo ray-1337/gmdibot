@@ -1,12 +1,6 @@
 import { Client, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
 import {randomBytes} from "crypto";
 
-import dayjs from "dayjs";
-import dayjsTZ from "dayjs/plugin/timezone";
-import dayjsUTC from "dayjs/plugin/utc";
-dayjs.extend(dayjsTZ);
-dayjs.extend(dayjsUTC);
-
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
 export async function transformMessage(client: Client, message: PossiblyUncachedMessage | null) {

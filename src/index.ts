@@ -3,7 +3,8 @@ import "dotenv/config";
 import { Client } from "oceanic.js";
 
 import GMDIEvent from "./handler/Event";
-// import "./server/Server";
+
+import "./registry/dayjs";
 
 const client = new Client({
   auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
