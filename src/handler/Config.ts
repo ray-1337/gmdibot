@@ -6,6 +6,8 @@ export const coblosChannelID = "905076614042370088";
 
 export const gmdiGuildID = "190826809896468480";
 
+export const birthdayRoleID: string = "780975504068444265";
+
 export const firstGeneralTextChannelID = "190826809896468480";
 
 export const modlogChannelID = "900578330858905601";
