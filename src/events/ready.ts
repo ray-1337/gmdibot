@@ -1,4 +1,4 @@
-import { Client, Constants } from "oceanic.js";
+import { Client } from "oceanic.js";
 import { version } from "../../package.json";
 
 // bmkg features
@@ -16,10 +16,10 @@ export default async (client: Client) => {
     return;
   };
 
-  client.editStatus("idle", [{
-    type: Constants.ActivityTypes.LISTENING,
-    name: "Dosen"
-  }]);
+  // client.editStatus("idle", [{
+  //   type: Constants.ActivityTypes.LISTENING,
+  //   name: "Dosen"
+  // }]);
 
   // prayerTiming(client);
   
