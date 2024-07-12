@@ -3,6 +3,7 @@ import { version } from "../../package.json";
 
 // bmkg features
 // import prayerTiming from "../registry/prayerTiming";
+import { rescheduleBirthdayPeople } from "../registry/birthdayRole";
 import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 
 let isReady: boolean = false;
@@ -21,6 +22,8 @@ export default async (client: Client) => {
   }]);
 
   // prayerTiming(client);
+  
+  rescheduleBirthdayPeople(client);
 
   // cache (redis) startup
   try {
