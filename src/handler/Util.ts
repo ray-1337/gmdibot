@@ -3,6 +3,10 @@ import {randomBytes} from "crypto";
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
+export function delay(ms: number) {
+  return new Promise(r => setTimeout(r, ms));
+};
+
 export async function transformMessage(client: Client, message: PossiblyUncachedMessage | null) {
   if (message) {
     if (message instanceof Message) {
