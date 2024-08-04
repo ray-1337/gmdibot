@@ -42,7 +42,7 @@ const scheduleRemoval = (client: Client, userID: string, guildID: string) => {
   };
 
   // removal time: 12:00 AM (GMT+7 / WIB)
-  const nextDayRemovalTime = dayjs().utc().set("hour", 23).set("minute", 59).set("second", 59).tz("Asia/Jakarta");
+  const nextDayRemovalTime = dayjs().utc(true).hour(23).minute(59).second(59); // dayjs().utc().set("hour", 23).set("minute", 59).set("second", 59).tz("Asia/Jakarta");
   const nextDayJSDate = nextDayRemovalTime.toDate();
   if (isNaN(nextDayJSDate.getTime())) {
     return;
