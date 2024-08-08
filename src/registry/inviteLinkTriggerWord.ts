@@ -7,7 +7,7 @@ let cooldown: number = ms("1h");
 
 export default async (message: Message<AnyTextableGuildChannel>) => {
   // should be triggered in a channel that registered under "Lounge" category channel only
-  if (message.channel.parentID !== "360449483282055169") {
+  if (message.channel.parentID !== "360449483282055169" && message.channelID !== "459637978269220864") {
     return;
   };
 
