@@ -2,7 +2,7 @@ import { Message, AnyTextableGuildChannel } from "oceanic.js";
 import { inviteLinkChannelID } from "../handler/Config";
 import ms from "ms";
 
-let lastTriggered: number | null = null;
+let lastTriggered = new Map<string, number>();
 let cooldown: number = ms("1h");
 
 export default async (message: Message<AnyTextableGuildChannel>) => {
@@ -15,8 +15,9 @@ export default async (message: Message<AnyTextableGuildChannel>) => {
     return;
   };
 
-  if (typeof lastTriggered === "number") {
-    if ((Date.now() - lastTriggered) <= cooldown) {
+  if (lastTriggered.has(message.author.id)) {
+    const current = lastTriggered.get(message.author.id) as number;
+    if ((Date.now() - current) <= cooldown) {
       return;
     };
   };
@@ -35,7 +36,7 @@ export default async (message: Message<AnyTextableGuildChannel>) => {
 
   setTimeout(() => prevMessage.delete("[GMDIBot] Occurs one time"), ms("1m"));
 
-  lastTriggered = Date.now();
+  lastTriggered.set(message.author.id, Date.now());
 
   return;
 };
