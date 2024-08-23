@@ -4,9 +4,6 @@ import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/C
 // Moderation Registry
 // import ChannelCooldown from "../registry/channelCooldown";
 
-// Forgotten Member Role
-import forgottenMemberRole from "../registry/forgottenMemberRole";
-
 // invite link trigger word
 import inviteLinkTriggerWord from "../registry/inviteLinkTriggerWord";
 
@@ -23,8 +20,6 @@ export default async (client: Client, message: Message<AnyTextableGuildChannel>)
   // if (mostCooldownRelevantTextChannelIDs.some(channelID => channelID === message.channel.id)) {
   //   ChannelCooldown(client, message);
   // };
-
-  forgottenMemberRole(message);
 
   inviteLinkTriggerWord(message);
 
