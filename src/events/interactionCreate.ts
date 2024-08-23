@@ -219,7 +219,10 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               }]
             });
 
-            await client.rest.guilds.addMemberRole(gmdiGuildID, userID[0], memberRoleID);
+            await client.rest.guilds.editMember(gmdiGuildID, userID[0], {
+              roles: [memberRoleID],
+              reason: "[GMDIBot] Finished verification"
+            });
 
             await interaction.createFollowup({content: "Accepted.", flags: 64})
 
