@@ -6,6 +6,8 @@ import { version } from "../../package.json";
 import { rescheduleBirthdayPeople } from "../registry/birthdayRole";
 import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
 
+import initVerificationEmbed from "../registry/verification/initEmbed";
+
 let isReady: boolean = false;
 
 export default async (client: Client) => {
@@ -27,7 +29,11 @@ export default async (client: Client) => {
 
   // cache (redis) startup
   try {
-    await bmkgNotificationRealtime(client);
+    await Promise.all([
+      bmkgNotificationRealtime(client),
+
+      initVerificationEmbed(client)
+    ]);
   } catch (error) {
     return console.error(error);
   };
