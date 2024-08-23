@@ -7,6 +7,8 @@ export const verificationLogChannelID: string = "1276271108017881220";
 
 export const staffRoleID: string = "217296828339585026";
 
+export const unverifiedRoleID: string = "1276683650565668874";
+
 export const memberRoleID: string = "312868594549653514";
 
 export const coblosChannelID = "905076614042370088";
