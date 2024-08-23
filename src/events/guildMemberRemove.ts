@@ -1,5 +1,5 @@
 import { Client, Guild, Member, User } from "oceanic.js";
-import { gmdiGuildID, firstGeneralTextChannelID } from "../handler/Config";
+import { gmdiGuildID, firstGeneralTextChannelID, unverifiedRoleID } from "../handler/Config";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { usernameHandle } from "../handler/Util";
 
@@ -7,7 +7,9 @@ export default async (client: Client, member: User | Member, guild: Guild) => {
   if (guild.id !== gmdiGuildID || member.bot) return;
 
   // skip if member still on verification pending
-  if (member instanceof Member && member.pending) return;
+  if (member instanceof Member && (member.pending || member.roles.some(roleID => roleID === unverifiedRoleID))) {
+    return;
+  };
 
   // Embed
   const embed = new RichEmbed()
