@@ -19,7 +19,7 @@
   "dependencies": {
     "@oceanicjs/builders": "^1.1.11",
     "common-tags": "^1.8.2",
-    "dayjs": "^1.11.12",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "firebase-admin": "^12.4.0",
     "gd.js": "^0.2.13",
