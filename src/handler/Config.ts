@@ -2,6 +2,9 @@ import ms from "ms";
 
 const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
 
+export const staffRoleID: string = "217296828339585026";
+
+
 export const coblosChannelID = "905076614042370088";
 
 export const gmdiGuildID = "190826809896468480";
