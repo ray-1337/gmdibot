@@ -2,6 +2,9 @@ import ms from "ms";
 
 const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
 
+export const verificationChannelID: string = process.env.npm_lifecycle_event === "dev" ? "1160715499005562912" : "1276229374043099146";
+export const verificationLogChannelID: string = "1276271108017881220";
+
 export const staffRoleID: string = "217296828339585026";
 
 export const memberRoleID: string = "312868594549653514";
