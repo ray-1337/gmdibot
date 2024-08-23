@@ -4,6 +4,7 @@ const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠",
 
 export const staffRoleID: string = "217296828339585026";
 
+export const memberRoleID: string = "312868594549653514";
 
 export const coblosChannelID = "905076614042370088";
 
