@@ -49,12 +49,6 @@ export function truncate(str: string, len: number) {
   return (str.length >= len) ? str.substring(0, len - 1) + '...' : str;
 };
 
-export function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 export function shuffle<T>(array: T[]): T[] {
   let currentIndex = array.length;
   let randomIndex: number;

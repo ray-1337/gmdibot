@@ -1,7 +1,7 @@
 import {Constants, Client, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
 import ms from "ms";
 import normalizeURL from "normalize-url";
-import { transformMessage, truncate, getRandomInt, usernameHandle } from "../handler/Util";
+import { transformMessage, truncate, randomNumber, usernameHandle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
 
@@ -42,7 +42,7 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
     const starboardMessageDoc = starboardCollection.doc(message.id);
     const currentStarboardMessage = await starboardMessageDoc.get();
 
-    const starThreshold = getRandomInt(minStar, maxStar);
+    const starThreshold = randomNumber(minStar, maxStar);
 
     if (reactions.length >= 1) {
       if (!currentStarboardMessage.exists) {
