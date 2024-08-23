@@ -19,7 +19,7 @@ export default [
     components: [
       {
         customID: "creator-player",
-        label: "Salah satu creator/player yang kamu ketahui",
+        label: "Salah satu creator GD yang kamu ketahui",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 45,
