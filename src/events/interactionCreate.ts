@@ -269,7 +269,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
           };
 
           // check if the gd username is claimed
-          const checkExist = await userCollection.where("gdUsername", "==", gdUsername).get();
+          const checkExist = await userCollection.where("gdUsername", "==", gdUsername).where("verified", "==", true).get();
           if (checkExist.docs.length > 0) {
             return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
           };
