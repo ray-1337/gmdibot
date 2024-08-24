@@ -37,6 +37,13 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
         switch (interaction.data.customID) {
           case "verification_self_buttonclick": {
             try {
+              if (cache.has(interaction.user.id)) {
+                return interaction.createMessage({
+                  content: "Kamu saat ini memiliki sesi verifikasi yang sedang berjalan. Mohon diselesaikan terlebih dahulu.",
+                  flags: 64
+                });
+              };
+
               const currentUser = await userDoc.get();
               const currentUserState = currentUser.data() as RegisteredUserState;
 
