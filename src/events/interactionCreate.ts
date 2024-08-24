@@ -57,6 +57,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             });
           };
 
+          case "gd-verification-cancel":
           case "gd-verification-check": {
             await interaction.defer(64);
 
@@ -64,6 +65,17 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               return interaction.createFollowup({
                 flags: 64,
                 content: `Kamu tidak memiliki sesi verifikasi untuk saat ini. Kemungkinan besar waktu sesi verifikasi kamu sudah habis. Kamu bisa coba lagi untuk pergi ke kanal verifikasi kami (<#${verificationChannelID}>)`
+              });
+            };
+
+            // cancel
+            if (interaction.data.customID === "gd-verification-cancel") {
+              cache.delete(interaction.user.id);
+
+              interaction.message.delete();
+
+              return await interaction.createFollowup({
+                content: "Sesi verifikasi dibatalkan.", flags: 64
               });
             };
 
