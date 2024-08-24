@@ -3,6 +3,7 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 import ms from "ms";
 import { stripIndents } from "common-tags";
 import dayjs from "dayjs";
+import parseDuration from "parse-duration";
 
 // utility
 const verificationCacheExpireTime: number = ms("5m");
@@ -14,6 +15,10 @@ import type { UserVerificationChoice, RegisteredUserState } from "../registry/ve
 
 // user temporary cache
 const cache = new Map<string, UserVerificationChoice>();
+
+// cooldown
+const cooldownTimeState = ms("3m");
+const cooldown = new Map<string, number>();
 
 // collection
 import userCollection from "../registry/verification/userCollection";
@@ -42,6 +47,19 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                   content: "Kamu saat ini memiliki sesi verifikasi yang sedang berjalan. Mohon diselesaikan terlebih dahulu.",
                   flags: 64
                 });
+              };
+
+              if (cooldown.has(interaction.user.id)) {
+                const currentCooldown = cooldown.get(interaction.user.id);
+
+                if (typeof currentCooldown === "number" && ((Date.now() - currentCooldown) <= cooldownTimeState)) {
+                  const timeRemaining = parseDuration(String(cooldownTimeState - (Date.now() - currentCooldown)), "second") || 0;
+
+                  return interaction.createMessage({
+                    content: `Harap tunggu, kamu masih memiliki cooldown selama **${Math.round(timeRemaining <= 0 ? 0 : timeRemaining)}** detik.`,
+                    flags: 64
+                  });
+                };
               };
 
               const currentUser = await userDoc.get();
@@ -391,6 +409,8 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
             message.delete();
           }, verificationCacheExpireTime);
+          
+          cooldown.set(content.userID, Date.now());
 
           return;
         };
