@@ -65,11 +65,22 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               const currentUser = await userDoc.get();
               const currentUserState = currentUser.data() as RegisteredUserState;
 
-              if (currentUserState?.blacklisted === true) {
-                return interaction.createMessage({
-                  content: "Maaf, saat ini kamu berada di dalam daftar blacklist. Silakan hubungi staf GMDI untuk informasi lebih lanjut.",
-                  flags: 64
-                });
+              switch (true) {
+                case (currentUserState?.blacklisted === true): {
+                  return interaction.createMessage({
+                    content: "Maaf, saat ini kamu berada di dalam daftar blacklist. Silakan hubungi staf GMDI untuk informasi lebih lanjut.",
+                    flags: 64
+                  });
+                };
+
+                case (currentUserState?.verified === true): {
+                  return await client.rest.guilds.editMember(gmdiGuildID, interaction.user.id, {
+                    roles: [memberRoleID],
+                    reason: "[GMDIBot] Already verified from store"
+                  });
+                };
+
+                default: break;
               };
             } catch (error) {
               console.error(error);
