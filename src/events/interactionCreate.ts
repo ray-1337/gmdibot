@@ -318,7 +318,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             .setColor(0x7289DA)
             .setTitle("Menunggu Verifikasi Lanjutan")
             .addField("Subject", `Konfirmasi ${content.code}`)
-            .addField("Body", "[ketik apa saja]")
+            .addField("Message", "[ketik apa saja]")
             .addField("❓ Kode sudah terkirim?", "Jika dirasa kode sudah terkirim ke akun kami \`GMDIBot\`, silakan kembali ke DM Discord ini dan tekan tombol **Cek Status**.")
             .setImage("https://gmdi.cdn.13373333.one/.GMDI_PRIVATE_ASSETS/example-001.png")
             .setDescription(stripIndents(`
