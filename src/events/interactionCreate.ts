@@ -338,9 +338,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
           cache.set(content.userID, content);
 
-          setTimeout(() => cache.delete(content.userID), verificationCacheExpireTime);
-
-          await Promise.all([
+          const [message, _] = await Promise.all([
             channel.createMessage({
               embeds: embed.toJSON(true),
               components: [{
@@ -359,6 +357,12 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               content: "Silakan cek **DM Discord** kamu. Segera lakukan verifikasi lebih lanjut, kamu diberi waktu 5 menit untuk menyelesaikannya."
             })
           ]);
+
+          setTimeout(() => {
+            cache.delete(content.userID);
+
+            message.delete();
+          }, verificationCacheExpireTime);
 
           return;
         };
