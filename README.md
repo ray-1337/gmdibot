@@ -3,9 +3,9 @@ An advanced private Discord Bot, mostly for moderation purposes. <br>
 Built with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org).
 
 ## Current
-- **TypeScript:** v5.2.x
-- **Node.js:** v20.5.x / LTS
-- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.8.x
+- **TypeScript:** v5.5.x
+- **Node.js:** v20.15.x / LTS
+- [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.11.x
 
 ## How To Setup
 - Type `npm i` or `npm install`, basically the same.
