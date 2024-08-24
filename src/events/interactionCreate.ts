@@ -120,7 +120,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             
             const message = messages
             .filter(msg => (Date.now() - msg.sentAt.date.getTime()) < verificationCacheExpireTime)
-            .find(msg => msg.from.username === cachedUser.gdUsername && msg.subject.startsWith("Konfirmasi") && msg.sentAt.date);
+            .find(msg => msg.from.username === cachedUser.gdUsername && msg.subject.startsWith("Konfirmasi"));
 
             if (!message || typeof message.id !== "number") {
               return interaction.createFollowup({content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64});
