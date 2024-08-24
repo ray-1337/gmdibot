@@ -133,7 +133,9 @@ export default async (client: Client) => {
       });
 
       if (postedBMKGMessage?.channel && postedBMKGMessage.channel.type === Constants.ChannelTypes.GUILD_ANNOUNCEMENT) {
-        postedBMKGMessage.crosspost();
+        try {
+          await postedBMKGMessage.crosspost();
+        } catch {}
       };
 
       cached.set(earthquakeID, true);
