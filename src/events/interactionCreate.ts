@@ -343,13 +343,22 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               embeds: embed.toJSON(true),
               components: [{
                 type: ComponentTypes.ACTION_ROW,
-                components: [{
-                  type: ComponentTypes.BUTTON,
-                  customID: "gd-verification-check",
-                  style: ButtonStyles.PRIMARY,
-                  emoji: { name: "✅" },
-                  label: "Cek status"
-                }]
+                components: [
+                  {
+                    type: ComponentTypes.BUTTON,
+                    customID: "gd-verification-check",
+                    style: ButtonStyles.PRIMARY,
+                    emoji: { name: "✅" },
+                    label: "Cek status"
+                  },
+                  {
+                    type: ComponentTypes.BUTTON,
+                    customID: "gd-verification-cancel",
+                    style: ButtonStyles.DANGER,
+                    emoji: { name: "✖️" },
+                    label: "Batal"
+                  }
+                ]
               }]
             }),
 
