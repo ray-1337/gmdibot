@@ -188,12 +188,14 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
               cache.delete(interaction.user.id);
 
-              setTimeout(() => {
-                // delete the message from the Discord DM
-                interaction.message.delete();
+              setTimeout(async () => {
+                try {
+                  // delete the message from the Discord DM
+                  await interaction.message.delete();
 
-                // delete the message from GD account
-                message.delete();
+                  // delete the message from GD account
+                  await message.delete();
+                } catch {};
               }, ms("5s"));
 
               return;
@@ -415,10 +417,12 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             })
           ]);
 
-          setTimeout(() => {
-            cache.delete(content.userID);
-
-            message.delete();
+          setTimeout(async () => {
+            try {
+              cache.delete(content.userID);
+  
+              await message.delete();
+            } catch {};
           }, verificationCacheExpireTime);
           
           cooldown.set(content.userID, Date.now());
