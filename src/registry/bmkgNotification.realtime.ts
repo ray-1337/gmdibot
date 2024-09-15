@@ -66,7 +66,7 @@ export default async (client: Client) => {
         return;
       };
 
-      if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali)/gim)) {
+      if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali|borneo)/gim)) {
         cached.set(earthquakeID, true);
         
         if (isDevMode) {
