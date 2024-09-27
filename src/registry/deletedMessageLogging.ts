@@ -1,7 +1,7 @@
 import { Message, PossiblyUncachedMessage, Client, Embed } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
-import { randomNumber, truncate } from "../handler/Util";
+import { randomNumber, truncate, usernameHandle } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 import { request } from "undici";
 
@@ -9,7 +9,10 @@ export default async function (client: Client, message: PossiblyUncachedMessage)
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
 
   try {
-    const embed = new EmbedBuilder().setColor(0x7289DA).setTimestamp(new Date());
+    const embed = new EmbedBuilder()
+    .setColor(0x7289DA)
+    .setTimestamp(new Date())
+    .setAuthor(`${usernameHandle(message.author)} (${message.author.id})`, message.author.avatarURL("webp", 128))
 
     if (message?.content.length) {
       embed.addField("Caption", truncate(message.content, 1024))
