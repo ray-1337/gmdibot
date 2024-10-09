@@ -4,10 +4,10 @@ import normalizeURL from "normalize-url";
 import { transformMessage, truncate, randomNumber, usernameHandle } from "../handler/Util";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
+import { starboardChannelID as channelID } from "../handler/Config";
 
 const [minStar, maxStar] = [6, 9];
 const starEmoji = "⭐";
-const channelID = "954291153203769354";
 
 export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {

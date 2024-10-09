@@ -13,6 +13,8 @@ export const memberRoleID: string = "312868594549653514";
 
 export const coblosChannelID = "905076614042370088";
 
+export const starboardChannelID: string = "1293711489164775515";
+
 export const gmdiGuildID = "190826809896468480";
 
 export const inviteLinkChannelID = "774609047013163029";
