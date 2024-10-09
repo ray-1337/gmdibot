@@ -323,9 +323,15 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
           };
 
           // check if the gd username is claimed
-          const checkExist = await userCollection.where("gdUsername", "==", gdUsername).where("verified", "==", true).get();
-          if (checkExist.docs.length > 0) {
-            return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
+          const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).where("verified", "==", true).get();
+          if (existedVerifiedUser.docs.length > 0) {
+            const usersState = existedVerifiedUser.docs.map(doc => doc.data() as RegisteredUserState);
+            
+            const currentUserState = usersState.find(user => user.userID === interaction.user.id);
+            
+            if (!currentUserState) {
+              return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
+            };
           };
 
           const user = await gdOriginClient.users.getByUsername(gdUsername, true);
