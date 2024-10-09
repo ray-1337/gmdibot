@@ -74,10 +74,17 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                 };
 
                 case (currentUserState?.verified === true): {
-                  return await client.rest.guilds.editMember(gmdiGuildID, interaction.user.id, {
-                    roles: [memberRoleID],
-                    reason: "[GMDIBot] Already verified from store"
-                  });
+                  if (process.env.npm_lifecycle_event !== "dev") {
+                    await interaction.createMessage({
+                      content: "Kamu sudah terverifikasi.", flags: 64
+                    });
+
+                    await client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, memberRoleID, "[GMDIBot] Already verified from store");
+
+                    return;
+                  };
+
+                  break;
                 };
 
                 default: break;
