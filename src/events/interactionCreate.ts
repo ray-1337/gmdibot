@@ -137,7 +137,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             const messages = await gdClient.getMessages(25);
             
             const message = messages
-            .filter(msg => (Date.now() - msg.sentAt.date.getTime()) < verificationCacheExpireTime)
+            .filter(msg => (parseDuration(msg.sentAt.pretty) || 0) < verificationCacheExpireTime)
             .find(msg => msg.from.username === cachedUser.gdUsername && msg.subject.startsWith("Konfirmasi"));
 
             if (!message || typeof message.id !== "number") {
