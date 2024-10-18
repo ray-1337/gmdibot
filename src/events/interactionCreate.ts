@@ -137,7 +137,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               return interaction.createFollowup({content: "Terjadi kegagalan saat pengecekan isi DM dari sisi kami, coba lagi nanti.", flags: 64});
             };
 
-            const messages = await gdClient.getMessages(25);
+            const messages = await gdClient.getMessages(10);
             
             const message = messages
             .filter(msg => (parseDuration(msg.sentAt.pretty) || 0) < verificationCacheExpireTime)
