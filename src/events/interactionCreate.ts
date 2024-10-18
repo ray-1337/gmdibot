@@ -32,6 +32,9 @@ import { client as gdOriginClient } from "../registry/verification/gdClient";
 // config
 import { requirements } from "../registry/verification/config";
 
+// generate gjp
+import generateGJP from "../registry/generateGJP";
+
 export default async (client: Client, interaction: AnyInteractionGateway) => {
   try {
     const userDoc = userCollection.doc(interaction.user.id);
@@ -126,7 +129,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
             const gdClient = await gdOriginClient.users.authorize({
               accountID: +process.env.GD_ACCOUNT_ID!,
-              gjp: process.env.GD_GJP!,
+              gjp: generateGJP(process.env.GD_SECRET_KEY as string),
               userName: process.env.GD_USERNAME!
             });
 
