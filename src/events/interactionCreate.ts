@@ -144,7 +144,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             
             const message = messages
             .filter(msg => (parseDuration(msg.sentAt.pretty) || 0) < verificationCacheExpireTime)
-            .find(msg => msg.from.username === cachedUser.gdUsername && msg.subject.startsWith("Konfirmasi"));
+            .find(msg => msg.from.username.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject.startsWith("Konfirmasi"));
 
             if (!message || typeof message.id !== "number") {
               return interaction.createFollowup({content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64});
