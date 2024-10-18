@@ -8,7 +8,7 @@ import parseDuration from "parse-duration";
 // utility
 const verificationCacheExpireTime: number = ms("5m");
 import { randomNumber, usernameHandle } from "../handler/Util";
-import { firstGeneralTextChannelID, gmdiGuildID, memberRoleID, staffRoleID, verificationChannelID, verificationLogChannelID } from "../handler/Config";
+import { firstGeneralTextChannelID, unverifiedRoleID, gmdiGuildID, memberRoleID, staffRoleID, verificationChannelID, verificationLogChannelID } from "../handler/Config";
 
 // typings
 import type { UserVerificationChoice, RegisteredUserState } from "../registry/verification/typings";
@@ -82,7 +82,10 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                       content: "Kamu sudah terverifikasi.", flags: 64
                     });
 
-                    await client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, memberRoleID, "[GMDIBot] Already verified from store");
+                    await Promise.all([
+                      client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, memberRoleID, "[GMDIBot] Already verified from store"),
+                      client.rest.guilds.removeMemberRole(gmdiGuildID, interaction.user.id, unverifiedRoleID, "[GMDIBot] Already verified from store")
+                    ]);
 
                     return;
                   };
@@ -279,7 +282,10 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               }]
             });
 
-            await client.rest.guilds.addMemberRole(gmdiGuildID, userID[0], memberRoleID, "[GMDIBot] Finished verification");
+            await Promise.all([
+              client.rest.guilds.addMemberRole(gmdiGuildID, userID[0], memberRoleID, "[GMDIBot] Finished verification"),
+              client.rest.guilds.removeMemberRole(gmdiGuildID, userID[0], unverifiedRoleID, "[GMDIBot] Finished verification")
+            ]);
 
             await interaction.createFollowup({content: "Accepted.", flags: 64})
 
