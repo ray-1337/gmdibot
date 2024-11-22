@@ -103,7 +103,10 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               // check if the user has already submitted the form and it's not verified yet
               // the user can resubmit if the form is nowhere to be found around at least 10 messages
               const messages = await client.rest.channels.getMessages(verificationLogChannelID, {
-                filter: (message) => message.author.id === client.user.id && message.embeds.length >= 1 && message.embeds?.[0].author?.name?.match(interaction.user.id) !== null,
+                filter: (message) => message.author.id === client.user.id &&
+                  message.embeds.length >= 1 &&
+                  message.embeds?.[0].author?.name?.match(interaction.user.id) !== null &&
+                  message.embeds?.[0].title === "New User Verification",
                 limit: 10
               });
               
