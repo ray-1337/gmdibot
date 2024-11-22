@@ -45,6 +45,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
         switch (interaction.data.customID) {
           case "verification_self_buttonclick": {
             try {
+              // check if the user is currently has ongoing session
               if (cache.has(interaction.user.id)) {
                 return interaction.createMessage({
                   content: "Kamu saat ini memiliki sesi verifikasi yang sedang berjalan. Mohon diselesaikan terlebih dahulu.",
@@ -52,6 +53,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                 });
               };
 
+              // check if the user is in cooldown state
               if (cooldown.has(interaction.user.id)) {
                 const currentCooldown = cooldown.get(interaction.user.id);
 
@@ -69,6 +71,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               const currentUserState = currentUser.data() as RegisteredUserState;
 
               switch (true) {
+                // check if the user is blacklisted
                 case (currentUserState?.blacklisted === true): {
                   return interaction.createMessage({
                     content: "Maaf, saat ini kamu berada di dalam daftar blacklist. Silakan hubungi staf GMDI untuk informasi lebih lanjut.",
@@ -76,6 +79,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                   });
                 };
 
+                // check if the user is already verified
                 case (currentUserState?.verified === true): {
                   if (process.env.npm_lifecycle_event !== "dev") {
                     await interaction.createMessage({
