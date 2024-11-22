@@ -99,6 +99,20 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
                 default: break;
               };
+
+              // check if the user has already submitted the form and it's not verified yet
+              // the user can resubmit if the form is nowhere to be found around at least 10 messages
+              const messages = await client.rest.channels.getMessages(verificationLogChannelID, {
+                filter: (message) => message.author.id === client.user.id && message.embeds.length >= 1 && message.embeds?.[0].author?.name?.match(interaction.user.id) !== null,
+                limit: 10
+              });
+              
+              if (messages.length >= 1) {
+                return interaction.createMessage({
+                  flags: 64,
+                  content: "Kamu sudah mengirimkan formulir verifikasi. Mohon untuk menunggu hasil verifikasi kurang lebih 24 jam ke depan."
+                });
+              };
             } catch (error) {
               console.error(error);
             };
