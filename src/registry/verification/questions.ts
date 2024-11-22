@@ -23,7 +23,8 @@ export default [
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 45,
-        required: true
+        required: true,
+        placeholder: "Nama creator level (Nexus bukan creator level!)"
       }
     ]
   },
@@ -49,7 +50,8 @@ export default [
         style: TextInputStyles.PARAGRAPH,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 512,
-        required: true
+        required: true,
+        placeholder: "Facebook? Teman (dengan username) kamu?"
       }
     ]
   },
