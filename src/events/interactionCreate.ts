@@ -261,15 +261,19 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               return interaction.createFollowup({content: "Unable to fetch user ID from previous embed.", flags: 64});
             };
 
-            const fields: EmbedField[] = [];
-            if (embed?.fields?.[0]) {
-              fields.push(embed.fields[0]);
-            };
-
-            fields.push({
-              name: "Accepted by",
-              value: `@${interaction.user.username} (${interaction.user.id})`
-            });
+            let fields: EmbedField[] = [...embed?.fields || []];
+            
+            fields = fields.concat([
+              {
+                name: "\u200b",
+                value: "\u200b",
+                inline: true
+              },
+              {
+                name: "Accepted by",
+                value: `@${interaction.user.username} (${interaction.user.id})`
+              }
+            ]);
 
             await interaction.message.edit({
               components: [],
@@ -473,20 +477,23 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             return interaction.createFollowup({content: "Unable to fetch user ID from previous embed.", flags: 64});
           };
 
-          const fields: EmbedField[] = [];
-          if (embed?.fields?.[0]) {
-            fields.push(embed.fields[0]);
-          };
+          let fields: EmbedField[] = [...embed?.fields || []];
 
-          fields.push({
-            name: "Rejection Reason",
-            value: reason
-          });
-
-          fields.push({
-            name: "Rejected by",
-            value: `@${interaction.user.username} (${interaction.user.id})`
-          });
+          fields = fields.concat([
+            {
+              name: "\u200b",
+              value: "\u200b",
+              inline: true
+            },
+            {
+              name: "Rejection Reason",
+              value: reason
+            },
+            {
+              name: "Rejected by",
+              value: `@${interaction.user.username} (${interaction.user.id})`
+            }
+          ]);
 
           await client.rest.channels.editMessage(channelID, messageID, {
             components: [],
