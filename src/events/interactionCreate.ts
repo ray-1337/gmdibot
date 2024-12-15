@@ -432,7 +432,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
           cache.set(content.userID, content);
 
-          const [message, _] = await Promise.all([
+          const [message] = await Promise.all([
             channel.createMessage({
               embeds: embed.toJSON(true),
               components: [{
