@@ -107,7 +107,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                   message.embeds.length >= 1 &&
                   message.embeds?.[0].author?.name?.match(interaction.user.id) !== null &&
                   message.embeds?.[0].title === "New User Verification",
-                limit: 10
+                limit: 50
               });
               
               if (messages.length >= 1) {
