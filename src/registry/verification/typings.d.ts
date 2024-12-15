@@ -6,7 +6,7 @@ export interface UserVerificationChoice {
   createdAt: number;
 };
 
-export interface RegisteredUserState extends Record<"verified" | "blacklisted", boolean> {
+export interface RegisteredUserState extends Record<"verified" | "blacklisted", boolean>, Partial<Pick<UserVerificationChoice, "questions">> {
   lastUpdatedAt: number;
   userID: string;
   gdUsername: string;

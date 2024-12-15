@@ -183,12 +183,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                 - **GD Username:** ${cachedUser.gdUsername}
                 - **Filled Forms Date/Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
                 - **User ID in Cache:** ${cachedUser.userID}
-              `))
-              .addBlankField();
-
-              for (const [question, answer] of Object.entries(cachedUser.questions)) {
-                embed.addField(question, answer);
-              };
+              `));
 
               await client.rest.channels.createMessage(verificationLogChannelID, {
                 embeds: embed.toJSON(true),
@@ -208,6 +203,13 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                       style: ButtonStyles.DANGER,
                       label: "Reject",
                       emoji: { name: "✖️" }
+                    },
+                    {
+                      type: ComponentTypes.BUTTON,
+                      customID: "fetch-user-questions",
+                      style: ButtonStyles.SECONDARY,
+                      label: "Questionnaires",
+                      emoji: { name: "ℹ️" }
                     }
                   ]
                 }]
@@ -218,7 +220,12 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
                 content: "Formulir verifikasi kamu telah diterima, dan akan dicek oleh staf GMDI dalam 1x24 jam."
               });
 
-              await userDoc.set({ userID: cachedUser.userID, gdUsername: cachedUser.gdUsername, lastUpdatedAt: Date.now() }, { merge: true });
+              await userDoc.set({
+                userID: cachedUser.userID,
+                gdUsername: cachedUser.gdUsername,
+                lastUpdatedAt: Date.now(),
+                questions: cachedUser.questions
+              }, { merge: true });
 
               cache.delete(interaction.user.id);
 
@@ -241,6 +248,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             };
           };
 
+          case "fetch-user-questions":
           case "deny-user-verification":
           case "accept-user-verification": {
             if (!interaction.member?.roles.some(roleID => roleID === staffRoleID)) {
@@ -282,22 +290,67 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
               return interaction.createFollowup({content: "Unable to fetch user ID from previous embed.", flags: 64});
             };
 
+            // fetch user questionnaires
+            if (interaction.data.customID === "fetch-user-questions") {
+              const secondUserDoc = await userCollection.doc(userID[0]).get();
+              const userData = secondUserDoc.data() as RegisteredUserState;
+              
+              if (!userData?.questions) {
+                return interaction.createFollowup({
+                  content: "No questionnaires available. Only available on a new registered user after Dec 15, 2024.", flags: 64
+                });
+              };
+
+              let userProfile = client.users.get(userID[0]);
+              if (!userProfile) {
+                userProfile = await client.rest.users.get(userID[0]);
+
+                if (!userProfile) {
+                  return interaction.createFollowup({
+                    content: "Unable to fetch Discord user information.",
+                    flags: 64
+                  });
+                };
+              };
+
+              const questionFields: EmbedField[] = [];
+
+              for (const [question, answer] of Object.entries(userData.questions)) {
+                questionFields.push({
+                  name: question,
+                  value: answer
+                });
+              };
+
+              return await interaction.createFollowup({
+                embeds: [{
+                  title: "Questionnaires",
+                  fields: questionFields,
+                  timestamp: new Date(userData.lastUpdatedAt).toISOString(),
+                  color: 0x7289DA,
+                  author: {
+                    name: `@${userProfile.username} (${userProfile.id})`,
+                    iconURL: userProfile.avatarURL("webp", 64)
+                  }
+                }]
+              });
+            };
+
             let fields: EmbedField[] = [...embed?.fields || []];
             
-            fields = fields.concat([
-              {
-                name: "\u200b",
-                value: "\u200b",
-                inline: true
-              },
-              {
-                name: "Accepted by",
-                value: `@${interaction.user.username} (${interaction.user.id})`
-              }
-            ]);
+            fields.push({
+              name: "Accepted by",
+              value: `@${interaction.user.username} (${interaction.user.id})`
+            });
 
             await interaction.message.edit({
-              components: [],
+              components: [{
+                type: ComponentTypes.ACTION_ROW,
+                components: [
+                  interaction.message.components[0].components[interaction.message.components[0].components.length - 1]
+                ]
+              }],
+
               embeds: [{
                 ...embed,
                 color: 0x34eb46,
@@ -504,11 +557,6 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
 
           fields = fields.concat([
             {
-              name: "\u200b",
-              value: "\u200b",
-              inline: true
-            },
-            {
               name: "Rejection Reason",
               value: reason
             },
@@ -519,7 +567,13 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
           ]);
 
           await client.rest.channels.editMessage(channelID, messageID, {
-            components: [],
+            components: [{
+              type: ComponentTypes.ACTION_ROW,
+              components: [
+                logMessage.components[0].components[logMessage.components[0].components.length - 1]
+              ]
+            }],
+
             embeds: [{
               ...embed,
               color: 0xeb4634,
