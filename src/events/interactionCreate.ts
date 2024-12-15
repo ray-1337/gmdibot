@@ -8,7 +8,7 @@ import parseDuration from "parse-duration";
 // utility
 const verificationCacheExpireTime: number = ms("5m");
 import { randomNumber, usernameHandle } from "../handler/Util";
-import { firstGeneralTextChannelID, unverifiedRoleID, gmdiGuildID, memberRoleID, staffRoleID, verificationChannelID, verificationLogChannelID } from "../handler/Config";
+import { firstGeneralTextChannelID, botOwnerIDs, unverifiedRoleID, gmdiGuildID, memberRoleID, staffRoleID, verificationChannelID, verificationLogChannelID } from "../handler/Config";
 
 // typings
 import type { UserVerificationChoice, RegisteredUserState } from "../registry/verification/typings";
@@ -317,14 +317,16 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
             const userManualMention = `<@${userID[0]}>`;
             const user = await client.rest.users.get(userID[0]).catch(() => { return null });
 
-            const welcomeEmbed = new EmbedBuilder()
-            .setTimestamp(new Date()).setColor(0x24C86E)
-            .setTitle(`Halo, ${user ? usernameHandle(user) : userManualMention} 👋`);
+            if (!botOwnerIDs.includes(userID[0]) && process.env.npm_lifecycle_event !== "dev") {
+              const welcomeEmbed = new EmbedBuilder()
+              .setTimestamp(new Date()).setColor(0x24C86E)
+              .setTitle(`Halo, ${user ? usernameHandle(user) : userManualMention} 👋`);
 
-            await client.rest.channels.createMessage(firstGeneralTextChannelID, {
-              content: user?.mention || userManualMention,
-              embeds: welcomeEmbed.toJSON(true)
-            });
+              await client.rest.channels.createMessage(firstGeneralTextChannelID, {
+                content: user?.mention || userManualMention,
+                embeds: welcomeEmbed.toJSON(true)
+              });
+            };
 
             // optional: DM the user about the verification update
             // if the dm closed, we should ignore this
