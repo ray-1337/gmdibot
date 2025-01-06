@@ -33,7 +33,7 @@ export default [
     components: [
       {
         customID: "indonesia-creator-level",
-        label: "Salah satu level buatan creator Indonesia",
+        label: "Salah satu rated level dari creator Indonesia",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
