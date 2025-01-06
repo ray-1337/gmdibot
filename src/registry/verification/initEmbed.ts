@@ -22,13 +22,22 @@ export default async function(client: Client) {
         embeds: embed.toJSON(true),
         components: [{
           type: ComponentTypes.ACTION_ROW,
-          components: [{
-            type: ComponentTypes.BUTTON,
-            style: ButtonStyles.PRIMARY,
-            customID: "verification_self_buttonclick",
-            label: "Verifikasi",
-            emoji: { name: "✅" }
-          }]
+          components: [
+            {
+              type: ComponentTypes.BUTTON,
+              style: ButtonStyles.PRIMARY,
+              customID: "verification_self_buttonclick",
+              label: "Verifikasi",
+              emoji: { name: "✅" }
+            },
+            {
+              type: ComponentTypes.BUTTON,
+              style: ButtonStyles.LINK,
+              label: "Ban Appeal Form",
+              emoji: { name: "🔨" },
+              url: "https://docs.google.com/forms/d/e/1FAIpQLSdRbnpOLQ43ya01toDsEpIvVKxksEqVm5YjFj2TuVl13boDXg/viewform"
+            }
+          ]
         }]
       })
     };
