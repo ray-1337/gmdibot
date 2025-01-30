@@ -1,3 +1,4 @@
+import Client from "gd.js";
 export const requirements = {
   stars: 500,
   demons: 5,
@@ -6,3 +7,5 @@ export const requirements = {
     user: 50
   }
 };
+// gd client
+export const gdClient = new Client();
