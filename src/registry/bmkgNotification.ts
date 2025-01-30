@@ -1,6 +1,5 @@
 import { Client, Constants, File } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import { request } from "undici";
 import {xml2json} from "xml-js";
 import ms from "ms";
 import dayjs from "dayjs";
@@ -18,10 +17,10 @@ export default async (client: Client) => {
   randomInterval(async () => {
     try {
       const endpoint = "https://bmkg-content-inatews.storage.googleapis.com/live30event.xml";
-      const checkHeader = await request(endpoint, { method: "HEAD" });
-      if (!checkHeader || checkHeader.statusCode >= 400) throw await checkHeader.body.text();
+      const checkHeader = await fetch(endpoint, { method: "HEAD" });
+      if (!checkHeader || checkHeader.status >= 400) throw await checkHeader.text();
 
-      const lastModifiedHeader = String(checkHeader?.headers?.["last-modified"]);
+      const lastModifiedHeader = checkHeader.headers.get("last-modified");
       if (lastModifiedHeader?.length) {
         if (lastModifiedHeader === lastModified) {
           return;
@@ -30,10 +29,10 @@ export default async (client: Client) => {
         };
       };
 
-      const data = await request(endpoint, { method: "GET" });
-      if (data.statusCode >= 400) throw await data.body.text();
+      const data = await fetch(endpoint, { method: "GET" });
+      if (data.status >= 400) throw await data.text();
 
-      const rawXML = await data.body.text();
+      const rawXML = await data.text();
       const parsed = JSON.parse(xml2json(rawXML, {compact: true})) as GempaVirtualization;
       if (!parsed?.Infogempa?.gempa?.[0]) return;
 
@@ -101,18 +100,18 @@ export default async (client: Client) => {
 
       // mapbox
       const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+${earthquakeColor.toString(16)}(${bujur},${lintang})/${bujur},${lintang},6.95,0/1280x800?access_token=${process.env.MAPBOX_TOKEN}`;
-      const mapboxFetch = await request(mapboxEndpoint, {method: "GET"});
+      const mapboxFetch = await fetch(mapboxEndpoint, {method: "GET"});
 
       let files: File[] = [];
 
-      if (mapboxFetch.statusCode >= 400) {
-        console.error(await mapboxFetch.body.text());
+      if (mapboxFetch.status >= 400) {
+        console.error(await mapboxFetch.text());
         console.warn(`GMDI & BMKG (realtime alternative): Failed to fetch mapbox`);
       } else {
         embed.setImage(`attachment://gmdi_attitude_eq_${earthquakeID}.png`);
         files.push({
           name: `gmdi_attitude_eq_${earthquakeID}.png`,
-          contents: Buffer.from(await mapboxFetch.body.arrayBuffer())
+          contents: Buffer.from(await mapboxFetch.arrayBuffer())
         });
       };
 

@@ -3,7 +3,6 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
 import { randomNumber, truncate, usernameHandle } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
-import { request } from "undici";
 
 export default async function (client: Client, message: PossiblyUncachedMessage) {
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
@@ -126,10 +125,10 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
       !process.env?.BUNNYCDN_ENDPOINT?.length
     ) return null;
 
-    let data = await request(url, { method: "GET" });
-    if (!data?.headers?.["content-type"]?.length || !data?.body) return null;
+    let data = await fetch(url, { method: "GET" });
 
-    const contentType = String(data.headers["content-type"]);
+    const contentType = data.headers.get("content-type");
+    if (!contentType) return null;
 
     const extension = {
       "image/png": "png",
@@ -150,17 +149,17 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
 
     const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
 
-    const upload = await request(`https://${process.env.BUNNYCDN_HOSTNAME}/${process.env.BUNNYCDN_USERNAME}` + urlEndpoint, {
+    const upload = await fetch(`https://${process.env.BUNNYCDN_HOSTNAME}/${process.env.BUNNYCDN_USERNAME}` + urlEndpoint, {
       method: "PUT",
-      body: Buffer.from(await data.body.arrayBuffer()),
+      body: Buffer.from(await data.arrayBuffer()),
       headers: {
         "AccessKey": process.env.BUNNYCDN_PASSWORD,
         "content-type": "application/octet-stream"
       }
     });
 
-    if (upload.statusCode >= 400) {
-      console.error(`bunnyCDN upload error [${upload.statusCode}]`, await upload.body.text());
+    if (upload.status >= 400) {
+      console.error(`bunnyCDN upload error [${upload.status}]`, await upload.text());
       return null;
     };
 

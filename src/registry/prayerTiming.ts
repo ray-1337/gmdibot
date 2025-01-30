@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { Client } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import { request } from "undici";
 import nodeSchedule from "node-schedule";
 import { shuffle } from "../handler/Util";
 
@@ -32,12 +31,12 @@ async function initiatePrayingTime(client: Client, addOneMoreDay?: boolean) {
   ];
 
   // picked from https://kemenag.go.id/
-  const prayerAPIFetch = await request(`https://api.myquran.com/v${endpointVersion}/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
-  if (!prayerAPIFetch?.body || prayerAPIFetch.statusCode >= 400) {
-    return console.error(await prayerAPIFetch.body.text());
+  const prayerAPIFetch = await fetch(`https://api.myquran.com/v${endpointVersion}/sholat/jadwal/1301/${new Date().getFullYear()}/${currentMonth}/${currentTime.get("date")}`);
+  if (!prayerAPIFetch || prayerAPIFetch.status >= 400) {
+    return console.error(await prayerAPIFetch.text());
   };
 
-  const rawData = await prayerAPIFetch.body.json() as { data?: PrayerAPIConfig };
+  const rawData = await prayerAPIFetch.json() as { data?: PrayerAPIConfig };
 
   const data = rawData?.data;
   if (!data?.jadwal) return;
