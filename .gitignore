@@ -1,9 +1,4 @@
-json.sqlite
 .vscode
-/database/*
-/server/content/*
-.archived/*
-build/
 node_modules
 .env*
 .flaskenv*
