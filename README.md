@@ -1,17 +1,17 @@
-## Side-Project (GMDI Discord Bot, Oceanic.js Rebase)
-An advanced private, community-based Discord Bot, mostly used for moderation purposes. <br>
+# GMDI Discord Bot
+An advanced, private, community-based Discord Bot, mostly used for moderation purposes. <br>
 Built around with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org).
 
-## Current
-- **TypeScript:** v5.5
+## Spec
+- **TypeScript:** v5.x
 - **Node.js:** Latest, or v20.x
 - [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.11.x
 
-## How To Setup
+## Setup
 - Type `pnpm install`.
 - Rename `.env.example` to `.env`
 - Replace `DISCORD_BOT_TOKEN` value with your Discord Bot token.
 - And start the app with `pnpm start` command.
 
-## LICENSE
+## License
 [MIT](LICENSE)
