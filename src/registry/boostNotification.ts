@@ -1,12 +1,11 @@
 import { Member, Client, JSONMember } from "oceanic.js";
-import { firstGeneralTextChannelID } from "../handler/Config";
+import { firstGeneralTextChannelID, boostRoleID } from "../handler/Config";
 import { usernameHandle } from "../handler/Util";
 
 export default async (client: Client, member: Member, oldMember: JSONMember | null) => {
   if (member.bot || !oldMember) return;
 
-  const boostRole = "589643758564540417";
-  if (!oldMember?.premiumSince && member?.premiumSince && !oldMember.roles.includes(boostRole)) {
+  if (!oldMember?.premiumSince && member?.premiumSince && !oldMember.roles.includes(boostRoleID)) {
     return client.rest.channels.createMessage(firstGeneralTextChannelID, {embeds: [{
       color: 0xf47fff,
       timestamp: new Date().toISOString(),
