@@ -1,13 +1,7 @@
-export interface UserVerificationChoice {
+export interface UserVerificationChoice extends Record<"userID" | "gdUsername", string>, Record<"code" | "createdAt", number> {
   questions: Record<string, string>;
-  userID: string;
-  code: number;
-  gdUsername: string;
-  createdAt: number;
 };
 
-export interface RegisteredUserState extends Record<"verified" | "blacklisted", boolean>, Partial<Pick<UserVerificationChoice, "questions">> {
+export interface RegisteredUserState extends Record<"userID" | "gdUsername", string>, Record<"verified" | "blacklisted", boolean>, Partial<Pick<UserVerificationChoice, "questions">> {
   lastUpdatedAt: number;
-  userID: string;
-  gdUsername: string;
 };
