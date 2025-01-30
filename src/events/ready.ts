@@ -4,7 +4,7 @@ import { version } from "../../package.json";
 // bmkg features
 // import prayerTiming from "../registry/prayerTiming";
 import { rescheduleBirthdayPeople } from "../registry/birthdayRole";
-import bmkgNotificationRealtime from "../registry/bmkgNotification.realtime";
+import initBmkgNotification from "../registry/bmkgNotification";
 
 import initVerificationEmbed from "../registry/verification/initEmbed";
 
@@ -30,7 +30,7 @@ export default async (client: Client) => {
   // cache (redis) startup
   try {
     await Promise.all([
-      bmkgNotificationRealtime(client),
+      initBmkgNotification(client),
 
       initVerificationEmbed(client)
     ]);
