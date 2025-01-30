@@ -9,4 +9,3 @@ node_modules
 .flaskenv*
 !.env.project
 !.env.vault
-pnpm-lock.yaml
