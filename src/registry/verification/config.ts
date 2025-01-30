@@ -1,4 +1,8 @@
 import Client from "gd.js";
+import ms from "ms";
+
+import { type UserVerificationChoice } from "./typings";
+
 export const requirements = {
   stars: 500,
   demons: 5,
@@ -7,5 +11,15 @@ export const requirements = {
     user: 50
   }
 };
+
+// user temporary cache
+export const cache = new Map<string, UserVerificationChoice>();
+
 // gd client
 export const gdClient = new Client();
+
+export const verificationCacheExpireTime: number = ms("5m");
+
+// cooldown
+export const cooldownTimeState = ms("3m");
+export const cooldown = new Map<string, number>();

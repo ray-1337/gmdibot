@@ -1,44 +1,7 @@
-import { Client, AnyInteractionGateway, InteractionTypes, ComponentTypes, ButtonStyles, EmbedField, TextInputStyles } from "oceanic.js";
-import { EmbedBuilder } from "@oceanicjs/builders";
-import ms from "ms";
-import { stripIndents } from "common-tags";
-import dayjs from "dayjs";
-import parseDuration from "parse-duration";
+import { type AnyInteractionGateway, InteractionTypes, ComponentTypes } from "oceanic.js";
 
-// utility
-const verificationCacheExpireTime: number = ms("5m");
-import { randomNumber, usernameHandle } from "../handler/Util";
-import { firstGeneralTextChannelID, botOwnerIDs, unverifiedRoleID, gmdiGuildID, memberRoleID, staffRoleID, verificationChannelID, verificationLogChannelID } from "../handler/Config";
-
-// typings
-import type { UserVerificationChoice, RegisteredUserState } from "../registry/verification/typings";
-
-// user temporary cache
-const cache = new Map<string, UserVerificationChoice>();
-
-// cooldown
-const cooldownTimeState = ms("3m");
-const cooldown = new Map<string, number>();
-
-// collection
-import userCollection from "../registry/verification/userCollection";
-
-// questions
-import questions from "../registry/verification/questions";
-
-// gd client
-import { client as gdOriginClient } from "../registry/verification/gdClient";
-
-// config
-import { requirements } from "../registry/verification/config";
-
-// generate gjp
-import generateGJP from "../registry/generateGJP";
-
-export default async (client: Client, interaction: AnyInteractionGateway) => {
+export default async (_, interaction: AnyInteractionGateway) => {
   try {
-    const userDoc = userCollection.doc(interaction.user.id);
-
     if (interaction.type === InteractionTypes.MESSAGE_COMPONENT) {
       // verification button
       if (interaction.data.componentType === ComponentTypes.BUTTON) {
