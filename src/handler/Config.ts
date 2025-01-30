@@ -47,5 +47,3 @@ export const cooldownMessageCooling = [
   "ribut mulu daritadi",
   "kata mamah jangan ribut"
 ];
-
-export const evalPrefix = ".";

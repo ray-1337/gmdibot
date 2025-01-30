@@ -1,5 +1,4 @@
-import {Client, Message, AnyTextableGuildChannel, PrivateChannel, GuildChannel} from "oceanic.js";
-import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/Config";
+import {Message, AnyTextableGuildChannel, PrivateChannel, GuildChannel} from "oceanic.js";
 
 // Moderation Registry
 // import ChannelCooldown from "../registry/channelCooldown";
@@ -7,10 +6,7 @@ import { /*mostCooldownRelevantTextChannelIDs,*/ evalPrefix } from "../handler/C
 // invite link trigger word
 import inviteLinkTriggerWord from "../registry/inviteLinkTriggerWord";
 
-// command
-import EvalFactory from "../registry/eval";
-
-export default async (client: Client, message: Message<AnyTextableGuildChannel>) => {
+export default async (_, message: Message<AnyTextableGuildChannel>) => {
   if (
     message.author.bot ||
     message.channel instanceof PrivateChannel ||
@@ -29,4 +25,6 @@ export default async (client: Client, message: Message<AnyTextableGuildChannel>)
 
     return EvalFactory(client, message, args);
   };
+
+
 };
