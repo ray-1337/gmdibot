@@ -2,7 +2,6 @@ import { Client } from "oceanic.js";
 import { version } from "../../package.json";
 
 // bmkg features
-// import prayerTiming from "../registry/prayerTiming";
 import { rescheduleBirthdayPeople } from "../registry/birthdayRole";
 import initBmkgNotification from "../registry/bmkgNotification";
 
@@ -11,27 +10,17 @@ import initVerificationEmbed from "../registry/verification/initEmbed";
 let isReady: boolean = false;
 
 export default async (client: Client) => {
-  if (!isReady) {
-    console.log(`The bot is ready with version (v${version})`);
-    isReady = true;
-  } else {
+  if (isReady) {
     return;
   };
 
-  // client.editStatus("idle", [{
-  //   type: Constants.ActivityTypes.LISTENING,
-  //   name: "Dosen"
-  // }]);
+  console.log(`The bot is ready with version (v${version})`);
+  isReady = true;
 
-  // prayerTiming(client);
-  
-  rescheduleBirthdayPeople(client);
-
-  // cache (redis) startup
   try {
     await Promise.all([
       initBmkgNotification(client),
-
+      rescheduleBirthdayPeople(client),
       initVerificationEmbed(client)
     ]);
   } catch (error) {
