@@ -26,8 +26,13 @@
     "removeComments": true,
     "typeRoots": ["src/typings"],
     "declaration": true,
-    "outDir": "./build"
+    "outDir": "./build",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
   },
-
+  
   "exclude": [".archived/**/*", "./built/**/*"]
 }
