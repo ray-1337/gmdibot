@@ -9,7 +9,6 @@ const app = () => {
     return getApp(appName);
   } catch {
     return initializeApp({
-      databaseURL: `https://${process.env.FIREBASE_ADMIN_DB_ENDPOINT}`,
       projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
       credential: cert({
         clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
