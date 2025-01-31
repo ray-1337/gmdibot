@@ -10,7 +10,6 @@ import userCollection from "@/registry/verification/userCollection";
 
 export default async (interaction: ComponentInteraction) => {
   const client = interaction.client;
-  const userDoc = userCollection.doc(interaction.user.id);
 
   if (!interaction.member?.roles.some(roleID => roleID === staffRoleID)) {
     return interaction.createMessage({ content: "You don't have permissions to do this.", flags: 64 });
@@ -51,10 +50,11 @@ export default async (interaction: ComponentInteraction) => {
     return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
   };
 
+  const userDoc = userCollection.doc(userID[0]);
+
   // fetch user questionnaires
   if (interaction.data.customID === "fetch-user-questions") {
-    const secondUserDoc = await userCollection.doc(userID[0]).get();
-    const userData = secondUserDoc.data() as RegisteredUserState;
+    const userData = (await userDoc.get()).data() as RegisteredUserState;
 
     if (!userData?.questions) {
       return interaction.createFollowup({
