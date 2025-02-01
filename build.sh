@@ -15,9 +15,11 @@ docker rm -f "$APP_NAME"
 $IMAGE_URL="ghcr.io/$GITHUB_REPOSITORY_OWNER_USERNAME/$IMAGE_ID"
 docker pull $IMAGE_URL
 
+# Get the Dotenv key
+DOTENV_PRODUCTION_KEY=$(pnpm dlx dotenv-vault@latest keys production | tail -n 1)
 
 # Build the container
-docker create --name $APP_NAME $IMAGE_ID
+docker create -e DOTENV_KEY="$DOTENV_PRODUCTION_KEY" --name $APP_NAME $IMAGE_URL
 
 # Start the container
 docker start $APP_NAME
