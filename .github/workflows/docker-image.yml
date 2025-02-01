@@ -26,8 +26,7 @@ jobs:
 
       - name: Check if package.json version changed
         uses: actions/checkout@v4
-        id: check_version
-        run: |
+      - run: |
           OLD_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
           NEW_VERSION=$(jq -r '.version' package.json)
 
