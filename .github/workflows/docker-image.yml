@@ -24,24 +24,7 @@ jobs:
         run: |
           echo "repository=${GITHUB_REPOSITORY@L}" >> $GITHUB_OUTPUT
 
-      - name: Check if package.json version changed
-        uses: actions/checkout@v4
-      - run: |
-          OLD_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
-          NEW_VERSION=$(jq -r '.version' package.json)
-
-          echo "Old/new version: $OLD_VERSION / $NEW_VERSION"
-
-          if [[ "$OLD_VERSION" == "$NEW_VERSION" ]]; then
-            echo "No version change detected. Skipping build."
-            echo "SHOULD_BUILD=false" >> $GITHUB_ENV
-          else
-            echo "Version changed! Proceeding with build."
-            echo "SHOULD_BUILD=true" >> $GITHUB_ENV
-          fi
-
       - name: Set up Docker Buildx
-        if: env.SHOULD_BUILD == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to the Container registry
