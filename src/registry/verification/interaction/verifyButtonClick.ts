@@ -59,11 +59,9 @@ export default async (interaction: ComponentInteraction) => {
             client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, memberRoleID, "[GMDIBot] Already verified from store"),
             client.rest.guilds.removeMemberRole(gmdiGuildID, interaction.user.id, unverifiedRoleID, "[GMDIBot] Already verified from store")
           ]);
-
-          return;
         };
 
-        break;
+        return;
       };
 
       default: break;
@@ -86,7 +84,7 @@ export default async (interaction: ComponentInteraction) => {
       });
     };
   } catch (error) {
-    console.error(error);
+    return console.error(error);
   };
 
   return await interaction.createModal({
