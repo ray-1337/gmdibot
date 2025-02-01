@@ -1,6 +1,7 @@
 # Use "name" and "version" from package.json as a Docker material.
 APP_NAME=$(grep '"name"' package.json | sed -E 's/.*"name": *"([^"]+)".*/\1/')
 VERSION=$(grep '"version"' package.json | sed -E 's/.*"version": *"([^"]+)".*/\1/')
+IMAGE_ID="$APP_NAME:$VERSION"
 
 # Update modules
 pnpm install
