@@ -15,7 +15,7 @@ docker rm -f "$APP_NAME"
 docker pull ghcr.io/${GITHUB_REPOSITORY_OWNER_USERNAME}/${IMAGE_ID}
 
 # Build the container
-docker create -p --name $APP_NAME $IMAGE_ID
+docker create --name $APP_NAME $IMAGE_ID
 
 # Start the container
 docker start $APP_NAME
