@@ -16,7 +16,7 @@ export default async (interaction: ComponentInteraction) => {
 
     // check if the user is currently has ongoing session
     if (cache.has(interaction.user.id)) {
-      return interaction.createMessage({
+      return interaction.reply({
         content: "Kamu saat ini memiliki sesi verifikasi yang sedang berjalan. Mohon diselesaikan terlebih dahulu.",
         flags: 64
       });
@@ -29,7 +29,7 @@ export default async (interaction: ComponentInteraction) => {
       if (typeof currentCooldown === "number" && ((Date.now() - currentCooldown) <= cooldownTimeState)) {
         const timeRemaining = parseDuration(String(cooldownTimeState - (Date.now() - currentCooldown)), "second") || 0;
 
-        return interaction.createMessage({
+        return interaction.reply({
           content: `Harap tunggu, kamu masih memiliki cooldown selama **${Math.round(timeRemaining <= 0 ? 0 : timeRemaining)}** detik.`,
           flags: 64
         });
@@ -42,7 +42,7 @@ export default async (interaction: ComponentInteraction) => {
     switch (true) {
       // check if the user is blacklisted
       case (currentUserState?.blacklisted === true): {
-        return interaction.createMessage({
+        return interaction.reply({
           content: "Maaf, saat ini kamu berada di dalam daftar blacklist. Silakan hubungi staf GMDI untuk informasi lebih lanjut.",
           flags: 64
         });
@@ -51,7 +51,7 @@ export default async (interaction: ComponentInteraction) => {
       // check if the user is already verified
       case (currentUserState?.verified === true): {
         if (process.env.npm_lifecycle_event !== "dev") {
-          await interaction.createMessage({
+          await interaction.reply({
             content: "Kamu sudah terverifikasi.", flags: 64
           });
 
@@ -80,7 +80,7 @@ export default async (interaction: ComponentInteraction) => {
     });
 
     if (messages.length >= 1) {
-      return interaction.createMessage({
+      return interaction.reply({
         flags: 64,
         content: "Kamu sudah mengirimkan formulir verifikasi. Mohon untuk menunggu hasil verifikasi kurang lebih 24 jam ke depan."
       });
