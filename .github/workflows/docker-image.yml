@@ -14,10 +14,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get version from package.json
-        id: package-version
+      - name: Get latest version from package.json
+        id: latest-project-version
+        run: echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+
+      - name: Compare versions before building image
+        id: "project-version-comparison"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+          PREV_COMMIT_SHA=${{ github.event.before }}
+
+          PREV_VERSION=$(git show $PREV_COMMIT_SHA:package.json | jq -r '.version')
+          CURR_VERSION=${{ steps.latest-project-version.outputs.version }}
+
+          echo "Previous/Current version: v$PREV_VERSION | v$CURR_VERSION"
+
+          if [ "$PREV_VERSION" == "$CURR_VERSION" ]; then
+            echo "No version change detected. Build skipped."
+
+            echo "skip_build=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: lowercase github.repository
         id: lower-repo
@@ -41,5 +58,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{steps.lower-repo.outputs.repository}}:${{steps.package-version.outputs.version}}
+            ghcr.io/${{steps.lower-repo.outputs.repository}}:${{steps.latest-project-version.outputs.version}}
             ghcr.io/${{steps.lower-repo.outputs.repository}}:latest
