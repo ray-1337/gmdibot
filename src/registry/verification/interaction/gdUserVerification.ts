@@ -71,6 +71,7 @@ export default async (interaction: ComponentInteraction) => {
                 - **GD Username:** ${cachedUser.gdUsername}
                 - **Filled Forms Date/Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
                 - **User ID in Cache:** ${cachedUser.userID}
+                - **User Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
               `));
 
     await interaction.client.rest.channels.createMessage(verificationLogChannelID, {
