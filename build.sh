@@ -5,7 +5,7 @@ GITHUB_REPOSITORY_OWNER_USERNAME=$(git config user.name)
 IMAGE_ID="$APP_NAME:$VERSION"
 
 # Update modules
-pnpm install
+corepack use pnpm@latest && pnpm install
 
 # Delete existing container
 echo "Container '$APP_NAME' exists. Deleting."
