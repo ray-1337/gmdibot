@@ -83,13 +83,13 @@ export default async (interaction: ComponentInteraction) => {
         content: "Kamu sudah mengirimkan formulir verifikasi. Mohon untuk menunggu hasil verifikasi kurang lebih 24 jam ke depan."
       });
     };
+
+    return await interaction.createModal({
+      title: "GMDI Server Verification",
+      customID: "verification_self_modal",
+      components: questions
+    });
   } catch (error) {
     return console.error(error);
   };
-
-  return await interaction.createModal({
-    title: "GMDI Server Verification",
-    customID: "verification_self_modal",
-    components: questions
-  });
 };
