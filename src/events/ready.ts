@@ -17,8 +17,11 @@ export default async (client: Client) => {
   console.log(`The bot is ready with version (v${version})`);
   isReady = true;
 
+  const botDescription: string = `An official Discord bot of Geometry Dash Indonesia. Currently running under version **v${version}**.`;
+
   try {
     await Promise.all([
+      client.application.edit({description: botDescription}),
       initBmkgNotification(client),
       rescheduleBirthdayPeople(client),
       initVerificationEmbed(client)
