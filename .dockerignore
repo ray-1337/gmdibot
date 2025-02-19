@@ -6,3 +6,7 @@ dist
 .vscode
 .archived
 database
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
