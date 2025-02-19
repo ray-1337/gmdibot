@@ -17,7 +17,7 @@ export default async (client: Client) => {
   console.log(`The bot is ready with version (v${version})`);
   isReady = true;
 
-  const botDescription: string = `An official Discord bot of Geometry Dash Indonesia. Currently running under version **v${version}**.`;
+  const botDescription: string = `An official Discord bot of Geometry Dash Indonesia. \nCurrently running under version **v${version}**.`;
 
   try {
     await Promise.all([
