@@ -35,7 +35,7 @@ export default async function(client: Client) {
               style: ButtonStyles.LINK,
               label: "Ban Appeal Form",
               emoji: { name: "🔨" },
-              url: "https://docs.google.com/forms/d/e/1FAIpQLSdRbnpOLQ43ya01toDsEpIvVKxksEqVm5YjFj2TuVl13boDXg/viewform"
+              url: "https://forms.gle/cApJTBsWey6yM3rj9"
             }
           ]
         }]
