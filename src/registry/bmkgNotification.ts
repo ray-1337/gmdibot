@@ -44,7 +44,7 @@ export default async (client: Client) => {
       };
 
       const currentTime = dayjs().tz(timezone);
-      const earthquakeTime = dayjs(data.sent.slice(0, data.sent.length - 3))
+      const earthquakeTime = dayjs(data.sent.slice(0, data.sent.length - 3)).tz(timezone);
 
       // check if its already late
       if (currentTime.diff(earthquakeTime) > maxWindowTime) {
