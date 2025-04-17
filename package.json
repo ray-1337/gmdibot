@@ -34,7 +34,7 @@
     "tsconfig-paths": "^4.2.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "license": "MIT",
   "bugs": {
