@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-    "build": "bash ./build.sh"
+    "build": "bash ./build.sh",
+    "reload-env": "pnpm dlx dotenv-vault@latest pull production .env"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.4",
