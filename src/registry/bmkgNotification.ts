@@ -1,75 +1,71 @@
-import { Client, Constants, File } from "oceanic.js";
+import { Client, ComponentTypes, ButtonStyles, ChannelTypes } from "oceanic.js";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
-import {xml2json} from "xml-js";
 import ms from "ms";
 import dayjs from "dayjs";
-import { randomInterval, customInaTime, colorizedMagnitudeEmbed, mercalliIntensityScale, isDevMode } from "../handler/Util";
+import { colorizedMagnitudeEmbed, mercalliIntensityScale, isDevMode } from "../handler/Util";
 
 const timezone = "Asia/Jakarta";
-const cached = new Map<string, boolean>();
+const cached = new Set<string>();
+const maxWindowTime: number = ms("15m");
 
-let intervalStarted = false;
-let lastModified = "";
+let intervalStarted: NodeJS.Timeout | null = null;
+let lastModified: string | null = null;
 
 export default async (client: Client) => {
-  if (intervalStarted) return;
+  if (intervalStarted !== null) {
+    return;
+  };
 
-  randomInterval(async () => {
+  intervalStarted = setInterval(async () => {
     try {
-      const endpoint = "https://bmkg-content-inatews.storage.googleapis.com/live30event.xml";
+      const endpoint = "https://bmkg-content-inatews.storage.googleapis.com/datagempa.json";
       const checkHeader = await fetch(endpoint, { method: "HEAD" });
-      if (!checkHeader || checkHeader.status >= 400) throw await checkHeader.text();
+      if (!checkHeader.ok) {
+        throw await checkHeader.text();
+      };
 
       const lastModifiedHeader = checkHeader.headers.get("last-modified");
-      if (lastModifiedHeader?.length) {
-        if (lastModifiedHeader === lastModified) {
+      if (typeof lastModifiedHeader === "string") {
+        if (typeof lastModified === "string" && lastModifiedHeader === lastModified) {
           return;
-        } else {
-          lastModified = lastModifiedHeader;
         };
+
+        lastModified = lastModifiedHeader;
       };
 
-      const data = await fetch(endpoint, { method: "GET" });
-      if (data.status >= 400) throw await data.text();
+      const earthquakeReq = await fetch(endpoint, { method: "GET" });
+      if (!earthquakeReq.ok) {
+        throw await earthquakeReq.text();
+      };
 
-      const rawXML = await data.text();
-      const parsed = JSON.parse(xml2json(rawXML, {compact: true})) as GempaVirtualization;
-      if (!parsed?.Infogempa?.gempa?.[0]) return;
-
-      const latestEQ = parsed.Infogempa.gempa[0];
-      const parsedTime = customInaTime(latestEQ.waktu._text);
+      const data = await earthquakeReq.json() as PartialEarthquakeDataProps;
+      if (!data || typeof data !== "object" || typeof data?.info !== "object") {
+        return;
+      };
 
       const currentTime = dayjs().tz(timezone);
-      const localizedTime = dayjs(parsedTime).tz(timezone);
-      const late = ms("15m");
+      const earthquakeTime = dayjs(data.sent.slice(0, data.sent.length - 3))
 
       // check if its already late
-      if (currentTime.valueOf() - localizedTime.valueOf() > late) {
-        // console.log(currentTime.valueOf(), localizedTime.valueOf(), currentTime.valueOf() - localizedTime.valueOf() > late)
+      if (currentTime.diff(earthquakeTime) > maxWindowTime) {
         return;
       };
 
-      const earthquakeID = latestEQ.eventid._text;
-      const cachedEarthQuake = cached.get(earthquakeID); // prevent replay
-      if (cachedEarthQuake) return;
+      const earthquakeID = data.info.eventid;
+      
+      // prevent replay
+      if (typeof earthquakeID !== "string" || isNaN(+earthquakeID) || cached.has(earthquakeID)) {
+        return;
+      };
       
       // at least >= {specified}
-      let limitMagnitudeToPost = 4;
-      if (Number(latestEQ.mag._text) < limitMagnitudeToPost) {
-        cached.set(earthquakeID, true);
+      let limitMagnitudeToPost = 3;
+      const magnitude = Number(data.info.magnitude);
+      if (isNaN(magnitude) || (magnitude < limitMagnitudeToPost)) {
+        cached.add(earthquakeID);
         
         if (isDevMode) {
-          console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but lower mag; ${latestEQ.mag._text}`);
-        };
-
-        return;
-      };
-
-      if (!latestEQ.area._text.toLowerCase().match(/(java|sumatra|sulawesi|bali|borneo)/gim)) {
-        cached.set(earthquakeID, true);
-        
-        if (isDevMode) {
-          console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${earthquakeID} but not in an indonesia-related place; ${latestEQ.area._text}`);
+          console.log(`GMDI & BMKG (realtime alternative): Posted with earthquake ID [${earthquakeID}] but the magnitude is lower than ${limitMagnitudeToPost} [${magnitude}]`);
         };
 
         return;
@@ -77,102 +73,60 @@ export default async (client: Client) => {
 
       // host
       const generalChannel = "1062203494691520522";
-      // const contentTemplate = "Stay safe, kawan-kawan. ⚠";
-      // const disclaimer = "Kalkulasi gempa tidak begitu akurat dalam menit pertama, dan data akan berubah sewaktu-waktu oleh tim ahli seismologi.";
 
-      const earthquakeColor = colorizedMagnitudeEmbed(+latestEQ.mag._text);
+      const earthquakeColor = colorizedMagnitudeEmbed(magnitude);
       const embed = new RichEmbed()
-      .setColor(earthquakeColor)
-      .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
-      .setFooter("Provided by InaTEWS, Mapbox", "https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png")
-      .setTimestamp(new Date())
-      .setTitle(`${latestEQ.area._text}`)
-      // .setDescription(`Every earthquake with magnitude above >= ${limitMagnitudeToPost} will be posted here.`)
+        .setColor(earthquakeColor)
+        .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
+        .setFooter("Provided by BMKG", "https://inatews.bmkg.go.id/favicon.ico")
+        .setTimestamp(new Date())
+        .setImage(`https://bmkg-content-inatews.storage.googleapis.com/${earthquakeID}.mmi.jpg`)
+        .setTitle(data.info.area);
       
-      const lintang = latestEQ.lintang._text;
-      const bujur = latestEQ.bujur._text;
       embed
-      .addField("Lintang Bujur", `${latestEQ.area._text} (${lintang} / ${bujur})`)
-      .addField("Skala", `${latestEQ.mag._text} / ${mercalliIntensityScale(+latestEQ.mag._text)}`, true)
-      .addField("Kedalaman", `${latestEQ.dalam._text} km`, true)
-      .addField("Waktu Terdeteksi", `<t:${Math.round(localizedTime.valueOf() / 1000)}>`, true)
-      // .addField("Disclaimer", disclaimer);
-
-      // mapbox
-      const mapboxEndpoint = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-l+${earthquakeColor.toString(16)}(${bujur},${lintang})/${bujur},${lintang},6.95,0/1280x800?access_token=${process.env.MAPBOX_TOKEN}`;
-      const mapboxFetch = await fetch(mapboxEndpoint, {method: "GET"});
-
-      let files: File[] = [];
-
-      if (mapboxFetch.status >= 400) {
-        console.error(await mapboxFetch.text());
-        console.warn(`GMDI & BMKG (realtime alternative): Failed to fetch mapbox`);
-      } else {
-        embed.setImage(`attachment://gmdi_attitude_eq_${earthquakeID}.png`);
-        files.push({
-          name: `gmdi_attitude_eq_${earthquakeID}.png`,
-          contents: Buffer.from(await mapboxFetch.arrayBuffer())
-        });
-      };
+        .addField("Lintang / Bujur", `${data.info.latitude} / ${data.info.longitude}`)
+        .addField("Skala", `${magnitude} / ${mercalliIntensityScale(magnitude)}`, true)
+        .addField("Kedalaman", data.info.depth.toLowerCase(), true)
+        .addField("Waktu Terdeteksi", `<t:${Math.round(earthquakeTime.valueOf() / 1000)}>`, true);
 
       const postedBMKGMessage = await client.rest.channels.createMessage(generalChannel, {
         // content: contentTemplate,
         embeds: embed.toJSON(true),
-        files,
+        // files,
         components: [{
-          type: Constants.ComponentTypes.ACTION_ROW,
+          type: ComponentTypes.ACTION_ROW,
           components: [{
-            type: Constants.ComponentTypes.BUTTON,
-            style: Constants.ButtonStyles.LINK,
+            type: ComponentTypes.BUTTON,
+            style: ButtonStyles.LINK,
             emoji: {id: null, name: "📑"},
             label: "More information",
-            url: `https://inatews.bmkg.go.id/web/detail2?name=${latestEQ.eventid._text}`
+            url: "https://www.bmkg.go.id/gempabumi/gempabumi-dirasakan"
           }]
         }]
       });
 
-      if (postedBMKGMessage?.channel && postedBMKGMessage.channel.type === Constants.ChannelTypes.GUILD_ANNOUNCEMENT) {
+      if (postedBMKGMessage?.channel && postedBMKGMessage.channel.type === ChannelTypes.GUILD_ANNOUNCEMENT) {
         try {
           await postedBMKGMessage.crosspost();
         } catch {}
       };
 
-      cached.set(earthquakeID, true);
+      cached.add(earthquakeID);
 
       if (isDevMode) {
-        console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${latestEQ.eventid._text}`);
+        console.log(`GMDI & BMKG (realtime alternative): Posted with ID_${magnitude}`);
       };
 
       return;
     } catch (error) {
       return console.error(error);
     };
-  }, ms("1m"), ms("2m"));
+  }, ms("1m"));
 
-  intervalStarted = true;
-  console.log(`GMDI & BMKG (realtime alternative): Ready.`);
-  return
+  return console.log(`GMDI & BMKG (realtime alternative): Ready.`);
 };
 
-interface GempaVirtualization {
-  _declaration: {
-    _attributes: {
-      version: string
-    }
-  },
-  Infogempa: {
-    gempa: Array<GempaInterface>;
-  };
-};
-
-interface GempaInterface {
-  eventid: { _text: string }
-  status: { _text: string }
-  waktu: { _text: string }
-  lintang: { _text: string }
-  bujur: { _text: string }
-  dalam: { _text: string }
-  mag: { _text: string }
-  fokal: { _text: string }
-  area: { _text: string }
+interface PartialEarthquakeDataProps {
+  sent: string;
+  info: Record<"date" | "time" | "latitude" | "longitude" | "depth" | "eventid" | "area" | "magnitude", string>;
 };
