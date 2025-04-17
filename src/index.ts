@@ -1,3 +1,5 @@
+process.env.TZ = "Asia/Jakarta";
+
 import "dotenv/config";
 import "./registry/normalizeDayJsComponents";
 
