@@ -1,6 +1,9 @@
 import { type ModalSubmitInteraction, ComponentTypes, ButtonStyles } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
+
 import { stripIndents } from "common-tags";
+
+import { load as loadHTML } from "cheerio";
 
 import { randomNumber } from "@/handler/Util";
 
@@ -33,17 +36,55 @@ export default async (interaction: ModalSubmitInteraction) => {
       };
     };
 
-    const user = await gdClient.users.getByUsername(gdUsername, true);
-    if (!user || typeof user.accountID !== "number" || typeof user.id !== "number") {
-      return interaction.createFollowup({ content: `Maaf, akun Geometry Dash dengan username [\`${gdUsername}\`] tidak dapat ditemukan.`, flags: 64 });
-    };
+    let [stars, demons, normalCoin, userCoin] = Array.from({length: 4}).map(() => 0);
 
+    try {
+      const user = await gdClient.users.getByUsername(gdUsername, true);
+      if (!user || typeof user.accountID !== "number" || typeof user.id !== "number") {
+        return interaction.createFollowup({ content: `Maaf, akun Geometry Dash dengan username [\`${gdUsername}\`] tidak dapat ditemukan.`, flags: 64 });
+      };
+
+      stars = user.stats.stars;
+      demons = user.stats.demons;
+      normalCoin = user.stats.coins.normal;
+      userCoin = user.stats.coins.user;
+    } catch {
+      try {
+        const browserReq = await fetch(`https://gdbrowser.com/u/${gdUsername}`, {
+          method: "GET",
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+          }
+        });
+
+        if (!browserReq.ok) {
+          throw new Error(`An error occurred when fetching user from "gdbrowser.com" [${browserReq.status}]`);
+        };
+
+        const text = await browserReq.text();
+        const $ = loadHTML(text);
+
+        const removeCommas = (str: string) => str.replace(/[,]/gim, "");
+        
+        stars = Number(removeCommas($("#stars").text()));
+        demons = Number(removeCommas($("#demons").text()));
+        normalCoin = Number(removeCommas($("#coins").text()));
+        userCoin = Number(removeCommas($("#usercoins").text()));
+
+        if (isNaN(stars) || isNaN(demons) || isNaN(normalCoin) || isNaN(userCoin)) {
+          throw new Error(`An error occurred when parsing numbers from "gdbrowser.com" [${gdUsername} / ${stars}/${demons}/${normalCoin}/${userCoin}]`);
+        };
+      } catch (error) {
+        console.error(error);
+        return interaction.createFollowup({ content: "Terjadi kesalahan pada sistem kami, coba lagi nanti.", flags: 64 });
+      };
+    };
     // geometry dash account stats check
     if (
-      (user.stats.stars < requirements.stars) &&
-      (user.stats.demons < requirements.demons) &&
-      (user.stats.coins.normal < requirements.coins.secret) &&
-      (user.stats.coins.user < requirements.coins.user)
+      (stars < requirements.stars) &&
+      (demons < requirements.demons) &&
+      (normalCoin < requirements.coins.secret) &&
+      (userCoin < requirements.coins.user)
     ) {
       return interaction.createFollowup({
         flags: 64,
