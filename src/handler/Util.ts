@@ -1,6 +1,10 @@
 import { Client, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
 import {randomBytes} from "crypto";
 
+export const defaultScrapUserAgent: string = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
+
+export const [officialAccountId, officialAccountKey] = (process.env.GD_ACCOUNT_KEY as string).split(" | ");
+
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
 export function delay(ms: number) {
@@ -136,4 +140,43 @@ export function mercalliIntensityScale(magnitude: number) {
 
     case magnitude >= 7.0: return "VIII";
   };
+};
+
+// get official GMDIBot account messages
+export async function getOfficialMessagesFromGD() {
+  const query = new URLSearchParams();
+
+  [["password", officialAccountKey], ["accountID", officialAccountId]]
+    .forEach(([key, value]) => query.append(key, value));
+
+  const req = await fetch("https://gdbrowser.com/messages", {
+    method: "POST",
+    body: query.toString(),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": defaultScrapUserAgent
+    }
+  });
+
+  if (!req.ok) {
+    return null;
+  };
+
+  return await req.json() as Array<Record<"accountID" | "username" | "id" | "subject" | "date", string>>;
+};
+
+// get user account data
+export async function getGDUserData(username: string) {
+  const req = await fetch("https://gdbrowser.com/api/profile/" + username, {
+    method: "GET",
+    headers: {
+      "User-Agent": defaultScrapUserAgent
+    }
+  });
+
+  if (!req.ok) {
+    return null;
+  };
+
+  return await req.json() as Record<`${"star" | "diamond" | "coin" | "userCoin" | "demon"}s`, number> & { accountID: string };
 };
