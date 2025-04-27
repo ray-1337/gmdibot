@@ -47,7 +47,7 @@ export default async (interaction: ComponentInteraction) => {
 
     const message = messages
       .filter(msg => (parseDuration(msg.date) || 0) < verificationCacheExpireTime)
-      .find(msg => msg.username.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject.startsWith("Konfirmasi"));
+      .find(msg => msg.author.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject.startsWith("Konfirmasi"));
 
     if (!message || isNaN(+message.id)) {
       return interaction.createFollowup({ content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64 });
