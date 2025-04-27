@@ -7,11 +7,11 @@ import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
 
 import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
+import { getOfficialMessagesFromGD } from "@/handler/Util";
 
-import { cache, gdClient, verificationCacheExpireTime } from "../config";
+import { cache, verificationCacheExpireTime } from "../config";
 import type { UserVerificationChoice } from "../typings";
 
-import generateGJP from "@/registry/generateGJP";
 import userCollection from "@/registry/verification/userCollection";
 
 export default async (interaction: ComponentInteraction) => {
@@ -40,23 +40,16 @@ export default async (interaction: ComponentInteraction) => {
 
     const cachedUser = cache.get(interaction.user.id) as UserVerificationChoice;
 
-    const client = await gdClient.users.authorize({
-      accountID: +process.env.GD_ACCOUNT_ID!,
-      gjp: generateGJP(process.env.GD_SECRET_KEY as string),
-      userName: process.env.GD_USERNAME!
-    });
-
-    if (!client || typeof client.id !== "number") {
+    const messages = await getOfficialMessagesFromGD();
+    if (!messages || !Array.isArray(messages) || messages.length <= 0) {
       return interaction.createFollowup({ content: "Terjadi kegagalan saat pengecekan isi DM dari sisi kami, coba lagi nanti.", flags: 64 });
     };
 
-    const messages = await client.getMessages(10);
-
     const message = messages
-      .filter(msg => (parseDuration(msg.sentAt.pretty) || 0) < verificationCacheExpireTime)
-      .find(msg => msg.from.username.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject.startsWith("Konfirmasi"));
+      .filter(msg => (parseDuration(msg.date) || 0) < verificationCacheExpireTime)
+      .find(msg => msg.username.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject.startsWith("Konfirmasi"));
 
-    if (!message || typeof message.id !== "number") {
+    if (!message || isNaN(+message.id)) {
       return interaction.createFollowup({ content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64 });
     };
 
@@ -125,7 +118,7 @@ export default async (interaction: ComponentInteraction) => {
           await interaction.message.delete();
 
           // delete the message from GD account
-          await message.delete();
+          // await message.delete();
         } catch { };
       }, ms("5s"));
 

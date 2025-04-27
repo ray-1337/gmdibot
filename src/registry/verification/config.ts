@@ -1,4 +1,3 @@
-import Client from "gd.js";
 import ms from "ms";
 
 import { type UserVerificationChoice } from "./typings";
@@ -14,9 +13,6 @@ export const requirements = {
 
 // user temporary cache
 export const cache = new Map<string, UserVerificationChoice>();
-
-// gd client
-export const gdClient = new Client();
 
 export const verificationCacheExpireTime: number = ms("5m");
 
