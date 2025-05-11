@@ -5,7 +5,7 @@ import { stripIndents } from "common-tags";
 
 import { randomNumber, getGDUserData } from "@/handler/Util";
 
-import type { RegisteredUserState, UserVerificationChoice } from "../typings";
+import type { UserVerificationChoice } from "../typings";
 import { cache, requirements, verificationCacheExpireTime, cooldown } from "../config";
 
 import userCollection from "@/registry/verification/userCollection";
@@ -23,15 +23,9 @@ export default async (interaction: ModalSubmitInteraction) => {
     };
 
     // check if the gd username is claimed
-    const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).where("verified", "==", true).get();
+    const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).get();
     if (existedVerifiedUser.docs.length > 0) {
-      const usersState = existedVerifiedUser.docs.map(doc => doc.data() as RegisteredUserState);
-
-      const currentUserState = usersState.find(user => user.userID === interaction.user.id);
-
-      if (!currentUserState) {
-        return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
-      };
+      return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
     };
 
     const user = await getGDUserData(gdUsername);
