@@ -71,16 +71,17 @@ export default async (interaction: ModalSubmitInteraction) => {
     embed
       .setColor(0x7289DA)
       .setTitle("Menunggu Verifikasi Lanjutan")
-      .addField("Subject", `Konfirmasi ${content.code}`)
-      .addField("Message", "[ketik apa saja]")
+      .addField("Subject", "Konfirmasi")
+      .addField("Message", String(content.code))
       .addField("❓ Kode sudah terkirim?", "Jika dirasa kode sudah terkirim ke akun kami \`GMDIBot\`, silakan kembali ke DM Discord ini dan tekan tombol **Cek Status**.")
-      .setImage("https://gmdi.cdn.13373333.one/.GMDI_PRIVATE_ASSETS/example-001.png")
+      .setImage("https://gmdi.cdn.13373333.one/.GMDI_PRIVATE_ASSETS/example-002.png")
       .setDescription(stripIndents(`
-              - Buka game **Geometry Dash** kamu.
-              - Login dengan akun username yang sudah kamu masukkan sebelumnya.
-              - Cari akun yang bernama \`GMDIBot\`.
-              - Lalu kirim pesan ke akun tersebut PERSIS dibawah ini.
-            `))
+        - Buka **Geometry Dash** kamu.
+        - Login dengan akun username yang sudah kamu masukkan sebelumnya.
+        - Cari akun yang bernama \`GMDIBot\`.
+        - Lalu kirim pesan ke akun tersebut dengan \`Subject\` **Konfirmasi** dan \`Message\` yang diisi dengan kode yang sesuai.
+        - Karena peka akan huruf besar dan kecil (case sensitive), isi dan subjek pesan harus sesuai seperti diatas.
+      `));
 
     const channel = await client.rest.channels.createDM(interaction.user.id);
     if (!channel?.id) {
