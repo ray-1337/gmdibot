@@ -197,3 +197,24 @@ export async function getGDUserData(username: string) {
 
   return await req.json() as Record<`${"star" | "diamond" | "coin" | "userCoin" | "demon"}s`, number> & { accountID: string };
 };
+
+// delete message
+export async function deleteGDMessage(messageId: string): Promise<Boolean> {
+  const query = prepareDefaultParameters();
+  query.append("id[]", messageId);
+
+  const req = await fetch("https://gdbrowser.com/deleteMessage/", {
+    method: "POST",
+    body: query.toString(),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": defaultScrapUserAgent
+    }
+  });
+
+  if (!req.ok) {
+    return false;
+  };
+
+  return true;
+};
