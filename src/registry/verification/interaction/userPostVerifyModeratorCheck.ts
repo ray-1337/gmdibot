@@ -2,7 +2,7 @@ import { type ComponentInteraction, type EmbedField, ComponentTypes, TextInputSt
 import { EmbedBuilder } from "@oceanicjs/builders";
 
 import { staffRoleID, gmdiGuildID, memberRoleID, unverifiedRoleID, botOwnerIDs, firstGeneralTextChannelID } from "@/handler/Config";
-import { usernameHandle } from "@/handler/Util";
+import { usernameHandle, extractDiscordID } from "@/handler/Util";
 
 import type { RegisteredUserState } from "../typings";
 
@@ -46,12 +46,12 @@ export default async (interaction: ComponentInteraction) => {
       return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
-    const userID = embed.author.name.match(/(\d{15,21})/gim);
-    if (!userID?.[0]) {
+    const userID = extractDiscordID(embed.author.name);
+    if (!userID) {
       return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
-    const userDoc = userCollection.doc(userID[0]);
+    const userDoc = userCollection.doc(userID);
 
     // fetch user questionnaires
     if (interaction.data.customID === "fetch-user-questions") {
@@ -63,9 +63,9 @@ export default async (interaction: ComponentInteraction) => {
         });
       };
 
-      let userProfile = client.users.get(userID[0]);
+      let userProfile = client.users.get(userID);
       if (!userProfile) {
-        userProfile = await client.rest.users.get(userID[0]);
+        userProfile = await client.rest.users.get(userID);
 
         if (!userProfile) {
           return interaction.createFollowup({
@@ -123,16 +123,16 @@ export default async (interaction: ComponentInteraction) => {
     });
 
     await Promise.all([
-      client.rest.guilds.addMemberRole(gmdiGuildID, userID[0], memberRoleID, "[GMDIBot] Finished verification"),
-      client.rest.guilds.removeMemberRole(gmdiGuildID, userID[0], unverifiedRoleID, "[GMDIBot] Finished verification")
+      client.rest.guilds.addMemberRole(gmdiGuildID, userID, memberRoleID, "[GMDIBot] Finished verification"),
+      client.rest.guilds.removeMemberRole(gmdiGuildID, userID, unverifiedRoleID, "[GMDIBot] Finished verification")
     ]);
 
     await interaction.createFollowup({ content: "Accepted.", flags: 64 })
 
-    const userManualMention = `<@${userID[0]}>`;
-    const user = await client.rest.users.get(userID[0]).catch(() => { return null });
+    const userManualMention = `<@${userID}>`;
+    const user = await client.rest.users.get(userID).catch(() => { return null });
 
-    if (!botOwnerIDs.includes(userID[0]) && process.env.npm_lifecycle_event !== "dev") {
+    if (!botOwnerIDs.includes(userID) && process.env.npm_lifecycle_event !== "dev") {
       const welcomeEmbed = new EmbedBuilder()
         .setTimestamp(new Date()).setColor(0x24C86E)
         .setTitle(`Halo, ${user ? usernameHandle(user) : userManualMention} 👋`);
@@ -146,12 +146,12 @@ export default async (interaction: ComponentInteraction) => {
     // optional: DM the user about the verification update
     // if the dm closed, we should ignore this
     try {
-      const channel = await client.rest.channels.createDM(userID[0]);
+      const channel = await client.rest.channels.createDM(userID);
 
       await channel.createMessage({ content: "Verifikasi Anda telah diterima. Anda kini diperbolehkan untuk bergabung dengan server Discord kami." });
     } catch { };
 
-    await userDoc.set({ userID: userID[0], verified: true, lastUpdatedAt: Date.now() }, { merge: true });
+    await userDoc.set({ userID, verified: true, lastUpdatedAt: Date.now() }, { merge: true });
 
     return;
   } catch (error) {

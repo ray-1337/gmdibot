@@ -3,6 +3,8 @@ import { stripIndents } from "common-tags";
 
 import userCollection from "@/registry/verification/userCollection";
 
+import { extractDiscordID, isDiscordIDValid } from "@/handler/Util";
+
 export default async (interaction: ModalSubmitInteraction) => {
   try {
     const client = interaction.client;
@@ -10,7 +12,7 @@ export default async (interaction: ModalSubmitInteraction) => {
     await interaction.defer(64);
 
     const [channelID, messageID] = interaction.data.customID.split(/\-/gim).slice(1);
-    if (!channelID.match(/(\d{16,21})/gim) || !messageID.match(/(\d{16,21})/gim)) {
+    if (!isDiscordIDValid(channelID) || !isDiscordIDValid(messageID)) {
       return interaction.createFollowup({ content: "Invalid secondary ID from interaction.", flags: 64 });
     };
 
@@ -25,12 +27,12 @@ export default async (interaction: ModalSubmitInteraction) => {
       return interaction.createFollowup({ content: "Unable to fetch previous log message.", flags: 64 });
     };
 
-    const userID = embed?.author?.name.match(/(\d{15,21})/gim);
-    if (!userID?.[0]) {
+    const userID = extractDiscordID(embed.author.name);
+    if (!userID) {
       return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
-    const userDoc = userCollection.doc(userID[0]);
+    const userDoc = userCollection.doc(userID);
 
     let fields: EmbedField[] = [...embed?.fields || []];
 
@@ -63,7 +65,7 @@ export default async (interaction: ModalSubmitInteraction) => {
     });
 
     try {
-      const channel = await client.rest.channels.createDM(userID[0]);
+      const channel = await client.rest.channels.createDM(userID);
 
       await channel.createMessage({
         content: stripIndents(`
@@ -73,7 +75,7 @@ export default async (interaction: ModalSubmitInteraction) => {
       });
     } catch { };
 
-    await userDoc.set({ userID: userID[0], lastUpdatedAt: Date.now() }, { merge: true });
+    await userDoc.set({ userID, lastUpdatedAt: Date.now() }, { merge: true });
 
     return await interaction.createFollowup({ content: "Rejected.", flags: 64 });
   } catch (error) {
