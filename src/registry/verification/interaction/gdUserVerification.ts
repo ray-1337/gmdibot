@@ -62,11 +62,10 @@ export default async (interaction: ComponentInteraction) => {
         .setAuthor(`@${interaction.user.username} (${interaction.user.id})`, interaction.user.avatarURL("webp", 128))
         .setColor(0xfcba03)
         .addField("Metadata", stripIndents(`
-                - **GD Username:** ${cachedUser.gdUsername}
-                - **Filled Forms Date/Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
-                - **User ID in Cache:** ${cachedUser.userID}
-                - **User Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
-              `));
+          - **Geometry Dash Username:** ${cachedUser.gdUsername}
+          - **Submission Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
+          - **Discord Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
+        `));
 
       await interaction.client.rest.channels.createMessage(verificationLogChannelID, {
         embeds: embed.toJSON(true),
