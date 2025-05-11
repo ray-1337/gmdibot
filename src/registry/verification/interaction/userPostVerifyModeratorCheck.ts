@@ -1,7 +1,7 @@
 import { type ComponentInteraction, type EmbedField, ComponentTypes, TextInputStyles } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 
-import { staffRoleID, gmdiGuildID, memberRoleID, unverifiedRoleID, botOwnerIDs, firstGeneralTextChannelID } from "@/handler/Config";
+import { staffRoleIDs, gmdiGuildID, memberRoleID, unverifiedRoleID, botOwnerIDs, firstGeneralTextChannelID } from "@/handler/Config";
 import { usernameHandle, extractDiscordID } from "@/handler/Util";
 
 import type { RegisteredUserState } from "../typings";
@@ -12,7 +12,7 @@ export default async (interaction: ComponentInteraction) => {
   try {
     const client = interaction.client;
 
-    if (!interaction.member?.roles.some(roleID => roleID === staffRoleID)) {
+    if (!interaction.member?.roles.some(roleID => staffRoleIDs.includes(roleID))) {
       return interaction.createMessage({ content: "You don't have permissions to do this.", flags: 64 });
     };
 

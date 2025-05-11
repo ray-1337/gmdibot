@@ -5,7 +5,12 @@ const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠",
 export const verificationChannelID: string = process.env.npm_lifecycle_event === "dev" ? "1160715499005562912" : "1276229374043099146";
 export const verificationLogChannelID: string = "1276271108017881220";
 
-export const staffRoleID: string = "217296828339585026";
+export const staffRoleIDs: string[] = [
+  "1091378943971561553", // Owner
+  "907227861969166376", // Founder
+  "434936406960242709", // Co-owner
+  "217296828339585026" // Staff
+];
 
 export const boostRoleID = "589643758564540417";
 
