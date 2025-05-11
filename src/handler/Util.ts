@@ -7,6 +7,17 @@ export const [officialAccountId, officialAccountKey] = (process.env.GD_ACCOUNT_K
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
+const regexDiscordID: RegExp = /(\d{17,19})/gim;
+
+export function isDiscordIDValid(str: string) {
+  return str.match(regexDiscordID) !== null;
+};
+
+export function extractDiscordID(str: string) {
+  const matches = str.match(regexDiscordID);
+  return matches !== null ? matches.shift() : null;
+};
+
 export function delay(ms: number) {
   return new Promise(r => setTimeout(r, ms));
 };
