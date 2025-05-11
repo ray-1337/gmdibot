@@ -179,7 +179,7 @@ export async function getOfficialMessagesFromGD() {
     return null;
   };
 
-  return await req.json() as Array<Record<"accountID" | "author" | "id" | "subject" | "date", string>>;
+  return await req.json() as Array<Record<"accountID" | "content" | "author" | "id" | "subject" | "date", string>>;
 };
 
 // get user account data
