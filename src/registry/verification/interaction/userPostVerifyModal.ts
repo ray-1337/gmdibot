@@ -46,6 +46,14 @@ export default async (interaction: ModalSubmitInteraction) => {
       });
     };
 
+    const channel = await client.rest.channels.createDM(interaction.user.id);
+    if (!channel?.id) {
+      return interaction.createFollowup({
+        flags: 64,
+        content: "Maaf, kami tidak dapat mengirimkan pesan ke DM Discord kamu. Pastikan DM Discord kamu terbuka di server ini."
+      });
+    };
+
     const croppedQuestions = questions.slice(0, 4);
 
     const finalizedQuestions: Record<string, string> = {};
@@ -66,6 +74,8 @@ export default async (interaction: ModalSubmitInteraction) => {
       userID: interaction.user.id
     };
 
+    cache.set(content.userID, content);
+
     const embed = new EmbedBuilder();
 
     embed
@@ -82,16 +92,6 @@ export default async (interaction: ModalSubmitInteraction) => {
         - Lalu kirim pesan ke akun tersebut dengan \`Subject\` **Konfirmasi** dan \`Message\` yang diisi dengan kode yang sesuai.
         - Karena peka akan huruf besar dan kecil (case sensitive), isi dan subjek pesan harus sesuai seperti diatas.
       `));
-
-    const channel = await client.rest.channels.createDM(interaction.user.id);
-    if (!channel?.id) {
-      return interaction.createFollowup({
-        flags: 64,
-        content: "Maaf, kami tidak dapat mengirimkan pesan ke DM Discord kamu. Pastikan DM Discord kamu terbuka di server ini."
-      });
-    };
-
-    cache.set(content.userID, content);
 
     const [message] = await Promise.all([
       channel.createMessage({
