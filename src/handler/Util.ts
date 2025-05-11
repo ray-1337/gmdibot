@@ -153,12 +153,18 @@ export function mercalliIntensityScale(magnitude: number) {
   };
 };
 
-// get official GMDIBot account messages
-export async function getOfficialMessagesFromGD() {
+function prepareDefaultParameters() {
   const query = new URLSearchParams();
 
-  [["password", officialAccountKey], ["accountID", officialAccountId]]
-    .forEach(([key, value]) => query.append(key, value));
+  query.append("password", officialAccountKey);
+  query.append("accountID", officialAccountId);
+
+  return query;
+};
+
+// get official GMDIBot account messages
+export async function getOfficialMessagesFromGD() {
+  const query = prepareDefaultParameters();
 
   const req = await fetch("https://gdbrowser.com/messages", {
     method: "POST",
