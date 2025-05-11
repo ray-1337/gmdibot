@@ -3,7 +3,7 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 
 import { stripIndents } from "common-tags";
 
-import { randomNumber, getGDUserData } from "@/handler/Util";
+import { randomNumber, getGDUserData, checkPlayerAccountBlacklistRegistry } from "@/handler/Util";
 
 import type { UserVerificationChoice } from "../typings";
 import { cache, requirements, verificationCacheExpireTime, cooldown } from "../config";
@@ -43,6 +43,23 @@ export default async (interaction: ModalSubmitInteraction) => {
       return interaction.createFollowup({
         flags: 64,
         content: "Maaf, akun Geometry Dash kamu saat ini belum memenuhi salah satu persyaratan kami yang tertera di kanal verifikasi. Coba lagi nanti."
+      });
+    };
+
+    // check if the provided gd account is in GMDI blacklist registry
+    const blacklistRegistry = await checkPlayerAccountBlacklistRegistry();
+    if (!blacklistRegistry) {
+      return interaction.createFollowup({
+        flags: 64,
+        content: "Saat ini, kami sedang tidak bisa mengecek akun Geometry Dash kamu, silakan coba lagi nanti."
+      });
+    };
+
+    const registry = blacklistRegistry.values.find(([accountName]) => accountName === gdUsername);
+    if (typeof registry !== "undefined" && registry[2] === "TRUE") {
+      return interaction.createFollowup({
+        content: "Maaf, akun Geometry Dash tersebut masuk dalam daftar hitam kami.",
+        flags: 64
       });
     };
 
