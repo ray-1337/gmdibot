@@ -218,3 +218,17 @@ export async function deleteGDMessage(messageId: string): Promise<Boolean> {
 
   return true;
 };
+
+// check myGMDI blacklist
+export async function checkPlayerAccountBlacklistRegistry() {
+  const sheetId: string = "1OiSgtZ_P0fojAVyZErE9na5f6Z5eR-Hu6ICv4-6k85o";
+  const ranges: string = "Pemain Terdaftar!A6:C";
+  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+
+  const req = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${ranges}?key=${apiKey}&majorDimension=ROWS`);
+  if (!req.ok) return null;
+
+  const data = await req.json() as Record<"range" | "majorDimension", string> & { values: Array<[string, string, "TRUE" | "FALSE"]> };
+
+  return data;
+};
