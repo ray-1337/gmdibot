@@ -7,7 +7,7 @@ import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
 
 import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
-import { getOfficialMessagesFromGD } from "@/handler/Util";
+import { getOfficialMessagesFromGD, deleteGDMessage } from "@/handler/Util";
 
 import { cache, verificationCacheExpireTime } from "../config";
 import type { UserVerificationChoice } from "../typings";
@@ -117,7 +117,7 @@ export default async (interaction: ComponentInteraction) => {
           await interaction.message.delete();
 
           // delete the message from GD account
-          // await message.delete();
+          await deleteGDMessage(message.id);
         } catch { };
       }, ms("5s"));
 
