@@ -23,7 +23,7 @@ export default async (interaction: ModalSubmitInteraction) => {
 
     const logMessage = await client.rest.channels.getMessage(channelID, messageID);
     const embed = logMessage?.embeds?.[0] || null;
-    if (!logMessage || !embed || !embed?.author) {
+    if (!logMessage || !embed?.author?.name) {
       return interaction.createFollowup({ content: "Unable to fetch previous log message.", flags: 64 });
     };
 

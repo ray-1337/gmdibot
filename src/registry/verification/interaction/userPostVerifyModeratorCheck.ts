@@ -38,12 +38,8 @@ export default async (interaction: ComponentInteraction) => {
     await interaction.defer(64);
 
     const embed = interaction.message.embeds?.[0];
-    if (!embed) {
+    if (!embed?.author?.name) {
       return interaction.createFollowup({ content: "Invalid message embed.", flags: 64 });
-    };
-
-    if (!embed?.author?.name?.length) {
-      return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
     const userID = extractDiscordID(embed.author.name);
