@@ -179,7 +179,29 @@ export async function getOfficialMessagesFromGD() {
     return null;
   };
 
-  return await req.json() as Array<Record<"accountID" | "content" | "author" | "id" | "subject" | "date", string>>;
+
+// get specific GMDIBot account message
+export async function getMessageFromGD(id: string) {
+  if (typeof id === "string" && isNaN(+id)) {
+    return null;
+  };
+
+  const query = prepareDefaultParameters();
+
+  const req = await fetch("https://gdbrowser.com/messages/" + id, {
+    method: "POST",
+    body: query.toString(),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": defaultScrapUserAgent
+    }
+  });
+
+  if (!req.ok) {
+    return null;
+  };
+
+  return await req.json() as NonNullable<Awaited<ReturnType<typeof getOfficialMessagesFromGD>>>[number] & { content: string };
 };
 
 // get user account data
