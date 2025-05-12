@@ -7,7 +7,7 @@ import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
 
 import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
-import { getOfficialMessagesFromGD, deleteGDMessage } from "@/handler/Util";
+import { getOfficialMessagesFromGD, getMessageFromGD, deleteGDMessage } from "@/handler/Util";
 
 import { cache, verificationCacheExpireTime } from "../config";
 import type { UserVerificationChoice } from "../typings";
@@ -45,12 +45,17 @@ export default async (interaction: ComponentInteraction) => {
       return interaction.createFollowup({ content: "Terjadi kegagalan saat pengecekan isi DM dari sisi kami, coba lagi nanti.", flags: 64 });
     };
 
-    const message = messages
+    const currentMessage = messages
       .filter(msg => (parseDuration(msg.date) || 0) < verificationCacheExpireTime)
       .find(msg => msg.author.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject === "Konfirmasi");
 
-    if (!message || isNaN(+message.id)) {
+    if (!currentMessage || isNaN(+currentMessage.id)) {
       return interaction.createFollowup({ content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64 });
+    };
+
+    const message = await getMessageFromGD(currentMessage.id);
+    if (!message) {
+      return interaction.createFollowup({ content: "Saat ini kami tidak dapat mengambil informasi pesan terakhir kamu.", flags: 64 });
     };
 
     const code = String(cachedUser.code);
