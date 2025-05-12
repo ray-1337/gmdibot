@@ -179,6 +179,8 @@ export async function getOfficialMessagesFromGD() {
     return null;
   };
 
+  return await req.json() as Array<Record<"accountID" | "author" | "id" | "subject" | "date", string>>;
+};
 
 // get specific GMDIBot account message
 export async function getMessageFromGD(id: string) {
