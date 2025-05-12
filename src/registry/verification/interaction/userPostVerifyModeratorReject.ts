@@ -75,7 +75,7 @@ export default async (interaction: ModalSubmitInteraction) => {
       });
     } catch { };
 
-    await userDoc.set({ userID, lastUpdatedAt: Date.now() }, { merge: true });
+    await userDoc.delete({ exists: true });
 
     return await interaction.createFollowup({ content: "Rejected.", flags: 64 });
   } catch (error) {
