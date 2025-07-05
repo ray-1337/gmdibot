@@ -1,0 +1,28 @@
+{
+  "isModule": true,
+  "jsc": {
+    "target": "esnext",
+    "minify": {
+      "compress": true,
+      "mangle": {
+        "topLevel": true,
+        "keepFnNames": true
+      }
+    },
+    "keepClassNames": true,
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    }
+  },
+  "module": {
+    "type": "es6",
+
+    "strict": true,
+    "strictMode": true,
+    "lazy": true,
+    "noInterop": true,
+    "resolveFully": true
+  }
+}
