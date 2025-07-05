@@ -32,7 +32,6 @@
     "oceanic.js": "^1.11.2",
     "parse-duration": "^2.1.4",
     "pretty-ms": "^7.0.1",
-    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "undici": "^7.11.0"
   },

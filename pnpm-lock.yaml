@@ -41,9 +41,6 @@ importers:
       pretty-ms:
         specifier: ^7.0.1
         version: 7.0.1
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.12.9)(@types/node@22.14.1)(typescript@5.8.3)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
