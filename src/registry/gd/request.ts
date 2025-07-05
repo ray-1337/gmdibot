@@ -33,7 +33,7 @@ export async function getMessagesList() {
 
 // get specific message
 export async function getIndividualMessage(messageID: string | number) {
-  const req = await request(defaultEndpoint + "/getGJMessages20.php", {
+  const req = await request(defaultEndpoint + "/downloadGJMessage20.php", {
     method: "POST",
     body: wrapPropertiesToSearchParams({...defaultData, messageID}).toString(),
     headers: defaultHeaders
