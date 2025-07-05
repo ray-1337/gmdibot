@@ -19,14 +19,16 @@ export async function getMessagesList() {
   if (!raw || isError(raw)) return null;
 
   const data = raw
-    .split("|")
+    .split("#")?.shift()?.split("|")
     .map(preParsedData => parseRobTopData(preParsedData))
     .map(parsedData => ({
       author: parsedData[6],
       subject: Buffer.from(parsedData[4], "base64").toString("utf-8"),
       date: parsedData[7],
       id: parsedData[1]
-    }))
+    }));
+  
+  if (!data) return null;
 
   return data;
 };
