@@ -1,13 +1,13 @@
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { type ComponentInteraction, ComponentTypes, ButtonStyles } from "oceanic.js";
 
-import ms from "ms";
 import dayjs from "dayjs";
 import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
 
 import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
-import { getOfficialMessagesFromGD, getMessageFromGD, deleteGDMessage } from "@/handler/Util";
+
+import { getIndividualMessage, getMessagesList, deleteIndividualMessage } from "@/registry/gd/request";
 
 import { cache, verificationCacheExpireTime } from "../config";
 import type { UserVerificationChoice } from "../typings";
@@ -40,7 +40,7 @@ export default async (interaction: ComponentInteraction) => {
 
     const cachedUser = cache.get(interaction.user.id) as UserVerificationChoice;
 
-    const messages = await getOfficialMessagesFromGD();
+    const messages = await getMessagesList();
     if (!messages || !Array.isArray(messages) || messages.length <= 0) {
       return interaction.createFollowup({ content: "Terjadi kegagalan saat pengecekan isi DM dari sisi kami, coba lagi nanti.", flags: 64 });
     };
@@ -53,7 +53,7 @@ export default async (interaction: ComponentInteraction) => {
       return interaction.createFollowup({ content: "Pesan tidak ditemukan. Pastikan pesan yang kamu kirim sudah benar dan tidak ketinggalan satu karakter pun.", flags: 64 });
     };
 
-    const message = await getMessageFromGD(currentMessage.id);
+    const message = await getIndividualMessage(currentMessage.id);
     if (!message) {
       return interaction.createFollowup({ content: "Saat ini kami tidak dapat mengambil informasi pesan terakhir kamu.", flags: 64 });
     };
@@ -115,26 +115,22 @@ export default async (interaction: ComponentInteraction) => {
       content: "Formulir verifikasi kamu telah diterima, dan akan dicek oleh staf GMDI dalam 1x24 jam."
     });
 
-    await userDoc.set({
-      userID: cachedUser.userID,
-      gdUsername: cachedUser.gdUsername,
-      lastUpdatedAt: Date.now(),
-      questions: cachedUser.questions
-    }, { merge: true });
+    await Promise.allSettled([
+      userDoc.set({
+        userID: cachedUser.userID,
+        gdUsername: cachedUser.gdUsername,
+        lastUpdatedAt: Date.now(),
+        questions: cachedUser.questions
+      }, { merge: true }),
 
-    cache.delete(interaction.user.id);
+      // delete the message from the Discord DM
+      interaction.message.delete(),
 
-    setTimeout(async () => {
-      try {
-        // delete the message from the Discord DM
-        await interaction.message.delete();
+      // delete the message from GD account
+      deleteIndividualMessage(message.id)
+    ]);
 
-        // delete the message from GD account
-        await deleteGDMessage(message.id);
-      } catch { };
-    }, ms("5s"));
-
-    return;
+    return cache.delete(interaction.user.id);
   } catch (error) {
     console.error(error);
   };

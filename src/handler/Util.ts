@@ -1,10 +1,6 @@
 import { Client, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
 import {randomBytes} from "crypto";
 
-export const defaultScrapUserAgent: string = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
-
-export const [officialAccountId, officialAccountKey] = (process.env.GD_ACCOUNT_KEY as string).split(" | ");
-
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
 const regexDiscordID: RegExp = /(\d{17,19})/gim;
@@ -151,96 +147,6 @@ export function mercalliIntensityScale(magnitude: number) {
 
     case magnitude >= 7.0: return "VIII";
   };
-};
-
-function prepareDefaultParameters() {
-  const query = new URLSearchParams();
-
-  query.append("password", officialAccountKey);
-  query.append("accountID", officialAccountId);
-
-  return query;
-};
-
-// get official GMDIBot account messages
-export async function getOfficialMessagesFromGD() {
-  const query = prepareDefaultParameters();
-
-  const req = await fetch("https://gdbrowser.com/messages", {
-    method: "POST",
-    body: query.toString(),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": defaultScrapUserAgent
-    }
-  });
-
-  if (!req.ok) {
-    return null;
-  };
-
-  return await req.json() as Array<Record<"accountID" | "author" | "id" | "subject" | "date", string>>;
-};
-
-// get specific GMDIBot account message
-export async function getMessageFromGD(id: string) {
-  if (typeof id === "string" && isNaN(+id)) {
-    return null;
-  };
-
-  const query = prepareDefaultParameters();
-
-  const req = await fetch("https://gdbrowser.com/messages/" + id, {
-    method: "POST",
-    body: query.toString(),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": defaultScrapUserAgent
-    }
-  });
-
-  if (!req.ok) {
-    return null;
-  };
-
-  return await req.json() as NonNullable<Awaited<ReturnType<typeof getOfficialMessagesFromGD>>>[number] & { content: string };
-};
-
-// get user account data
-export async function getGDUserData(username: string) {
-  const req = await fetch("https://gdbrowser.com/api/profile/" + username, {
-    method: "GET",
-    headers: {
-      "User-Agent": defaultScrapUserAgent
-    }
-  });
-
-  if (!req.ok) {
-    return null;
-  };
-
-  return await req.json() as Record<`${"star" | "diamond" | "coin" | "userCoin" | "demon"}s`, number> & { accountID: string };
-};
-
-// delete message
-export async function deleteGDMessage(messageId: string): Promise<Boolean> {
-  const query = prepareDefaultParameters();
-  query.append("id[]", messageId);
-
-  const req = await fetch("https://gdbrowser.com/deleteMessage/", {
-    method: "POST",
-    body: query.toString(),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": defaultScrapUserAgent
-    }
-  });
-
-  if (!req.ok) {
-    return false;
-  };
-
-  return true;
 };
 
 // check myGMDI blacklist

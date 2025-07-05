@@ -33,6 +33,9 @@ export default async (interaction: ModalSubmitInteraction) => {
     };
 
     const userDoc = userCollection.doc(userID);
+    if (!(await userDoc.get()).exists) {
+      return interaction.createFollowup({ content: "No registry found in the database.", flags: 64 });
+    };
 
     let fields: EmbedField[] = [...embed?.fields || []];
 

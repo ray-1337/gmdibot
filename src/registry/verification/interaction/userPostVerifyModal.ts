@@ -3,7 +3,9 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 
 import { stripIndents } from "common-tags";
 
-import { randomNumber, getGDUserData, checkPlayerAccountBlacklistRegistry } from "@/handler/Util";
+import { randomNumber } from "@/handler/Util";
+
+import { getGeometryDashUser } from "@/registry/gd/request";
 
 import type { UserVerificationChoice } from "../typings";
 import { cache, requirements, verificationCacheExpireTime, cooldown } from "../config";
@@ -28,7 +30,7 @@ export default async (interaction: ModalSubmitInteraction) => {
       return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
     };
 
-    const user = await getGDUserData(gdUsername);
+    const user = await getGeometryDashUser(gdUsername);
     if (!user || isNaN(+user.accountID)) {
       return interaction.createFollowup({ content: `Maaf, akun Geometry Dash dengan username [\`${gdUsername}\`] tidak dapat ditemukan.`, flags: 64 });
     };
