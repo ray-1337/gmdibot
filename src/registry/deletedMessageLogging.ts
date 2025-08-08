@@ -144,7 +144,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
 
     const randomFileID = pseudoRandomBytes(randomNumber(8, 16)).toString("hex");
 
-    const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
+    const urlEndpoint = `${authorID}/${randomFileID}.${availableExtension}`;
 
     const upload = await fetch(`https://${cdnHostname}/${cdnUsername}/` + urlEndpoint, {
       method: "PUT",
