@@ -4,7 +4,7 @@ Built around with [TypeScript](https://www.typescriptlang.org/) and [Node.js](ht
 
 ## Spec
 - **TypeScript:** v5.x
-- **Node.js:** Latest, or v20.x
+- **Node.js:** Latest, or v24.x
 - [**Oceanic.js**](https://npmjs.com/package/oceanic.js): v1.11.x
 
 ## Setup
