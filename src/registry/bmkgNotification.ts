@@ -13,7 +13,8 @@ let lastModified: string | null = null;
 
 export default async (client: Client) => {
   if (intervalStarted !== null) {
-    return;
+    clearInterval(intervalStarted);
+    intervalStarted = null;
   };
 
   intervalStarted = setInterval(async () => {
@@ -29,8 +30,6 @@ export default async (client: Client) => {
         if (typeof lastModified === "string" && lastModifiedHeader === lastModified) {
           return;
         };
-
-        lastModified = lastModifiedHeader;
       };
 
       const earthquakeReq = await fetch(endpoint, { method: "GET" });
@@ -43,18 +42,20 @@ export default async (client: Client) => {
         return;
       };
 
+      lastModified = lastModifiedHeader;
+
+      const earthquakeID = data.info.eventid;
+
+      // prevent replay
+      if (typeof earthquakeID !== "string" || isNaN(+earthquakeID) || cached.has(earthquakeID)) {
+        return;
+      };
+
       const currentTime = dayjs().tz(timezone);
       const earthquakeTime = dayjs(data.sent.slice(0, data.sent.length - 3)).tz(timezone);
 
       // check if its already late
       if (currentTime.diff(earthquakeTime) > maxWindowTime) {
-        return;
-      };
-
-      const earthquakeID = data.info.eventid;
-      
-      // prevent replay
-      if (typeof earthquakeID !== "string" || isNaN(+earthquakeID) || cached.has(earthquakeID)) {
         return;
       };
       
@@ -105,7 +106,7 @@ export default async (client: Client) => {
         }]
       });
 
-      if (postedBMKGMessage?.channel && postedBMKGMessage.channel.type === ChannelTypes.GUILD_ANNOUNCEMENT) {
+      if (!isDevMode && postedBMKGMessage?.channel && postedBMKGMessage.channel.type === ChannelTypes.GUILD_ANNOUNCEMENT) {
         try {
           await postedBMKGMessage.crosspost();
         } catch {}
