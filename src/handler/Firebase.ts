@@ -1,26 +1,11 @@
-import { initializeApp, cert, getApp } from 'firebase-admin/app';
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore"; 
+import { Firestore } from "@google-cloud/firestore";
 
-const appName = `GMDI Discord Bot (Server-Side)`;
+const [projectId, databaseId, client_email, private_key] = (process.env.FIRESTORE_KEY as string).split(" | ");
 
-const app = () => {
-  try {
-    return getApp(appName);
-  } catch {
-    return initializeApp({
-      projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-      credential: cert({
-        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
-        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID
-      })
-    }, appName);
-  };
-};
-
-const constitutedApp = app();
-
-export const auth = getAuth(constitutedApp);
-
-export const firestore = getFirestore(constitutedApp);
+export const firestore = new Firestore({
+  projectId, databaseId,
+  ssl: true,
+  credentials: {
+    client_email, private_key,
+  }
+});
