@@ -4,6 +4,8 @@ import { modlogChannelID } from "../handler/Config";
 import { randomNumber, truncate, usernameHandle } from "../handler/Util";
 import { pseudoRandomBytes } from "crypto";
 
+const [cdnHostname, cdnUsername, cdnAuthKey, cdnEndpointDomain] = (process.env.BUNNYCDN_KEY as string).split(" | ");
+
 export default async function (client: Client, message: PossiblyUncachedMessage) {
   if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
 
@@ -118,12 +120,7 @@ export default async function (client: Client, message: PossiblyUncachedMessage)
 
 async function storeToCDN(authorID: string, url: string): Promise<string | null> {
   try {
-    if (
-      !process.env?.BUNNYCDN_HOSTNAME?.length ||
-      !process.env?.BUNNYCDN_USERNAME?.length ||
-      !process.env?.BUNNYCDN_PASSWORD?.length ||
-      !process.env?.BUNNYCDN_ENDPOINT?.length
-    ) return null;
+    if (!process.env?.BUNNYCDN_KEY) return null;
 
     let data = await fetch(url, { method: "GET" });
 
@@ -149,11 +146,11 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
 
     const urlEndpoint = `/${authorID}/${randomFileID}.${availableExtension}`;
 
-    const upload = await fetch(`https://${process.env.BUNNYCDN_HOSTNAME}/${process.env.BUNNYCDN_USERNAME}` + urlEndpoint, {
+    const upload = await fetch(`https://${cdnHostname}/${cdnUsername}/` + urlEndpoint, {
       method: "PUT",
       body: Buffer.from(await data.arrayBuffer()),
       headers: {
-        "AccessKey": process.env.BUNNYCDN_PASSWORD,
+        "AccessKey": cdnAuthKey,
         "content-type": "application/octet-stream"
       }
     });
@@ -163,7 +160,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
       return null;
     };
 
-    return process.env.BUNNYCDN_ENDPOINT + urlEndpoint;
+    return "https://" + cdnEndpointDomain + "/" + urlEndpoint;
   } catch (error) {
     console.error(error);
     return null;
