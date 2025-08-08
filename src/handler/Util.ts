@@ -109,8 +109,9 @@ export function randomInterval(intervalFunction, minDelay: number, maxDelay: num
 
 // improved from https://earthquake.usgs.gov/education/shakingsimulations/colors.php
 export function colorizedMagnitudeEmbed(magnitude: number) {
-  // limit 4
+  // limit 3
   switch (true) {
+    case magnitude >= 3 && magnitude <= 3.9: return 0xffbb6b;
     case magnitude >= 4 && magnitude <= 4.9: return 0xf69420;
     case magnitude >= 5 && magnitude <= 5.9: return 0xf66f2a;
     case magnitude >= 6 && magnitude <= 6.9: return 0xef452b;
