@@ -4,7 +4,7 @@ import ms from "ms";
 import dayjs from "dayjs";
 import { xml2json } from "xml-js";
 
-import { colorizedMagnitudeEmbed, customInaTime, mercalliIntensityScale, isDevMode } from "../handler/Util";
+import { colorizedMagnitudeEmbed, customInaTime, isInIndonesia, mercalliIntensityScale, isDevMode } from "../handler/Util";
 
 const timezone = "Asia/Jakarta";
 const cached = new Set<string>();
@@ -92,6 +92,10 @@ export default async (client: Client) => {
       const generalChannel = "1062203494691520522";
 
       const { lintang, bujur } = data;
+      if (isNaN(+lintang) || isNaN(+bujur) || !isInIndonesia(+lintang, +bujur)) {
+        return;
+      };
+
       const coordinates = [lintang, bujur].join(",");
 
       const earthquakeColor = colorizedMagnitudeEmbed(magnitude);

@@ -163,3 +163,7 @@ export async function checkPlayerAccountBlacklistRegistry() {
 
   return data;
 };
+
+export function isInIndonesia(lat: number, lng: number) {
+  return lat >= -11.0 && lat <= 6.0 && lng >= 95.0 && lng <= 141.0;
+};
