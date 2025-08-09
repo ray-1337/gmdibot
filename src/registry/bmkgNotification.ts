@@ -155,8 +155,8 @@ export default async (client: Client) => {
           components: [{
             type: ComponentTypes.BUTTON,
             style: ButtonStyles.LINK,
-            emoji: {id: null, name: "📑"},
-            label: "More information",
+            emoji: {id: null, name: "🔗"},
+            label: "Info lebih lanjut",
             url: "https://www.bmkg.go.id/gempabumi/gempabumi-dirasakan"
           }]
         }],
