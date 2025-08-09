@@ -1,4 +1,7 @@
-import { request } from "undici";
+import { request, ProxyAgent } from "undici";
+
+const [proxyAddress, proxyPort, proxyUsername, proxyPassword] = (process.env.PROXY_CONTENT_KEY as string).split(" | ");
+const dispatcher = new ProxyAgent(`http://${proxyUsername}:${proxyPassword}@${proxyAddress}:${proxyPort}`);
 
 import { defaultData, defaultHeaders, defaultEndpoint } from "./constants";
 import { wrapPropertiesToSearchParams, parseRobTopData, isError, decodeMessage } from "./util";
@@ -6,6 +9,7 @@ import { wrapPropertiesToSearchParams, parseRobTopData, isError, decodeMessage }
 // get official account messages
 export async function getMessagesList() {
   const req = await request(defaultEndpoint + "/getGJMessages20.php", {
+    dispatcher,
     method: "POST",
     body: wrapPropertiesToSearchParams(defaultData).toString(),
     headers: defaultHeaders
@@ -36,6 +40,7 @@ export async function getMessagesList() {
 // get specific message
 export async function getIndividualMessage(messageID: string | number) {
   const req = await request(defaultEndpoint + "/downloadGJMessage20.php", {
+    dispatcher,
     method: "POST",
     body: wrapPropertiesToSearchParams({...defaultData, messageID}).toString(),
     headers: defaultHeaders
@@ -59,6 +64,7 @@ export async function getIndividualMessage(messageID: string | number) {
 
 export async function deleteIndividualMessage(messageID: string | number) {
   const req = await request(defaultEndpoint + "/deleteGJMessages20.php", {
+    dispatcher,
     method: "POST",
     body: wrapPropertiesToSearchParams({...defaultData, messageID}).toString(),
     headers: defaultHeaders
