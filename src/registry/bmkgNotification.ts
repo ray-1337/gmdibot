@@ -104,7 +104,6 @@ export default async (client: Client) => {
         .setURL(`https://www.google.com/maps/search/?api=1&query=${coordinates}`)
         .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
         .setFooter("Provided by BMKG")
-        .setTimestamp(new Date())
         .setImage(`https://bmkg-content-inatews.storage.googleapis.com/${earthquakeID}.mmi.jpg`);
 
       let displayName = data.area;
