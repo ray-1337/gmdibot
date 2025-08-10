@@ -145,7 +145,7 @@ export default async (interaction: ComponentInteraction) => {
     try {
       const channel = await client.rest.channels.createDM(userID);
 
-      await channel.createMessage({ content: "Verifikasi Anda telah diterima. Anda kini diperbolehkan untuk bergabung dengan server Discord kami." });
+      await channel.createMessage({ content: "Verifikasi Anda telah kami terima. Selamat datang di Discord server Geometry Dash Indonesia!" });
     } catch { };
 
     await userDoc.set({ userID, verified: true, lastUpdatedAt: Date.now() }, { merge: true });
