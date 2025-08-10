@@ -1,7 +1,10 @@
 import { type ModalSubmitInteraction, ComponentTypes, ButtonStyles } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 
+import dayjs from "dayjs";
+import { randomBytes } from "node:crypto";
 import { stripIndents } from "common-tags";
+import ms from "ms";
 
 import { randomNumber } from "@/handler/Util";
 
@@ -10,7 +13,7 @@ import { getGeometryDashUser } from "@/registry/gd/request";
 import type { UserVerificationChoice } from "../typings";
 import { cache, requirements, verificationCacheExpireTime, cooldown } from "../config";
 
-import userCollection from "@/registry/verification/userCollection";
+import { submissionUserCollection } from "@/registry/verification/userCollection";
 import questions from "@/registry/verification/questions";
 
 export default async (interaction: ModalSubmitInteraction) => {
@@ -90,7 +93,8 @@ export default async (interaction: ModalSubmitInteraction) => {
       code: randomNumber(1e7, 1e8),
       createdAt: Date.now(),
       questions: finalizedQuestions,
-      userID: interaction.user.id
+      userID: interaction.user.id,
+      submissionReferenceId: randomBytes(6).toString("hex")
     };
 
     cache.set(content.userID, content);

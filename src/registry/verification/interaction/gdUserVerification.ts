@@ -13,12 +13,10 @@ import { getIndividualMessage, getMessagesList, deleteIndividualMessage } from "
 import { cache, verificationCacheExpireTime } from "../config";
 import type { UserVerificationChoice } from "../typings";
 
-import userCollection from "@/registry/verification/userCollection";
+import { submissionUserCollection } from "@/registry/verification/userCollection";
 
 export default async (interaction: ComponentInteraction) => {
   try {
-    const userDoc = userCollection.doc(interaction.user.id);
-
     await interaction.defer(64);
 
     if (!cache.has(interaction.user.id)) {
@@ -70,6 +68,8 @@ export default async (interaction: ComponentInteraction) => {
 
     const embed = new EmbedBuilder();
 
+    const { code: _code, submissionReferenceId, ...cachedUserData } = cachedUser;
+
     embed
       .setTitle("New User Verification")
       .setTimestamp(new Date())
@@ -117,12 +117,7 @@ export default async (interaction: ComponentInteraction) => {
     });
 
     await Promise.allSettled([
-      userDoc.set({
-        userID: cachedUser.userID,
-        gdUsername: cachedUser.gdUsername,
-        lastUpdatedAt: Date.now(),
-        questions: cachedUser.questions
-      }, { merge: true }),
+      submissionUserCollection.doc(submissionReferenceId).create(cachedUserData),
 
       // delete the message from the Discord DM
       interaction.message.delete(),

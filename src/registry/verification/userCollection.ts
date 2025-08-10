@@ -1,3 +1,5 @@
 import { firestore } from "../../handler/Firebase";
 
-export default firestore.collection("registered-user");
+export const registeredUserCollection = firestore.collection("registered-user");
+
+export const submissionUserCollection = firestore.collection("user-verification-submission");
