@@ -12,7 +12,7 @@ export default async (interaction: ComponentInteraction) => {
   try {
     const client = interaction.client;
 
-    if (!interaction.member?.roles.some(roleID => staffRoleIDs.includes(roleID))) {
+    if (!botOwnerIDs.includes(interaction.user.id) && !interaction.member?.roles.some(roleID => staffRoleIDs.includes(roleID))) {
       return interaction.createMessage({ content: "You don't have permissions to do this.", flags: 64 });
     };
 
