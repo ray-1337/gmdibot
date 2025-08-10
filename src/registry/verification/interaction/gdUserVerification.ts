@@ -135,6 +135,13 @@ export default async (interaction: ComponentInteraction) => {
     await Promise.allSettled([
       submissionUserCollection.doc(submissionReferenceId).create(cachedUserData),
 
+      registeredUserCollection.doc(interaction.user.id).create({
+        submissionReferenceId,
+        gdUsername: cachedUserData.gdUsername,
+        lastUpdatedAt: Date.now(),
+        userID: interaction.user.id
+      } satisfies RegisteredUserState),
+
       // delete the message from the Discord DM
       interaction.message.delete(),
 
