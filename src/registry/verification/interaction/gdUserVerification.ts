@@ -76,7 +76,7 @@ export default async (interaction: ComponentInteraction) => {
       .setAuthor(`@${interaction.user.username} (${interaction.user.id})`, interaction.user.avatarURL("webp", 128))
       .setColor(0xfcba03)
       .addField("Metadata", stripIndents(`
-        - **Geometry Dash Username:** ${cachedUser.gdUsername}
+        - **Geometry Dash Username:** [${cachedUser.gdUsername}](https://gdbrowser.com/u/${cachedUser.gdUsername})
         - **Submission Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
         - **Discord Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
       `));
