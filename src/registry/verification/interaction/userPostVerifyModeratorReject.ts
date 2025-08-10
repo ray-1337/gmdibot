@@ -1,7 +1,7 @@
 import { type ModalSubmitInteraction, ComponentTypes, EmbedField } from "oceanic.js";
 import { stripIndents } from "common-tags";
 
-import userCollection from "@/registry/verification/userCollection";
+// import userCollection from "@/registry/verification/userCollection";
 
 import { extractDiscordID, isDiscordIDValid } from "@/handler/Util";
 
@@ -32,10 +32,10 @@ export default async (interaction: ModalSubmitInteraction) => {
       return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
-    const userDoc = userCollection.doc(userID);
-    if (!(await userDoc.get()).exists) {
-      return interaction.createFollowup({ content: "No registry found in the database.", flags: 64 });
-    };
+    // const userDoc = userCollection.doc(userID);
+    // if (!(await userDoc.get()).exists) {
+    //   return interaction.createFollowup({ content: "No registry found in the database.", flags: 64 });
+    // };
 
     let fields: EmbedField[] = [...embed?.fields || []];
 
@@ -78,7 +78,7 @@ export default async (interaction: ModalSubmitInteraction) => {
       });
     } catch { };
 
-    await userDoc.delete({ exists: true });
+    // await userDoc.delete({ exists: true });
 
     return await interaction.createFollowup({ content: "Rejected.", flags: 64 });
   } catch (error) {
