@@ -78,7 +78,6 @@ export default async (interaction: ComponentInteraction) => {
 
     embed
       .setTitle("New User Verification")
-      .setTimestamp(new Date())
       .setAuthor(`@${interaction.user.username} (${interaction.user.id})`, interaction.user.avatarURL("webp", 128))
       .setColor(0xfcba03)
       .addField("Metadata", stripIndents(`
