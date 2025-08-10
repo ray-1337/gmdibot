@@ -116,46 +116,49 @@ export default async (interaction: ModalSubmitInteraction) => {
         - Karena peka akan huruf besar dan kecil (case sensitive), isi dan subjek pesan harus sesuai seperti diatas.
       `));
 
-    const [message] = await Promise.all([
-      channel.createMessage({
-        embeds: embed.toJSON(true),
-        components: [{
-          type: ComponentTypes.ACTION_ROW,
-          components: [
-            {
-              type: ComponentTypes.BUTTON,
-              customID: "gd-verification-check",
-              style: ButtonStyles.PRIMARY,
-              emoji: { name: "✅" },
-              label: "Cek status"
-            },
-            {
-              type: ComponentTypes.BUTTON,
-              customID: "gd-verification-cancel",
-              style: ButtonStyles.DANGER,
-              emoji: { name: "✖️" },
-              label: "Batal"
-            }
-          ]
-        }]
-      }),
-
-      interaction.createFollowup({
-        content: "Silakan cek **DM Discord** kamu. Segera lakukan verifikasi lebih lanjut, kamu diberi waktu 5 menit untuk menyelesaikannya."
-      })
-    ]);
-
-    setTimeout(async () => {
       try {
-        cache.delete(content.userID);
+        const message = await channel.createMessage({
+          embeds: embed.toJSON(true),
+          components: [{
+            type: ComponentTypes.ACTION_ROW,
+            components: [
+              {
+                type: ComponentTypes.BUTTON,
+                customID: "gd-verification-check",
+                style: ButtonStyles.PRIMARY,
+                emoji: { name: "✅" },
+                label: "Cek status"
+              },
+              {
+                type: ComponentTypes.BUTTON,
+                customID: "gd-verification-cancel",
+                style: ButtonStyles.DANGER,
+                emoji: { name: "✖️" },
+                label: "Batal"
+              }
+            ]
+          }]
+        });
 
-        await message.delete();
-      } catch { };
-    }, verificationCacheExpireTime);
+        setTimeout(async () => {
+          try {
+            cache.delete(content.userID);
 
-    cooldown.set(content.userID, Date.now());
+            await message.delete();
+          } catch { };
+        }, ms(`${verificationCacheExpireTime}m`));
 
-    return;
+        cooldown.set(content.userID, Date.now());
+
+        return await interaction.createFollowup({
+          content: `Silakan cek **DM Discord** kamu. Segera lakukan verifikasi lebih lanjut, kamu diberi waktu ${verificationCacheExpireTime} menit untuk menyelesaikannya.`
+        })
+      } catch (error) {
+        console.error(error);
+        return interaction.createFollowup({
+          content: "Kami tidak bisa mengirimkan kode verifikasi ke DM Discord kamu."
+        })
+      };
   } catch (error) {
     console.error(error);
   };
