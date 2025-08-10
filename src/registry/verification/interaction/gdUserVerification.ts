@@ -11,9 +11,9 @@ import { verificationLogChannelID, verificationChannelID } from "@/handler/Confi
 import { getIndividualMessage, getMessagesList, deleteIndividualMessage } from "@/registry/gd/request";
 
 import { cache, verificationCacheExpireTime } from "../config";
-import type { UserVerificationChoice } from "../typings";
+import type { UserVerificationChoice, RegisteredUserState } from "../typings";
 
-import { submissionUserCollection } from "@/registry/verification/userCollection";
+import { submissionUserCollection, registeredUserCollection } from "@/registry/verification/userCollection";
 
 export default async (interaction: ComponentInteraction) => {
   try {
@@ -70,6 +70,10 @@ export default async (interaction: ComponentInteraction) => {
 
     const { code: _code, submissionReferenceId, ...cachedUserData } = cachedUser;
 
+    const multiRegistry = await registeredUserCollection
+      .where("gdUsername", "==", cachedUser.gdUsername)
+      .get();
+
     embed
       .setTitle("New User Verification")
       .setTimestamp(new Date())
@@ -81,6 +85,16 @@ export default async (interaction: ComponentInteraction) => {
         - **Discord Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
         - **Submission Reference ID:** Q_${submissionReferenceId}
       `));
+
+    if (multiRegistry.docs.length >= 1) {
+      const registry = multiRegistry.docs.map(doc => {
+        const data = doc.data() as RegisteredUserState;
+
+        return `- <@${data.userID}> (\`${data.userID}\`)`;
+      });
+
+      embed.addField("Previous connected accounts", registry.join("\n"))
+    };
 
     await interaction.client.rest.channels.createMessage(verificationLogChannelID, {
       embeds: embed.toJSON(true),
