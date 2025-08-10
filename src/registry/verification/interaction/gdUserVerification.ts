@@ -77,7 +77,7 @@ export default async (interaction: ComponentInteraction) => {
       .setColor(0xfcba03)
       .addField("Metadata", stripIndents(`
         - **Geometry Dash Username:** [${cachedUser.gdUsername}](https://gdbrowser.com/u/${cachedUser.gdUsername})
-        - **Submission Time:** <t:${Math.round((dayjs(cachedUser.createdAt).tz("Asia/Jakarta").valueOf()) / 1000)}>
+        - **Submission Time:** <t:${dayjs(cachedUser.createdAt).tz("Asia/Jakarta").unix()}>
         - **Discord Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
       `));
 
