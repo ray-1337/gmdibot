@@ -124,6 +124,8 @@ export default async (client: Client) => {
           displayName = json.display_name;
         };
       };
+
+      displayName = displayName.split(", ").filter(text => !text.match(/\d/gim)).join(", ");
       
       embed
         .setTitle(displayName)
