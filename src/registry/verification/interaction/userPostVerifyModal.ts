@@ -27,6 +27,20 @@ export default async (interaction: ModalSubmitInteraction) => {
       return interaction.createFollowup({ content: "Maaf, formulir GD username tidak terisi.", flags: 64 });
     };
 
+    const latestVerificationUpdateSearch = await submissionUserCollection
+      .select("userID", "createdAt")
+      .where("userID", "==", interaction.user.id)
+      .get();
+
+    if (!latestVerificationUpdateSearch.empty) {
+      for (const doc of latestVerificationUpdateSearch.docs) {
+        const data = doc.data() as Pick<UserVerificationChoice, "userID" | "createdAt">;
+        if (dayjs(Date.now()).diff(data.createdAt) <= ms("1d")) {
+          return interaction.createFollowup({ content: "Maaf, kamu baru saja mengisi formulir verifikasi, silakan menunggu setidaknya 24 jam setelah mengisi formulir verifikasi.", flags: 64 });
+        };
+      };
+    };
+
     // check if the gd username is claimed
     // const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).get();
     // if (existedVerifiedUser.docs.length > 0) {
