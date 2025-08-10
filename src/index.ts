@@ -7,8 +7,10 @@ import { Client } from "oceanic.js";
 
 import GMDIEvent from "./handler/Event";
 
+const [productionToken, canaryToken] = (process.env.DISCORD_BOT_TOKEN as string).split(" | ");
+
 const client = new Client({
-  auth: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+  auth: `Bot ${process.env.npm_lifecycle_event === "dev" ? canaryToken : productionToken}`,
   gateway: {
     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "MESSAGE_CONTENT"],
     guildCreateTimeout: 30000
