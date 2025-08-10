@@ -4,6 +4,7 @@ import { type ComponentInteraction, ComponentTypes, ButtonStyles } from "oceanic
 import dayjs from "dayjs";
 import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
+import ms from "ms";
 
 import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
 
@@ -46,7 +47,7 @@ export default async (interaction: ComponentInteraction) => {
     };
 
     const currentMessage = messages
-      .filter(msg => (parseDuration(msg.date) || 0) < verificationCacheExpireTime)
+      .filter(msg => (parseDuration(msg.date) || 0) < ms(`${verificationCacheExpireTime}m`))
       .find(msg => msg.author.toLowerCase() === cachedUser.gdUsername.toLowerCase() && msg.subject === "Konfirmasi");
 
     if (!currentMessage || isNaN(+currentMessage.id)) {

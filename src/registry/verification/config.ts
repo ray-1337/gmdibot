@@ -14,7 +14,7 @@ export const requirements = {
 // user temporary cache
 export const cache = new Map<string, UserVerificationChoice>();
 
-export const verificationCacheExpireTime: number = ms("5m");
+export const verificationCacheExpireTime: number = 15;
 
 // cooldown
 export const cooldownTimeState = ms("3m");
