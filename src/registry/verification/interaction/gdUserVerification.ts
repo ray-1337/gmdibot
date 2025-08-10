@@ -57,6 +57,8 @@ export default async (interaction: ComponentInteraction) => {
       return interaction.createFollowup({ content: "Saat ini kami tidak dapat mengambil informasi pesan terakhir kamu.", flags: 64 });
     };
 
+    cachedUser.gdUsername = currentMessage.author;
+
     const code = String(cachedUser.code);
 
     if (!(message.subject === "Konfirmasi" && message.content === code && message.content.length === code.length)) {
