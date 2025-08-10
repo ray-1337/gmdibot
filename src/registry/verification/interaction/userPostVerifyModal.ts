@@ -35,8 +35,8 @@ export default async (interaction: ModalSubmitInteraction) => {
     if (!latestVerificationUpdateSearch.empty) {
       for (const doc of latestVerificationUpdateSearch.docs) {
         const data = doc.data() as Pick<UserVerificationChoice, "userID" | "createdAt">;
-        if (dayjs(Date.now()).diff(data.createdAt) <= ms("1d")) {
-          return interaction.createFollowup({ content: "Maaf, kamu baru saja mengisi formulir verifikasi, silakan menunggu setidaknya 24 jam setelah mengisi formulir verifikasi.", flags: 64 });
+        if (dayjs(Date.now()).diff(data.createdAt) <= ms("15m")) {
+          return interaction.createFollowup({ content: "Maaf, kamu baru saja mengisi formulir verifikasi, silakan menunggu setidaknya 15 menit setelah mengisi formulir verifikasi.", flags: 64 });
         };
       };
     };
