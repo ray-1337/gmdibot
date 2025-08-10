@@ -54,6 +54,7 @@ export default async (interaction: ModalSubmitInteraction) => {
       components: [{
         type: ComponentTypes.ACTION_ROW,
         components: [
+          // @ts-expect-error
           logMessage.components[0].components[logMessage.components[0].components.length - 1]
         ]
       }],

@@ -105,6 +105,7 @@ export default async (interaction: ComponentInteraction) => {
       components: [{
         type: ComponentTypes.ACTION_ROW,
         components: [
+          // @ts-expect-error
           interaction.message.components[0].components[interaction.message.components[0].components.length - 1]
         ]
       }],
