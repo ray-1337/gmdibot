@@ -25,10 +25,10 @@ export default async (interaction: ModalSubmitInteraction) => {
     };
 
     // check if the gd username is claimed
-    const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).get();
-    if (existedVerifiedUser.docs.length > 0) {
-      return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
-    };
+    // const existedVerifiedUser = await userCollection.where("gdUsername", "==", gdUsername).get();
+    // if (existedVerifiedUser.docs.length > 0) {
+    //   return interaction.createFollowup({ content: "Maaf, akun Geometry Dash tersebut sudah dimiliki oleh salah satu member di server Discord GMDI.", flags: 64 });
+    // };
 
     const user = await getGeometryDashUser(gdUsername);
     if (!user || isNaN(+user.accountID)) {
