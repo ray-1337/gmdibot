@@ -4,9 +4,9 @@ import { EmbedBuilder } from "@oceanicjs/builders";
 import { staffRoleIDs, gmdiGuildID, memberRoleID, unverifiedRoleID, botOwnerIDs, firstGeneralTextChannelID } from "@/handler/Config";
 import { usernameHandle, extractDiscordID } from "@/handler/Util";
 
-import type { RegisteredUserState } from "../typings";
+import type { RegisteredUserState, UserVerificationChoice } from "../typings";
 
-import userCollection from "@/registry/verification/userCollection";
+import { registeredUserCollection, submissionUserCollection } from "@/registry/verification/userCollection";
 
 export default async (interaction: ComponentInteraction) => {
   try {
@@ -47,15 +47,42 @@ export default async (interaction: ComponentInteraction) => {
       return interaction.createFollowup({ content: "Unable to fetch user ID from previous embed.", flags: 64 });
     };
 
-    const userDoc = userCollection.doc(userID);
+    const userDoc = registeredUserCollection.doc(userID);
 
     // fetch user questionnaires
     if (interaction.data.customID === "fetch-user-questions") {
+      // NEW: get based on submission reference id
+      const metadata = embed?.fields?.[0]?.value;
+      const submissionReferenceIds = metadata?.match(/Q_(([a-f0-9]){12})/im);
+
+      let questions: RegisteredUserState["questions"];
+
+      const submissionReferenceId = submissionReferenceIds?.[1];
+      if (typeof submissionReferenceId === "string") {
+
+        const submissionDoc = await submissionUserCollection.doc(submissionReferenceId).get();
+        if (!submissionDoc.exists) {
+          return interaction.createFollowup({ content: "No questionnaires available.", flags: 64 });
+        };
+
+        const submissionData = submissionDoc.data() as Omit<UserVerificationChoice, "code">;
+        if (!submissionData?.questions || Object.keys(submissionData.questions).length <= 0) {
+          return interaction.createFollowup({ content: "No questionnaires available.", flags: 64 });
+        };
+
+        questions = submissionData.questions;
+      };
+
       const userData = (await userDoc.get()).data() as RegisteredUserState;
 
-      if (!userData?.questions) {
+      if (!questions && typeof userData?.questions !== "undefined") {
+        questions = userData.questions;
+      };
+
+      if (!questions) {
         return interaction.createFollowup({
-          content: "No questionnaires available. Only available on a new registered user after Dec 15, 2024.", flags: 64
+          content: "No questionnaires available for this user.",
+          flags: 64
         });
       };
 
@@ -73,7 +100,7 @@ export default async (interaction: ComponentInteraction) => {
 
       const questionFields: EmbedField[] = [];
 
-      for (const [question, answer] of Object.entries(userData.questions)) {
+      for (const [question, answer] of Object.entries(questions)) {
         questionFields.push({
           name: question,
           value: answer

@@ -79,6 +79,7 @@ export default async (interaction: ComponentInteraction) => {
         - **Geometry Dash Username:** [${cachedUser.gdUsername}](https://gdbrowser.com/u/${cachedUser.gdUsername})
         - **Submission Time:** <t:${dayjs(cachedUser.createdAt).tz("Asia/Jakarta").unix()}>
         - **Discord Account Creation Date:** <t:${Math.round(interaction.user.createdAt.getTime() / 1000)}>
+        - **Submission Reference ID:** Q_${submissionReferenceId}
       `));
 
     await interaction.client.rest.channels.createMessage(verificationLogChannelID, {
