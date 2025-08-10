@@ -115,7 +115,11 @@ export default async (client: Client) => {
       });
 
       if (geocodingReq.ok) {
-        const json = await geocodingReq.json() as Record<"display_name", string>;
+        const json = await geocodingReq.json() as Record<"display_name", string> & { address: { country_code: string; } };
+        if (json?.address?.country_code !== "id") {
+          return;
+        };
+
         if (typeof json.display_name === "string") {
           displayName = json.display_name;
         };
