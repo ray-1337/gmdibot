@@ -6,13 +6,13 @@ import { gmdiGuildID, memberRoleID, unverifiedRoleID, verificationLogChannelID }
 import { cache, cooldown, cooldownTimeState } from "../config";
 import type { RegisteredUserState } from "../typings";
 
-import userCollection from "@/registry/verification/userCollection";
+import { registeredUserCollection } from "@/registry/verification/userCollection";
 import questions from "@/registry/verification/questions";
 
 export default async (interaction: ComponentInteraction) => {
   try {
     const client = interaction.client;
-    const userDoc = userCollection.doc(interaction.user.id);
+    const userDoc = registeredUserCollection.doc(interaction.user.id);
 
     // check if the user is currently has ongoing session
     if (cache.has(interaction.user.id)) {
