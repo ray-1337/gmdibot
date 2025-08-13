@@ -121,6 +121,11 @@ export default async (client: Client) => {
         };
 
         if (typeof json.display_name === "string") {
+          const lowercaseDisplayName = json.display_name.toLowerCase();
+          if (lowercaseDisplayName.match(/(papua|nusa tenggara)/gim) !== null) {
+            return;
+          };
+
           displayName = json.display_name;
         };
       };
