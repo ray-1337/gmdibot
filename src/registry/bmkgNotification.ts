@@ -100,6 +100,7 @@ export default async (client: Client) => {
 
       const earthquakeColor = colorizedMagnitudeEmbed(magnitude);
       const embed = new RichEmbed()
+        .setTimestamp("now")
         .setColor(earthquakeColor)
         .setURL(`https://www.google.com/maps/search/?api=1&query=${coordinates}`)
         .setAuthor("Indonesia Tsunami Early Warning System (sub-alternative of BMKG)", "https://indonesiaexpat.id/wp-content/uploads/2022/02/WRS.png", "https://inatews.bmkg.go.id/")
