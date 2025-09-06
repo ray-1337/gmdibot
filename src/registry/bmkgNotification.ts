@@ -176,7 +176,9 @@ export default async (client: Client) => {
       if (!isDevMode && postedBMKGMessage?.channel && postedBMKGMessage.channel.type === ChannelTypes.GUILD_ANNOUNCEMENT) {
         try {
           await postedBMKGMessage.crosspost();
-        } catch {}
+        } catch (error) {
+          console.error(error);
+        };
       };
 
       cached.add(earthquakeID);
