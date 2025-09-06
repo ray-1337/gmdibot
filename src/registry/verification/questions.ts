@@ -46,7 +46,7 @@ export default [
     components: [
       {
         customID: "know-gmdi-more",
-        label: "Kamu tahu Geometry Dash Indonesia dari mana?",
+        label: "Kamu tahu GMDI dari mana?",
         style: TextInputStyles.PARAGRAPH,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 512,
