@@ -175,7 +175,7 @@ export default async (interaction: ComponentInteraction) => {
       await channel.createMessage({ content: "Verifikasi Anda telah kami terima. Selamat datang di Discord server Geometry Dash Indonesia!" });
     } catch { };
 
-    await userDoc.set({ userID, verified: true, lastUpdatedAt: Date.now() }, { merge: true });
+    await userDoc.set({ verified: true, lastUpdatedAt: Date.now() }, { merge: true });
 
     return;
   } catch (error) {

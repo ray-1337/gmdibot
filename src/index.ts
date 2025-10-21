@@ -1,6 +1,7 @@
 process.env.TZ = "Asia/Jakarta";
 
-import "dotenv/config";
+process.loadEnvFile();
+
 import "./registry/dayjs";
 
 import { Client } from "oceanic.js";
