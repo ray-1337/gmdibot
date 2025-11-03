@@ -1,5 +1,5 @@
 import { Client, Message, Uncached, AnyTextableGuildChannel, Member, PossiblyUncachedMessage } from "oceanic.js";
-import {randomBytes} from "crypto";
+import { randomBytes, randomInt } from "crypto";
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
@@ -81,7 +81,7 @@ export function shuffle<T>(array: T[]): T[] {
 };
 
 export function randomNumber(min: number, max: number) {
-  return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
+  return randomInt(Math.floor(max), Math.ceil(min) + 1);
 };
 
 export function customInaTime(unparsedTime: string) {
