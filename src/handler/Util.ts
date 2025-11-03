@@ -3,7 +3,7 @@ import { randomBytes, randomInt } from "crypto";
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
-const regexDiscordID: RegExp = /(\d{17,19})/gim;
+const regexDiscordID: RegExp = /^(\d{16,19})$/g;
 
 export function isDiscordIDValid(str: string) {
   return str.match(regexDiscordID) !== null;
@@ -11,7 +11,7 @@ export function isDiscordIDValid(str: string) {
 
 export function extractDiscordID(str: string) {
   const matches = str.match(regexDiscordID);
-  return matches !== null ? matches.shift() : null;
+  return matches?.at(0) ?? null;
 };
 
 export function delay(ms: number) {
@@ -19,22 +19,22 @@ export function delay(ms: number) {
 };
 
 export async function transformMessage(client: Client, message: PossiblyUncachedMessage | null) {
-  if (message) {
-    if (message instanceof Message) {
-      return message as Message<Uncached | AnyTextableGuildChannel>;
-    } else {
-      try {
-        let restMessage = await client.rest.channels.getMessage<AnyTextableGuildChannel>(message.channel.id, message.id).catch(() => {});
-
-        return restMessage || null;
-      } catch (error) {
-        console.error(error);
-        return null;
-      };
-    }
-  } else {
+  if (!message) {
     return null;
   };
+
+  if (message instanceof Message) {
+    return message as Message<Uncached | AnyTextableGuildChannel>;
+  };
+
+  try {
+    let restMessage = await client.rest.channels.getMessage<AnyTextableGuildChannel>(message.channel.id, message.id);
+    if (restMessage) return restMessage;
+  } catch (error) {
+    console.error(error);
+  };
+
+  return null;
 };
 
 export function usernameHandle(user: Member | Member["user"]) {
