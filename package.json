@@ -23,6 +23,7 @@
   "dependencies": {
     "@google-cloud/firestore": "^7.11.6",
     "@oceanicjs/builders": "^1.1.11",
+    "@upstash/redis": "^1.35.6",
     "common-tags": "^1.8.2",
     "dayjs": "^1.11.18",
     "ms": "^2.1.3",
