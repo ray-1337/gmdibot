@@ -148,9 +148,12 @@ export default async (client: Client) => {
         console.error(await mapboxFetch.text());
         console.warn(`GMDI & BMKG (realtime alternative): Failed to fetch mapbox`);
       } else {
-        embed.setImage(`attachment://gmdi_attitude_eq_${earthquakeID}.png`);
+        const filename = `gmdi_attitude_eq_${earthquakeID}.png`;
+
+        embed.setImage(`attachment://${filename}`);
+
         geographyImageContent = {
-          name: `gmdi_attitude_eq_${earthquakeID}.png`,
+          name: filename,
           contents: Buffer.from(await mapboxFetch.arrayBuffer())
         };
       };
