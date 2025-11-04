@@ -1,96 +1,119 @@
-import {Constants, Client, Message, AnyTextableGuildChannel, PartialEmoji, Member, Uncached, User, File, MessageActionRow} from "oceanic.js";
+import { Constants, Client, Message, type AnyTextableGuildChannel, type PartialEmoji, Member, type Uncached, type User, type MessageActionRow, type MessageAttachment, type File, type EmbedOptions } from "oceanic.js";
 import ms from "ms";
-import normalizeURL from "normalize-url";
+import { EmbedBuilder } from "@oceanicjs/builders";
+import { randomBytes } from "node:crypto";
+
 import { transformMessage, truncate, randomNumber, usernameHandle } from "../handler/Util";
-import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { firestore } from "../handler/Firebase";
+import { redis } from "../handler/Redis";
 import { starboardChannelID as channelID } from "../handler/Config";
 
 const [minStar, maxStar] = [6, 9];
 const starEmoji = "⭐";
+const maxStarboardedMessageDays = ms("90d");
+const maximumEmbedContentsLength: number = 4;
+
+const collectionName: string = "starboard";
+const getLegacyCollection = (messageId: string) => firestore.collection(collectionName).doc(messageId);
+
+// message older than Feb 28, 2024 will be ignored
+const breakingChangesDate = new Date("Nov 7 2025").getTime();
 
 export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
-    // must be presented in guild
-    if (!msg?.channel?.guildID || !msg?.channel?.id) return;
-
-    if (reactor instanceof Member) {
-      if (reactor.bot) return;
+    if (
+      !msg?.channel?.guildID || !msg.channel.id || // must be presented
+      (reactor instanceof Member && reactor.bot) // not a bot
+    ) {
+      return;
     };
 
     // check message
     let message = await transformMessage(client, msg);
-    if (!message?.channel) return;
-
-    // message older than Feb 28, 2024 will be ignored
-    let breakingChangesDate = new Date("Feb 28 2024").getTime();
-    if (message.createdAt.getTime() < breakingChangesDate) return;
-
-    // star in the same channel
-    if (message.channel.id == channelID) return;
-
-    // check if the star reaction is in the message
-    const starReaction = message.reactions.find(({emoji}) => emoji.name === starEmoji);
-    if (!starReaction || starReaction.me) return;
-
-    if (Date.now() - message.createdAt.getTime() >= ms("90d")) return;
-
-    let reactions = await client.rest.channels.getReactions(message.channel.id, message.id, starEmoji);
-
-    // starboard starter
-    const starboardCollection = firestore.collection("starboard");
-    const starboardMessageDoc = starboardCollection.doc(message.id);
-    const currentStarboardMessage = await starboardMessageDoc.get();
-
-    const starThreshold = randomNumber(minStar, maxStar);
-
-    if (reactions.length >= 1) {
-      if (!currentStarboardMessage.exists) {
-        await starboardMessageDoc.set({
-          "reactorID": reactions[0].id,
-          "posted": false,
-          "starCount": starThreshold
-        }, { merge: true });
-      };
-    } else if (reactions.length <= 0) {
-      if (currentStarboardMessage.exists) {
-        await starboardMessageDoc.delete();
-      };
-    };
-
-    // check if the starboard has been posted before or nah
-    const starboardMessageData = currentStarboardMessage.data() as Partial<Record<"reactorID", string> & { posted?: boolean; starCount?: number; }>;
-    if (starboardMessageData?.posted) {
+    if (
+      !message?.channel || // text channel must be presented
+      message.channel.id === channelID // not in "starboard" channel
+    ) {
       return;
     };
 
-    // star emoji validation
-    let limit = starboardMessageData?.starCount;
-    if (typeof limit !== "number") {
-      await starboardMessageDoc.set({"starCount": starThreshold}, { merge: true });
+    const messageId = message.id;
 
-      limit = starThreshold;
+    const currentTime = Date.now();
+    const messageCreationTime = message.createdAt;
+    const messageCreationTimeInEpoch = messageCreationTime.getTime();
+    const isLegacyMessage = messageCreationTimeInEpoch <= breakingChangesDate;
+    if ((currentTime - messageCreationTimeInEpoch) > maxStarboardedMessageDays) {
+      // must be at least < 90 days
+      return;
     };
 
-    // increment if same user reacted
-    if (reactions.find(val => message && (message.author.id == val.id))) ++limit;
+    const reactions = await message.getReactions(starEmoji);
+    const filteredReactions = reactions.filter(user => user.id !== message.author.id || !user.bot);
+    let data: StarboardProp | null = null;
 
-    // check if the star reaction below threshold
-    if (starReaction.count < limit) return;
+    let legacyDocument: ReturnType<typeof getLegacyCollection> | null = null;
+    if (isLegacyMessage) {
+      legacyDocument = getLegacyCollection(messageId);
+    };
 
-    const userTag = `${usernameHandle(message.author)}`;
-    let embed = new RichEmbed().setColor(0xffac33).setTimestamp(new Date(message.timestamp))
+    if (filteredReactions.length > 0) {
+      const earlyReaction = reactions?.[0] as User;
+      const reactorID = earlyReaction.id;
+
+      const starCount = randomNumber(minStar, maxStar);
+
+      const _data: StarboardProp = { 
+        reactorID, starCount
+      };
+
+      // legacy
+      if (isLegacyMessage && legacyDocument !== null) {
+        const starboardDoc = await legacyDocument.get();
+        if (!starboardDoc.exists) {
+          await legacyDocument.set(_data);
+        };
+      } else { // updated
+        await redis.hset<StarboardProp>(collectionName, {
+          [messageId]: _data
+        });
+      };
+
+      data = _data;
+    };
+
+    if (filteredReactions.length <= 0) {
+      if (isLegacyMessage && legacyDocument !== null) {
+        const starboardDoc = await legacyDocument.get();
+        if (starboardDoc.exists) {
+          await legacyDocument.delete();
+        };
+      } else {
+        await redis.hdel(collectionName, messageId);
+      };
+
+      // immediately return
+      return;
+    };
+    
+    if (!data || (filteredReactions.length < data.starCount)) {
+      return;
+    };
+
+    const userTag = usernameHandle(message.author);
+
+    let embed = new EmbedBuilder()
+      .setColor(0xffac33)
+      .setTimestamp(messageCreationTime)
       .setDescription(truncate(message.content, 1024))
       .setAuthor(`${userTag} (${message.author.id})`, message.author.avatarURL("png", 16));
 
-    if (starboardMessageData?.reactorID?.length) {
-      const starterUser = client.users.get(starboardMessageData.reactorID) || await client.rest.users.get(starboardMessageData.reactorID).catch(() => { });
+    if (typeof data?.reactorID === "string") {
+      const starterUser = client.users.get(data.reactorID) || await client.rest.users.get(data.reactorID);
       if (starterUser) {
-        embed.setFooter(`Si Pemulai: ${usernameHandle(starterUser)}`)
+        embed.setFooter(`Si Pemulai: ${usernameHandle(starterUser)}`);
       };
     };
-
-    let file: File | undefined;
 
     let redirectButton: MessageActionRow[] = [{
       type: Constants.ComponentTypes.ACTION_ROW,
@@ -102,91 +125,131 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
       }]
     }];
 
-    let embeddings: string[] = [];
-
     // listing
     const attachments = message.attachments.toArray();
+    const embeds = message.embeds ?? [];
+    const [currentAttachment, currentEmbed] = [
+      attachments?.[0], embeds?.[0]
+    ];
+
+    const markAsPosted = async () => {
+      if (legacyDocument !== null) {
+        await legacyDocument.update({ posted: true });
+      } else {
+        await redis.hset(collectionName, {
+          [messageId]: {
+            ...data, posted: true
+          }
+        });
+      };
+
+      return;
+    };
 
     // bypass videos into a layered discord custom embed
     if (
-      (attachments.length >= 1 && attachments[0].contentType?.match(/^(video)/gi)) ||
-      (message.embeds.length >= 1 && (message.embeds[0].type === "video" || message.embeds[0].type === "gifv"))
+      (currentAttachment?.contentType?.startsWith("video")) ||
+      (currentEmbed?.type === "video" || currentEmbed?.type === "gifv")
     ) {
       const url = new URL("https://dce.cdn.13373333.one");
       url.searchParams.append("description", `${userTag} (${message.author.id})`);
       url.searchParams.append("title", truncate(message.content, 512));
       url.searchParams.append("embedColor", `#FFAC33`);
 
-      const videoURL = attachments?.[0]?.url || message.embeds?.[0]?.video?.url || message.embeds?.[0]?.url;
+      const videoURL = currentAttachment?.url || currentEmbed?.video?.url || currentEmbed?.url;
       
       if (typeof videoURL === "string") {
         url.searchParams.append("videoURL", videoURL);
 
-        await client.rest.channels.createMessage(channelID, {
-          components: redirectButton,
-          content: `[Embed](${url.toString()})`
-        });
+        await Promise.all([
+          client.rest.channels.createMessage(channelID, {
+            components: redirectButton,
+            content: `[Embed](${url.toString()})`
+          }),
 
-        await starboardMessageDoc.update({posted: true});
+          markAsPosted()
+        ]);
 
         return;
       };
     };
 
-    if (message.attachments.size || message.embeds.length) {
-      let ext = {
-        "image/gif": ".gif",
-        "image/jpeg": ".jpeg",
-        "image/jpg": ".jpg",
-        "image/png": ".png",
-        "image/webp": ".webp",
-        // "video/mp4": ".mp4",
-        // "video/webm": ".webm"
-      };
+    let contents: Array<{ url: string; contentType?: string; }> = [];
 
-      // attachments
-      if (message.attachments.size == 1) {
-        if (attachments[0].contentType?.match(/^(image\/(jpe?g|gif|png|webp))/gi)) {
-          embed.setImage(normalizeURL(attachments[0].url));
+    if (attachments.length > 0) {
+      attachments.forEach(attachment => {
+        if (!attachment?.url) {
+          return;
         };
-      } else if (message.attachments.size > 1) {
-        for (let data of message.attachments) {
-          if (!data[1].contentType) continue;
 
-          if (Object.keys(ext).find(mime => mime == data[1].contentType)) {
-            embeddings.push(data[1].url);
-          };
-
-          continue;
-        };
-      };
-
-      // embeds
-      if (message.embeds.length == 1) {
-        if (message.embeds[0].type == "image" && message.embeds[0].url) {
-          embed.setImage(normalizeURL(message.embeds[0].url));
-        };
-      } else if (message.embeds.length > 1) {
-        for (let data of message.embeds) {
-          if (data[1].type.match(/(image|video)/gi) && data.url) {
-            embeddings.push(data.url);
-          };
-
-          continue;
-        };
-      };
+        contents.push({
+          contentType: attachment?.contentType,
+          url: attachment.url
+        });
+      });
     };
 
+    if (embeds.length > 0) {
+      embeds.forEach(embed => {
+        if (embed?.type !== "image" || typeof embed.image?.url !== "string") {
+          return;
+        };
+
+        contents.push({ url: embed.image.url });
+      });
+    };
+
+    if (contents.length > maximumEmbedContentsLength) {
+      contents = contents.slice(0, maximumEmbedContentsLength);
+    };
+
+    let _attachments: MessageAttachment[] = [];
+    let _files: File[] = [];
+    const _embeds: EmbedOptions[] = [];
+
+    for (const arrangedContent of contents) {
+      const _embed = EmbedBuilder.loadFromJSON(embed.toJSON());
+
+      const url = new URL(arrangedContent.url);
+      const ext = url.pathname.split(/\//gim).pop()?.split(/\./gim)?.pop();
+      if (!ext || typeof ext !== "string") continue;
+
+      const request = await fetch(arrangedContent.url);
+      if (!request.ok) continue;
+
+      const contents = Buffer.from(await request.arrayBuffer());
+      const name = [randomBytes(6).toString("base64url"), ext].join(".");
+
+      _attachments.push({ filename: name });
+      _files.push({ name, contents });
+
+      _embed.setImage(`attachment://${name}`);
+      _embeds.push(_embed.toJSON());
+    };
+
+    _attachments = _attachments.map((data, index) => ({ ...data, id: index + 1 }));
+    _files = _files.map((data, index) => ({ ...data, index: index + 1 }));
+
     await client.rest.channels.createMessage(channelID, {
-      embeds: embed.toJSON(true),
+      embeds: _embeds.length <= 0 ? embed.toJSON(true) : _embeds,
       components: redirectButton,
-      files: file ? [file] : undefined
+      ...(contents.length > 0 && ({
+        files: _files,
+        attachments: _attachments
+      }))
     });
 
-    await starboardMessageDoc.update({posted: true});
-
-    return;
+    await markAsPosted();
   } catch (error) {
-    return console.error(error);
-  }
+    console.error(error);
+  };
+
+  return;
+};
+
+export interface StarboardProp {
+  reactorID: string;
+  starCount: number;
+
+  posted?: boolean;
 };
