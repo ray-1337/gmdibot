@@ -1,113 +1,49 @@
-import { Message, PossiblyUncachedMessage, Client, Embed } from "oceanic.js";
+import { Message, PossiblyUncachedMessage, Client, type Embed, Attachment } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { modlogChannelID } from "../handler/Config";
-import { randomNumber, truncate, usernameHandle } from "../handler/Util";
+import { randomNumber, truncate, usernameHandle, delay } from "../handler/Util";
 import { randomBytes } from "crypto";
 
 const [cdnHostname, cdnUsername, cdnAuthKey, cdnEndpointDomain] = (process.env.BUNNYCDN_KEY as string).split(" | ");
 
 export default async function (client: Client, message: PossiblyUncachedMessage) {
-  if (!(message instanceof Message) || !message?.author || message?.author?.bot) return;
+  if (!(message instanceof Message) || message?.author?.bot === true) return;
 
   try {
+    const attachments: Array<Embed | Attachment> = [...message.attachments.toArray(), ...(message.embeds ?? [])];
+    if (attachments.length <= 0) return;
+
     const embed = new EmbedBuilder()
-    .setColor(0x7289DA)
-    .setTimestamp(new Date())
-    .setAuthor(`${usernameHandle(message.author)} (${message.author.id})`, message.author.avatarURL("webp", 128))
+      .setColor(0x7289DA)
+      .setTimestamp(message.createdAt)
+      .setAuthor(`${usernameHandle(message.author)} (${message.author.id})`, message.author.avatarURL("webp", 128));
 
-    if (message?.content.length) {
-      embed.addField("Caption", truncate(message.content, 1024))
+    if (message.content.length > 0) {
+      embed.addField("Caption", truncate(message.content, 1024));
     };
 
-    let videoRegexMimeType = /^(video)\/.*/gi;
-    let acceptableEmbedsRegexType = /^(video|image)$/gi;
     let listDeletedContent: string[] = [];
+    let embedImageStatus: boolean = false;
 
-    // attachments
-    if (message.attachments?.size) {
-      if (message.attachments.size === 1) {
-        const currentContent = message.attachments.toArray()?.[0];
-        if (!currentContent.contentType) return;
+    for (const content of attachments) {
+      const url = content instanceof Attachment ? content.proxyURL : (content.video?.proxyURL ?? content.image?.proxyURL);
+      if (!url || typeof url !== "string") continue;
 
-        let promisedStore = await storeToCDN(message.author.id, currentContent.proxyURL);
+      const uploadedContent = await uploadToCDN(message.author.id, url);
+      if (uploadedContent !== null) {
+        listDeletedContent.push(uploadedContent.url);
 
-        if (!videoRegexMimeType.test(currentContent.contentType)) {
-          if (promisedStore) {
-            listDeletedContent.push(promisedStore);
-            embed.setImage(promisedStore);
-          } else {
-            embed.setImage(currentContent.proxyURL);
-          };
-        };
-      }
-
-      else if (message.attachments.size > 1) {
-        for await (let content of message.attachments.toArray()) {
-          if (!content.contentType) continue;
-
-          let promisedStore = await storeToCDN(message.author.id, content.proxyURL);
-          if (promisedStore) {
-            listDeletedContent.push(promisedStore);
-          };
-
-          continue;
+        if (!embedImageStatus && uploadedContent.contentType.startsWith("image")) {
+          embed.setImage(uploadedContent.url);
+          embedImageStatus = true;
         };
       };
-    }
 
-    // embeds
-    if (message.embeds?.length) {
-      if (message.embeds.length === 1) {
-        if (message.embeds[0].type?.match(acceptableEmbedsRegexType)) {
-          let URLDecision: Embed["video"] | Embed["image"] | null = null;
-
-          if (message.embeds[0].type == "video" && message.embeds[0].video) {
-            URLDecision = message.embeds[0].video;
-          } else if (message.embeds[0].type == "image" && message.embeds[0].image) {
-            URLDecision = message.embeds[0].image;
-          };
-
-          if (URLDecision?.proxyURL) {
-            let promisedStore = await storeToCDN(message.author.id, URLDecision.proxyURL);
-            if (promisedStore) listDeletedContent.push(promisedStore);
-
-            if (message.embeds[0].type !== "video") {
-              if (promisedStore) {
-                embed.setImage(promisedStore);
-              } else {
-                embed.setImage(URLDecision.proxyURL);
-              };
-            };
-          };
-        };
-      }
-
-      else if (message.embeds.length > 1) {
-        for await (let embed of message.embeds) {
-          if (!embed.type?.match(acceptableEmbedsRegexType)) continue;
-
-          let URLDecision: Embed["video"] | Embed["image"] | null = null;
-
-          if (embed.type == "video" && embed.video) {
-            URLDecision = embed.video;
-          } else if (embed.type == "image" && embed.image) {
-            URLDecision = embed.image;
-          };
-
-          if (URLDecision?.proxyURL) {
-            let promisedStore = await storeToCDN(message.author.id, URLDecision.proxyURL);
-            if (promisedStore) {
-              listDeletedContent.push(promisedStore);
-            };
-          };
-
-          continue;
-        };
-      };
+      await delay(randomNumber(1250, 2500));
     };
 
-    if (listDeletedContent?.length) {
-      embed.addField(`Backup Endpoint (Total: ${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"));
+    if (listDeletedContent.length > 0) {
+      embed.addField(`Endpoints (${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"));
 
       return client.rest.channels.createMessage(modlogChannelID, {
         embeds: embed.toJSON(true)
@@ -118,7 +54,7 @@ export default async function (client: Client, message: PossiblyUncachedMessage)
   };
 };
 
-async function storeToCDN(authorID: string, url: string): Promise<string | null> {
+async function uploadToCDN(authorID: string, url: string): Promise<Record<"url" | "contentType", string> | null> {
   try {
     if (!process.env?.BUNNYCDN_KEY) return null;
 
@@ -134,7 +70,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
       "image/webp": "webp",
       "video/webm": "webm",
       "audio/mpeg": "mp3",
-      "video/mpeg": "mp4", 
+      "video/mpeg": "mp4",
       "video/mp4": "mp4",
       "video/quicktime": "mov"
     };
@@ -142,7 +78,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
     const availableExtension = extension?.[contentType];
     if (!availableExtension?.length) return null;
 
-    const randomFileID = randomBytes(randomNumber(8, 16)).toString("hex");
+    const randomFileID = randomBytes(10).toString("base64url");
 
     const urlEndpoint = `${authorID}/${randomFileID}.${availableExtension}`;
 
@@ -150,7 +86,7 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
       method: "PUT",
       body: Buffer.from(await data.arrayBuffer()),
       headers: {
-        "AccessKey": cdnAuthKey,
+        "AccessKey": cdnAuthKey as string,
         "content-type": "application/octet-stream"
       }
     });
@@ -160,7 +96,10 @@ async function storeToCDN(authorID: string, url: string): Promise<string | null>
       return null;
     };
 
-    return "https://" + cdnEndpointDomain + "/" + urlEndpoint;
+    return {
+      url: "https://" + cdnEndpointDomain + "/" + urlEndpoint,
+      contentType
+    };
   } catch (error) {
     console.error(error);
     return null;
