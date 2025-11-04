@@ -130,7 +130,7 @@ export default async (client: Client) => {
       
       embed
         .setTitle(displayName)
-        .addField("Lintang / Bujur", `${data.lintang} / ${data.bujur}`)
+        // .addField("Lintang / Bujur", `${data.lintang} / ${data.bujur}`)
         .addField("Skala", `${magnitude} / ${mercalliIntensityScale(magnitude)}`, true)
         .addField("Kedalaman", data.dalam + " km", true)
         .addField("Waktu Terdeteksi", `<t:${earthquakeTime.unix()}>`, true);
