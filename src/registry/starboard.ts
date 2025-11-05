@@ -6,12 +6,13 @@ import { randomBytes } from "node:crypto";
 import { transformMessage, truncate, randomNumber, usernameHandle } from "../handler/Util";
 import { firestore } from "../handler/Firebase";
 import { redis } from "../handler/Redis";
-import { starboardChannelID as channelID } from "../handler/Config";
+import { channel } from "../handler/Config";
 
 const [minStar, maxStar] = [6, 9];
 const starEmoji = "⭐";
 const maxStarboardedMessageDays = ms("90d");
 const maximumEmbedContentsLength: number = 4;
+const channelID = channel.starboard;
 
 const collectionName: string = "starboard";
 const getLegacyCollection = (messageId: string) => firestore.collection(collectionName).doc(messageId);

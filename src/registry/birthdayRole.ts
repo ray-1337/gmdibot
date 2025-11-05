@@ -1,9 +1,11 @@
 import { Member, Client, JSONMember } from "oceanic.js";
 import nodeSchedule from "node-schedule";
 import dayjs from "dayjs";
-import { birthdayRoleID, gmdiGuildID } from "../handler/Config";
+import { roles, gmdiGuildID } from "../handler/Config";
 import { randomNumber, delay, isDevMode } from "../handler/Util";
 import ms from "ms";
+
+const birthdayRoleID = roles.birthday;
 
 export async function rescheduleBirthdayPeople(client: Client) {
   const fixedLimit: number = 1000;

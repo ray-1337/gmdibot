@@ -1,6 +1,6 @@
 import { Message, PossiblyUncachedMessage, Client, type Embed, Attachment } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
-import { modlogChannelID } from "../handler/Config";
+import { channel } from "../handler/Config";
 import { randomNumber, truncate, usernameHandle, delay } from "../handler/Util";
 import { randomBytes } from "crypto";
 
@@ -45,7 +45,7 @@ export default async function (client: Client, message: PossiblyUncachedMessage)
     if (listDeletedContent.length > 0) {
       embed.addField(`Endpoints (${listDeletedContent.length})`, listDeletedContent.map(x => `- ${x}`).join("\n"));
 
-      return client.rest.channels.createMessage(modlogChannelID, {
+      return client.rest.channels.createMessage(channel.modlog, {
         embeds: embed.toJSON(true)
       });
     };

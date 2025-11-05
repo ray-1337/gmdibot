@@ -6,7 +6,7 @@ import parseDuration from "parse-duration";
 import { stripIndents } from "common-tags";
 import ms from "ms";
 
-import { verificationLogChannelID, verificationChannelID } from "@/handler/Config";
+import { channel } from "@/handler/Config";
 
 import { getIndividualMessage, getMessagesList, deleteIndividualMessage } from "@/registry/gd/request";
 
@@ -22,7 +22,7 @@ export default async (interaction: ComponentInteraction) => {
     if (!cache.has(interaction.user.id)) {
       return interaction.createFollowup({
         flags: 64,
-        content: `Kamu tidak memiliki sesi verifikasi untuk saat ini. Kemungkinan besar waktu sesi verifikasi kamu sudah habis. Kamu bisa coba lagi untuk pergi ke kanal verifikasi kami (<#${verificationChannelID}>)`
+        content: `Kamu tidak memiliki sesi verifikasi untuk saat ini. Kemungkinan besar waktu sesi verifikasi kamu sudah habis. Kamu bisa coba lagi untuk pergi ke kanal verifikasi kami (<#${channel.verification}>)`
       });
     };
 
@@ -97,7 +97,7 @@ export default async (interaction: ComponentInteraction) => {
       embed.addField("Previous connected accounts", registry.join("\n"))
     };
 
-    await interaction.client.rest.channels.createMessage(verificationLogChannelID, {
+    await interaction.client.rest.channels.createMessage(channel.verificationLog, {
       embeds: embed.toJSON(true),
       components: [{
         type: ComponentTypes.ACTION_ROW,

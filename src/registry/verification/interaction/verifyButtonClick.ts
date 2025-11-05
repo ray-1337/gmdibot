@@ -1,7 +1,7 @@
 import { type ComponentInteraction } from "oceanic.js";
 import parseDuration from "parse-duration";
 
-import { gmdiGuildID, memberRoleID, unverifiedRoleID, verificationLogChannelID } from "@/handler/Config";
+import { gmdiGuildID, roles, channel } from "@/handler/Config";
 
 import { cache, cooldown, cooldownTimeState } from "../config";
 import type { RegisteredUserState } from "../typings";
@@ -56,8 +56,8 @@ export default async (interaction: ComponentInteraction) => {
           });
 
           await Promise.all([
-            client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, memberRoleID, "[GMDIBot] Already verified from store"),
-            client.rest.guilds.removeMemberRole(gmdiGuildID, interaction.user.id, unverifiedRoleID, "[GMDIBot] Already verified from store")
+            client.rest.guilds.addMemberRole(gmdiGuildID, interaction.user.id, roles.member, "[GMDIBot] Already verified from store"),
+            client.rest.guilds.removeMemberRole(gmdiGuildID, interaction.user.id, roles.unverified, "[GMDIBot] Already verified from store")
           ]);
         };
 
@@ -69,7 +69,7 @@ export default async (interaction: ComponentInteraction) => {
 
     // check if the user has already submitted the form and it's not verified yet
     // the user can resubmit if the form is nowhere to be found around at least 10 messages
-    const messages = await client.rest.channels.getMessages(verificationLogChannelID, {
+    const messages = await client.rest.channels.getMessages(channel.verificationLog, {
       filter: (message) => message.author.id === client.user.id &&
         message.embeds.length >= 1 &&
         message.embeds?.[0].author?.name?.match(interaction.user.id) !== null &&

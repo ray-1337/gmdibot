@@ -1,7 +1,7 @@
 import { type ComponentInteraction, type EmbedField, ComponentTypes, TextInputStyles } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 
-import { staffRoleIDs, gmdiGuildID, memberRoleID, unverifiedRoleID, botOwnerIDs, firstGeneralTextChannelID } from "@/handler/Config";
+import { staffRoleIDs, gmdiGuildID, roles, botOwnerIDs, channel } from "@/handler/Config";
 import { usernameHandle, extractDiscordID } from "@/handler/Util";
 
 import type { RegisteredUserState, UserVerificationChoice } from "../typings";
@@ -147,8 +147,8 @@ export default async (interaction: ComponentInteraction) => {
     });
 
     await Promise.all([
-      client.rest.guilds.addMemberRole(gmdiGuildID, userID, memberRoleID, "[GMDIBot] Finished verification"),
-      client.rest.guilds.removeMemberRole(gmdiGuildID, userID, unverifiedRoleID, "[GMDIBot] Finished verification")
+      client.rest.guilds.addMemberRole(gmdiGuildID, userID, roles.member, "[GMDIBot] Finished verification"),
+      client.rest.guilds.removeMemberRole(gmdiGuildID, userID, roles.unverified, "[GMDIBot] Finished verification")
     ]);
 
     await interaction.createFollowup({ content: "Accepted.", flags: 64 })
@@ -161,7 +161,7 @@ export default async (interaction: ComponentInteraction) => {
         .setTimestamp(new Date()).setColor(0x24C86E)
         .setTitle(`Halo, ${user ? usernameHandle(user) : userManualMention} 👋`);
 
-      await client.rest.channels.createMessage(firstGeneralTextChannelID, {
+      await client.rest.channels.createMessage(channel.general, {
         content: user?.mention || userManualMention,
         embeds: welcomeEmbed.toJSON(true)
       });

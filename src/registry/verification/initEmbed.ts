@@ -1,10 +1,10 @@
 import { Client, ComponentTypes, ButtonStyles } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
-import { verificationChannelID } from "../../handler/Config";
+import { channel } from "../../handler/Config";
 
 export default async function(client: Client) {
   try {
-    const messages = await client.rest.channels.getMessages(verificationChannelID, {
+    const messages = await client.rest.channels.getMessages(channel.verification, {
       limit: 10, filter(message) {
         return message.author.id === client.user.id
       },
@@ -18,7 +18,7 @@ export default async function(client: Client) {
       .setDescription("Untuk mendapatkan akses penuh ke server Discord ini, diharapkan untuk menekan tombol **Verifikasi** di bawah ini.")
       .setColor(0x7289DA);
 
-      await client.rest.channels.createMessage(verificationChannelID, {
+      await client.rest.channels.createMessage(channel.verification, {
         embeds: embed.toJSON(true),
         components: [{
           type: ComponentTypes.ACTION_ROW,

@@ -1,5 +1,5 @@
 import { Client, Guild, Member, User } from "oceanic.js";
-import { gmdiGuildID, firstGeneralTextChannelID, unverifiedRoleID } from "../handler/Config";
+import { gmdiGuildID, channel, roles } from "../handler/Config";
 import { EmbedBuilder as RichEmbed } from "@oceanicjs/builders";
 import { usernameHandle } from "../handler/Util";
 
@@ -7,7 +7,7 @@ export default async (client: Client, member: User | Member, guild: Guild) => {
   if (guild.id !== gmdiGuildID || member.bot) return;
 
   // skip if member still on verification pending
-  if (member instanceof Member && (member.pending || member.roles.some(roleID => roleID === unverifiedRoleID))) {
+  if (member instanceof Member && (member.pending || member.roles.some(roleID => roleID === roles.unverified))) {
     return;
   };
 
@@ -18,7 +18,7 @@ export default async (client: Client, member: User | Member, guild: Guild) => {
   .setTitle("Farewell...")
   .setDescription(`**${usernameHandle(member)}** keluar dari server.`);
   
-  return client.rest.channels.createMessage(firstGeneralTextChannelID, {
+  return client.rest.channels.createMessage(channel.general, {
     embeds: embed.toJSON(true)
   });
 };

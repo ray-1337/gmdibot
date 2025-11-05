@@ -1,5 +1,5 @@
 import { Message, AnyTextableGuildChannel } from "oceanic.js";
-import { inviteLinkChannelID } from "../handler/Config";
+import { channel } from "../handler/Config";
 import ms from "ms";
 
 let lastTriggered = new Map<string, number>();
@@ -23,7 +23,7 @@ export default async (message: Message<AnyTextableGuildChannel>) => {
   };
 
   const prevMessage = await message.channel.createMessage({
-    content: `Halo! Silahkan kunjungi <#${inviteLinkChannelID}> untuk mendapatkan tautan/link berupa undangan ke Discord server ini!`,
+    content: `Halo! Silahkan kunjungi <#${channel.inviteLink}> untuk mendapatkan tautan/link berupa undangan ke Discord server ini!`,
     allowedMentions: {
       repliedUser: true,
       users: true
