@@ -21,6 +21,17 @@ export const channel = {
   verificationLog: "1276271108017881220"
 };
 
+export const channelSets = {
+  privateCategory: [
+    "433626801860771840",
+    "769174984521547796",
+    "535466115459973120",
+    "468266060987236352",
+    "1276229069897207948",
+    "759298776656510998"
+  ]
+};
+
 export const gmdiGuildID = "190826809896468480";
 
 export const botOwnerIDs = ["331265944363991042"];
