@@ -40,6 +40,8 @@
       ]
     },
   },
-  
-  "exclude": [".archived/**/*", "./built/**/*"]
+  "exclude": [
+    "build",
+    "node_modules"
+  ]
 }
