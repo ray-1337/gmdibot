@@ -1,5 +1,5 @@
 import { Message, AnyTextableGuildChannel } from "oceanic.js";
-import { channel } from "../handler/Config";
+import { channel, channelSets } from "../handler/Config";
 import ms from "ms";
 
 let lastTriggered = new Map<string, number>();
@@ -7,19 +7,16 @@ let cooldown: number = ms("1h");
 
 export default async (message: Message<AnyTextableGuildChannel>) => {
   // should be triggered in a channel that registered under "Lounge" category channel only
-  if (message.channel.parentID !== "360449483282055169" && message.channelID !== "459637978269220864") {
+  if (
+    (typeof message.channel.parentID === "string" && channelSets.privateCategory.includes(message.channel.parentID)) ||
+    !message.content.match(/(?=.*invite)(?=.*link).*/gim)
+  ) {
     return;
   };
 
-  if (message.content.match(/(?=.*invite)(?=.*link).*/gim) === null) {
+  const current = lastTriggered.get(message.author.id);
+  if (typeof current === "number" && ((Date.now() - current) <= cooldown)) {
     return;
-  };
-
-  if (lastTriggered.has(message.author.id)) {
-    const current = lastTriggered.get(message.author.id) as number;
-    if ((Date.now() - current) <= cooldown) {
-      return;
-    };
   };
 
   const prevMessage = await message.channel.createMessage({
@@ -36,7 +33,5 @@ export default async (message: Message<AnyTextableGuildChannel>) => {
 
   setTimeout(() => prevMessage.delete("[GMDIBot] Occurs one time"), ms("1m"));
 
-  lastTriggered.set(message.author.id, Date.now());
-
-  return;
+  return lastTriggered.set(message.author.id, Date.now());
 };
