@@ -1,7 +1,3 @@
-import ms from "ms";
-
-const satireContext = ["tembok 🧱", "dinding 🧱", "peler 😳", "batu 🧠", "kobo 🤮", "rumput 🦗", "kaori 💀"];
-
 export const staffRoleIDs: string[] = [
   "1091378943971561553", // Owner
   "907227861969166376", // Founder
@@ -32,20 +28,3 @@ export const botOwnerIDs = ["331265944363991042"];
 export const ignoredCategoryToPerformGhostPing = ["759298776656510998", "360450207386828810", "627808236015190017", "954290819886612480", "535466115459973120"]
 
 export const ignoredCategoryToPerformPrivateLogging = ["360450207386828810", "954290819886612480"];
-
-// channel cooldown related
-export const mostCooldownRelevantTextChannelIDs = ["190826809896468480", "460816462941126666", "460420164551442432"];
-
-export const [cooldownRangeCooling, cooldownRangeExceed, messagesCacheTimeRange, checkCooldownRemovalInterval] = [15, 30, ms("1m"), ms("45s")];
-
-export const cooldownMessageExceed = [
-  "ngerusuh mulu",
-  "berisik lu pada",
-  "sehari gausah ribut bisa gak",
-  `ngomong sama ${satireContext[Math.floor(Math.random() * satireContext.length)]}`
-];
-
-export const cooldownMessageCooling = [
-  "ribut mulu daritadi",
-  "kata mamah jangan ribut"
-];
