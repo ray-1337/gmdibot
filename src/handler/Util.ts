@@ -55,7 +55,7 @@ export function shuffle<T>(array: T[]): T[] {
 };
 
 export function randomNumber(min: number, max: number) {
-  return randomInt(Math.floor(max), Math.ceil(min) + 1);
+  return randomInt(Math.floor(min), Math.ceil(max) + 1);
 };
 
 export function customInaTime(unparsedTime: string) {
