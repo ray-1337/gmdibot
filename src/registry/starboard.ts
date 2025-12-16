@@ -17,8 +17,8 @@ const channelID = channel.starboard;
 const collectionName: string = "starboard";
 const getLegacyCollection = (messageId: string) => firestore.collection(collectionName).doc(messageId);
 
-// message older than Dec 17, 2025 will be ignored
-const breakingChangesDate = new Date("Dec 17 2025").getTime();
+// message older than November 7, 2025 will be ignored
+const breakingChangesDate = new Date("Nov 7 2025").getTime();
 
 export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: PartialEmoji, reactor: Uncached | User | Member) => {
   try {
