@@ -71,10 +71,17 @@ export default async (client: Client, msg: Message<AnyTextableGuildChannel>, _: 
       // legacy
       if (isLegacyMessage && legacyDocument !== null) {
         const starboardDoc = await legacyDocument.get();
-        if (!starboardDoc.exists) {
-          await legacyDocument.set(_data);
+        if (starboardDoc.exists) {
+          return;
         };
+        
+        await legacyDocument.set(_data);
       } else { // updated
+        const isPosted = await redis.hexists(collectionName, messageId);
+        if (isPosted !== 0) {
+          return;
+        };
+
         await redis.hset<StarboardProp>(collectionName, {
           [messageId]: _data
         });
