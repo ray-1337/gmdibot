@@ -1,6 +1,6 @@
 {
   "name": "gmdibot",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "packageManager": "pnpm@10.26.0+sha512.3b3f6c725ebe712506c0ab1ad4133cf86b1f4b687effce62a9b38b4d72e3954242e643190fc51fa1642949c735f403debd44f5cb0edd657abe63a8b6a7e1e402",
   "private": true,
   "scripts": {
@@ -10,20 +10,20 @@
   },
   "devDependencies": {
     "@swc-node/register": "^1.11.1",
-    "@swc/cli": "^0.7.8",
-    "@swc/core": "^1.15.0",
+    "@swc/cli": "^0.7.9",
+    "@swc/core": "^1.15.5",
     "@types/common-tags": "^1.8.4",
     "@types/ms": "^2.1.0",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.4",
     "@types/node-schedule": "^2.1.8",
-    "nodemon": "^3.1.10",
+    "nodemon": "^3.1.11",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@google-cloud/firestore": "^7.11.6",
     "@oceanicjs/builders": "^1.1.11",
-    "@upstash/redis": "^1.35.6",
+    "@upstash/redis": "^1.35.8",
     "common-tags": "^1.8.2",
     "dayjs": "^1.11.19",
     "ms": "^2.1.3",
