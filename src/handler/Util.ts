@@ -3,7 +3,7 @@ import { randomInt } from "crypto";
 
 export const isDevMode = process.env.npm_lifecycle_event === "dev";
 
-const regexDiscordID: RegExp = /^(\d{16,19})$/g;
+const regexDiscordID: RegExp = /(\d{16,19})/g;
 
 export function isDiscordIDValid(str: string) {
   return str.match(regexDiscordID) !== null;
