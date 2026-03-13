@@ -32,7 +32,7 @@
     "parse-duration": "^2.1.4",
     "pretty-ms": "^7.0.1",
     "tsconfig-paths": "^4.2.0",
-    "undici": "^7.16.0",
+    "undici": "^7.24.0",
     "xml-js": "^1.6.11"
   },
   "engines": {
