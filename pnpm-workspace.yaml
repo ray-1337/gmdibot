@@ -1,9 +1,17 @@
+minimumReleaseAgeExclude:
+  - '@tootallnate/once@3.0.1'
+  - file-type@21.3.1
+  - file-type@21.3.2
+
 onlyBuiltDependencies:
   - '@firebase/util'
   - '@swc/core'
   - protobufjs
 
 overrides:
+  '@tootallnate/once@<3.0.1': ^3.0.1
   brace-expansion@>=1.0.0 <=1.1.11: '>=1.1.12'
   braces@<3.0.3: '>=3.0.3'
+  file-type@>=13.0.0 <21.3.1: ^21.3.1
+  file-type@>=20.0.0 <=21.3.1: ^21.3.2
   jws@=4.0.0: '>=4.0.1'
