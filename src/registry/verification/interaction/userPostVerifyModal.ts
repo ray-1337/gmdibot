@@ -94,8 +94,6 @@ export default async (interaction: ModalSubmitInteraction) => {
       submissionReferenceId: randomBytes(6).toString("hex")
     };
 
-    cache.set(content.userID, content);
-
     const embed = new EmbedBuilder();
 
     embed
@@ -136,6 +134,8 @@ export default async (interaction: ModalSubmitInteraction) => {
             ]
           }]
         });
+
+        cache.set(content.userID, content);
 
         setTimeout(async () => {
           try {
