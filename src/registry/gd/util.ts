@@ -34,3 +34,17 @@ function exposeXOR(str: string, key = "14251") {
 export function decodeMessage(str: string) {
   return exposeXOR(Buffer.from(str, "base64url").toString("utf-8"));
 };
+
+export function parseResponse(raw: string): Record<string, string | number> {
+  const clean = raw.split('#')?.[0] as string;
+  const parts = clean.split(':');
+  const obj = {};
+
+  for (let i = 0; i < parts.length - 1; i += 2) {
+    const key = parts[i];
+    const value = parts[i + 1] as string | number;
+    obj[key as string] = Number.isNaN(+value) ? value : +value;
+  };
+
+  return obj;
+};

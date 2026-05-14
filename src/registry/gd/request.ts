@@ -4,7 +4,7 @@ const [proxyAddress, proxyPort, proxyUsername, proxyPassword] = (process.env.PRO
 const dispatcher = new ProxyAgent(`http://${proxyUsername}:${proxyPassword}@${proxyAddress}:${proxyPort}`);
 
 import { defaultData, defaultHeaders, defaultEndpoint } from "./constants";
-import { wrapPropertiesToSearchParams, parseRobTopData, isError, decodeMessage } from "./util";
+import { wrapPropertiesToSearchParams, parseRobTopData, isError, decodeMessage, parseResponse } from "./util";
 
 // get official account messages
 export async function getMessagesList() {
@@ -80,16 +80,67 @@ export async function deleteIndividualMessage(messageID: string | number) {
 
 // get user account data
 export async function getGeometryDashUser(username: string) {
-  const req = await fetch("https://gdbrowser.com/api/profile/" + username, {
-    method: "GET",
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
-    }
+  const searchReq = await request(defaultEndpoint + "/getGJUsers20.php", {
+    dispatcher,
+    method: "POST",
+    body: wrapPropertiesToSearchParams({...defaultData, str: username}).toString(),
+    headers: defaultHeaders
   });
 
-  if (!req.ok) {
+  if (searchReq.statusCode !== 200) {
+    console.error("Unable to perform users search.");
     return null;
   };
 
-  return await req.json() as Record<`${"star" | "diamond" | "coin" | "userCoin" | "demon"}s`, number> & { accountID: string };
+  const rawSearchResponse = await searchReq.body.text();
+  if (rawSearchResponse == "-1") {
+    console.error(`[${username}] not found [01].`);
+    return null;
+  };
+
+  const rawSearchUser = parseResponse(rawSearchResponse);
+  if (!rawSearchUser) {
+    console.error(`Unable to parse "${username}" information.`);
+    return null;
+  };
+
+  const userInfoReq = await request(defaultEndpoint + "/getGJUserInfo20.php", {
+    dispatcher,
+    method: "POST",
+    body: wrapPropertiesToSearchParams({...defaultData, targetAccountID: rawSearchUser[16] as number}).toString(),
+    headers: defaultHeaders
+  });
+
+  if (userInfoReq.statusCode !== 200) {
+    console.error(`Unable to perform specific user information search. [${username}]`);
+    return null;
+  };
+
+  /**
+   * 3 - stars
+   * 4 - demons
+   * 13 - official coins
+   * 17 - usercoins
+   * 46 - diamonds
+   */
+  const rawUserResponse = await userInfoReq.body.text();
+  if (rawUserResponse == "-1") {
+    console.error(`[${username}] not found. [02]`);
+    return null;
+  };
+
+  const user = parseResponse(rawUserResponse);
+  if (!user) {
+    console.error(`Unable to extract user data. [${username}]`);
+    return null;
+  };
+
+  return {
+    accountID: rawSearchUser[16] as number,
+    stars: user[3] as number,
+    demons: user[4] as number,
+    coins: user[13] as number,
+    userCoins: user[17] as number,
+    diamonds: user[46] as number
+  };
 };
