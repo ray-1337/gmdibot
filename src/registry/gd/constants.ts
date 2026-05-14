@@ -12,11 +12,11 @@ export const defaultHeaders: UndiciHeaders = {
 };
 
 export const defaultData = {
-  accountID: officialAccountId,
+  accountID: officialAccountId as string,
   binaryVersion: 47,
   gameVersion: 22,
-  gjp2: hashRobTopCredential(officialAccountKey),
+  gjp2: hashRobTopCredential(officialAccountKey as string),
   secret: "Wmfd2893gb7",
-  udid: officialUDID,
-  uuid: officialUUID
+  udid: officialUDID as string,
+  uuid: officialUUID as string
 };
