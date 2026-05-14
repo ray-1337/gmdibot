@@ -13,7 +13,7 @@ export const defaultHeaders: UndiciHeaders = {
 
 export const defaultData = {
   accountID: officialAccountId,
-  binaryVersion: 45,
+  binaryVersion: 47,
   gameVersion: 22,
   gjp2: hashRobTopCredential(officialAccountKey),
   secret: "Wmfd2893gb7",
