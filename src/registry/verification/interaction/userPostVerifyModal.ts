@@ -49,7 +49,7 @@ export default async (interaction: ModalSubmitInteraction) => {
 
     const user = await getGeometryDashUser(gdUsername);
     if (!user || isNaN(+user.accountID)) {
-      return interaction.createFollowup({ content: `Maaf, akun Geometry Dash dengan username [\`${gdUsername}\`] tidak dapat ditemukan.`, flags: 64 });
+      return interaction.createFollowup({ content: `Untuk sementara waktu, kami tidak bisa mengambil informasi akun milik "\`${gdUsername}\`".`, flags: 64 });
     };
 
     // geometry dash account stats check
