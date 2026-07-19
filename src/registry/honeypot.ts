@@ -9,7 +9,7 @@ const reason: string = "Interacting with a honeypot channel.";
 export default async function initiateHoneypot(message: Message<AnyTextableGuildChannel>) {
   if (
     message.channelID !== honeypotChannelId || // ignore non-honeypot channel
-    message.member.permissions.has("KICK_MEMBERS") // ignore a member that had a permission to kick members
+    message.member.permissions.has("BAN_MEMBERS") // ignore a member that had a permission to ban members
   ) {
     return;
   };
