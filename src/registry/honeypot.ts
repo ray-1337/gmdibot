@@ -1,5 +1,6 @@
 import type { Message, AnyTextableGuildChannel } from "oceanic.js";
 import { setTimeout } from "node:timers/promises";
+import { redis } from "@/handler/Redis";
 
 import ms from "ms";
 
@@ -14,13 +15,23 @@ export default async function initiateHoneypot(message: Message<AnyTextableGuild
     return;
   };
 
-  await message.member.ban({
-    reason, deleteMessageSeconds: Math.floor(ms("6h") / 1000)
-  });
+  try {
+    await message.member.ban({
+      reason, deleteMessageSeconds: Math.floor(ms("6h") / 1000)
+    });
 
-  await setTimeout(5000);
+    const newCount = await redis.incr("honeypot-ban-counter");
 
-  await message.guild.removeBan(message.author.id, reason);
+    await message.channel.edit({
+      topic: `Ban Counter: ${newCount}`
+    });
+
+    await setTimeout(5000);
+
+    await message.guild.removeBan(message.author.id, reason);
+  } catch (error) {
+    console.error(error);
+  };
 
   return;
 };
