@@ -33,6 +33,7 @@
     "removeComments": true,
     "typeRoots": ["src/typings"],
     "declaration": true,
+    "rootDir": "./",
     "outDir": "./build",
     "paths": {
       "@/*": [
