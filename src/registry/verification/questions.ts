@@ -5,8 +5,36 @@ export default [
     type: ComponentTypes.ACTION_ROW,
     components: [
       {
+        customID: "gd-username",
+        label: "Tuliskan nama pengguna (_username_) GD-mu!",
+        style: TextInputStyles.SHORT,
+        type: ComponentTypes.TEXT_INPUT,
+        maxLength: 25,
+        required: true,
+        placeholder: "GMDIBot"
+      }
+    ]
+  },
+  {
+    type: ComponentTypes.ACTION_ROW,
+    components: [
+      {
+        customID: "know-gmdi-more",
+        label: "Dari mana kamu tahu GMDI pertama kali?",
+        style: TextInputStyles.PARAGRAPH,
+        type: ComponentTypes.TEXT_INPUT,
+        maxLength: 512,
+        required: true,
+        placeholder: "Facebook? Teman kamu? (tuliskan nama penggunanya)"
+      }
+    ]
+  },
+  {
+    type: ComponentTypes.ACTION_ROW,
+    components: [
+      {
         customID: "robtop-demon",
-        label: "Sebutkan satu level Demon yang dibuat RobTop",
+        label: "Tuliskan salah satu level Demon dari RobTop!",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
@@ -19,12 +47,12 @@ export default [
     components: [
       {
         customID: "creator-player",
-        label: "Salah satu creator GD yang kamu ketahui",
+        label: "Tuliskan salah satu kreator level GD yang kamu ketahui!",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 45,
         required: true,
-        placeholder: "Nama creator level (Nexus bukan creator level!)"
+        placeholder: "(Catatan: Nexus bukan kreator level.)"
       }
     ]
   },
@@ -33,39 +61,11 @@ export default [
     components: [
       {
         customID: "indonesia-creator-level",
-        label: "Salah satu rated level dari creator Indonesia",
+        label: "Tuliskan salah satu level _rated_ dari kreator Indonesia!",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
         required: true
-      }
-    ]
-  },
-  {
-    type: ComponentTypes.ACTION_ROW,
-    components: [
-      {
-        customID: "know-gmdi-more",
-        label: "Kamu tahu GMDI dari mana?",
-        style: TextInputStyles.PARAGRAPH,
-        type: ComponentTypes.TEXT_INPUT,
-        maxLength: 512,
-        required: true,
-        placeholder: "Facebook? Teman (dengan username) kamu?"
-      }
-    ]
-  },
-  {
-    type: ComponentTypes.ACTION_ROW,
-    components: [
-      {
-        customID: "gd-username",
-        label: "Masukkan username Geometry Dash kamu",
-        style: TextInputStyles.SHORT,
-        type: ComponentTypes.TEXT_INPUT,
-        maxLength: 25,
-        required: true,
-        placeholder: "GMDIBot"
       }
     ]
   }
