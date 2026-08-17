@@ -1,6 +1,6 @@
 import { type AnyInteractionGateway, InteractionTypes, ComponentTypes } from "oceanic.js";
 
-export default async (_, interaction: AnyInteractionGateway) => {
+export default async function(_, interaction: AnyInteractionGateway) {
   try {
     if (interaction.type === InteractionTypes.MESSAGE_COMPONENT) {
       // verification button

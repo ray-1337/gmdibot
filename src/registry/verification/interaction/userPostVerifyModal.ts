@@ -16,7 +16,7 @@ import { cache, requirements, verificationCacheExpireTime, cooldown } from "../c
 import { submissionUserCollection } from "@/registry/verification/userCollection";
 import questions from "@/registry/verification/questions";
 
-export default async (interaction: ModalSubmitInteraction) => {
+export default async function(interaction: ModalSubmitInteraction) {
   try {
     const client = interaction.client;
 

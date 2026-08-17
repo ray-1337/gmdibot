@@ -15,7 +15,7 @@ import type { UserVerificationChoice, RegisteredUserState } from "../typings";
 
 import { submissionUserCollection, registeredUserCollection } from "@/registry/verification/userCollection";
 
-export default async (interaction: ComponentInteraction) => {
+export default async function(interaction: ComponentInteraction) {
   try {
     await interaction.defer(64);
 

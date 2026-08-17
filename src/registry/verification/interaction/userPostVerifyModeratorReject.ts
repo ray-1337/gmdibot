@@ -5,7 +5,7 @@ import { stripIndents } from "common-tags";
 
 import { extractDiscordID, isDiscordIDValid } from "@/handler/Util";
 
-export default async (interaction: ModalSubmitInteraction) => {
+export default async function(interaction: ModalSubmitInteraction) {
   try {
     const client = interaction.client;
 

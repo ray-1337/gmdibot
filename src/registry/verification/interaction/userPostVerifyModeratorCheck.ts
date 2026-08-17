@@ -8,7 +8,7 @@ import type { RegisteredUserState, UserVerificationChoice } from "../typings";
 
 import { registeredUserCollection, submissionUserCollection } from "@/registry/verification/userCollection";
 
-export default async (interaction: ComponentInteraction) => {
+export default async function(interaction: ComponentInteraction) {
   try {
     const client = interaction.client;
 
