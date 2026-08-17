@@ -2,7 +2,8 @@ export const staffRoleIDs: string[] = [
   "1091378943971561553", // Owner
   "907227861969166376", // Founder
   "434936406960242709", // Co-owner
-  "217296828339585026" // Staff
+  "217296828339585026", // Staff
+  "518430174748868637" // Helper
 ];
 
 export const roles = {
