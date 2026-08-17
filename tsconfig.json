@@ -5,8 +5,8 @@
   },
 
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ESNEXT",
+    "module": "esnext",
+    "target": "esnext",
     "checkJs": true,
     "allowJs": true,
     "strictFunctionTypes": true,
@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noImplicitAny": false,
     "strict": true,
     "alwaysStrict": true,
