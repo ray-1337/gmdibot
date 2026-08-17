@@ -30,16 +30,16 @@ importers:
         version: 7.11.6
       '@oceanicjs/builders':
         specifier: ^1.1.11
-        version: 1.1.11(oceanic.js@1.14.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))
+        version: 1.1.11(oceanic.js@1.15.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))
       '@upstash/redis':
-        specifier: ^1.38.0
-        version: 1.38.0
+        specifier: ^1.38.2
+        version: 1.38.2
       common-tags:
         specifier: ^1.8.2
         version: 1.8.2
       dayjs:
-        specifier: ^1.11.21
-        version: 1.11.21
+        specifier: ^1.11.22
+        version: 1.11.22
       ms:
         specifier: ^2.1.3
         version: 2.1.3
@@ -47,8 +47,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       oceanic.js:
-        specifier: ^1.14.0
-        version: 1.14.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
+        specifier: ^1.15.0
+        version: 1.15.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
       parse-duration:
         specifier: ^2.1.8
         version: 2.1.8
@@ -59,8 +59,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       undici:
-        specifier: ^8.7.0
-        version: 8.7.0
+        specifier: ^8.10.0
+        version: 8.10.0
       xml-js:
         specifier: ^1.6.11
         version: 1.6.11
@@ -755,8 +755,8 @@ packages:
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
-  '@upstash/redis@1.38.0':
-    resolution: {integrity: sha512-wu+dZBptlLy0+MCUEoHmzrY/TnmgDey3+c7EbIGwrLqAvkP8yi5MWZHYGIFtAygmL4Bkz2TdFu+eU0vFPncIcg==}
+  '@upstash/redis@1.38.2':
+    resolution: {integrity: sha512-RZ+JaRCVIS+ZTGnjOnDMr+/0aqDxsBb5rV6aW+Pys4SGELwr5lwE3UbLHRCHqMQ5Ulxj0b/CFBHfbmE175Otog==}
 
   '@xhmikosr/archive-type@8.1.0':
     resolution: {integrity: sha512-EXOjEbnZFE5c/nFMf4FOrEURVanzHpnkPYmnmr78u02/8hAhE0FMq8p9TK1IM0/bFr5VcyBUY0gfLm8f7dKy+Q==}
@@ -960,8 +960,8 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  dayjs@1.11.21:
-    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
+  dayjs@1.11.22:
+    resolution: {integrity: sha512-1YRnxzt/AabP3GHxnaB9/b+ZScCKu5TeF+co+BWG+lnWVIwEcTFc1FVE0WLNmNO3sA6GGXL40i5qkHfbLzpwrg==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1430,9 +1430,23 @@ packages:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
 
-  oceanic.js@1.14.0:
-    resolution: {integrity: sha512-h8KfbN0GEWoi4kiHXj10uJzQe+L//VMZX6cRDBU4GuGP8wNDWsami20wbpErP8fFzN78kpVshF3g70vd/niP3g==}
+  oceanic.js@1.15.0:
+    resolution: {integrity: sha512-RV1ezHnMzxDxGCkzKpbhHxYOWo6ZHOjTFYOXhxCyIU1mI3Xj01NT+djwJkOiUCekd8k9ciFnpKRs7ckXuLbzwg==}
     engines: {node: '>=18.13.0'}
+    peerDependencies:
+      erlpack: ^0.1.4
+      pako: ^2.1.0
+      zlib-sync: ^0.1.10
+      zstd-napi: ^0.0.12
+    peerDependenciesMeta:
+      erlpack:
+        optional: true
+      pako:
+        optional: true
+      zlib-sync:
+        optional: true
+      zstd-napi:
+        optional: true
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -1779,8 +1793,8 @@ packages:
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
-  undici@8.7.0:
-    resolution: {integrity: sha512-N7iQtfyLhIMOFgQubvmLV26svHpO0bqKnAiWotTQCVKCmWrcGbBotPuW1x+xwYZ2VHdSTVUfPQQnlEt1/LouTQ==}
+  undici@8.10.0:
+    resolution: {integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==}
     engines: {node: '>=22.19.0'}
 
   unicorn-magic@0.3.0:
@@ -1815,8 +1829,8 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  ws@8.21.1:
-    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
+  ws@8.21.3:
+    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -1862,7 +1876,7 @@ snapshots:
       discord-api-types: 0.38.47
       prism-media: 1.3.5
       tslib: 2.8.1
-      ws: 8.21.1
+      ws: 8.21.3
     transitivePeerDependencies:
       - '@discordjs/opus'
       - '@emnapi/core'
@@ -2090,9 +2104,9 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@oceanicjs/builders@1.1.11(oceanic.js@1.14.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))':
+  '@oceanicjs/builders@1.1.11(oceanic.js@1.15.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))':
     dependencies:
-      oceanic.js: 1.14.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
+      oceanic.js: 1.15.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
 
   '@opentelemetry/api@1.9.1': {}
 
@@ -2394,7 +2408,7 @@ snapshots:
       '@types/node': 24.13.3
     optional: true
 
-  '@upstash/redis@1.38.0':
+  '@upstash/redis@1.38.2':
     dependencies:
       uncrypto: 0.1.3
 
@@ -2635,7 +2649,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  dayjs@1.11.21: {}
+  dayjs@1.11.22: {}
 
   debug@4.4.3(supports-color@5.5.0):
     dependencies:
@@ -3135,10 +3149,10 @@ snapshots:
 
   object-hash@3.0.0: {}
 
-  oceanic.js@1.14.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2):
+  oceanic.js@1.15.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2):
     dependencies:
       tslib: 2.8.1
-      ws: 8.21.1
+      ws: 8.21.3
     optionalDependencies:
       '@discordjs/voice': 0.19.2(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
     transitivePeerDependencies:
@@ -3478,7 +3492,7 @@ snapshots:
 
   undici-types@7.18.2: {}
 
-  undici@8.7.0: {}
+  undici@8.10.0: {}
 
   unicorn-magic@0.3.0: {}
 
@@ -3507,7 +3521,7 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.21.1: {}
+  ws@8.21.3: {}
 
   xml-js@1.6.11:
     dependencies:
