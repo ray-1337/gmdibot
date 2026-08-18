@@ -34,7 +34,7 @@ export default [
     components: [
       {
         customID: "robtop-demon",
-        label: "Tuliskan salah satu level Demon dari RobTop!",
+        label: "Sebutkan satu level Demon yang dibuat RobTop",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
@@ -47,7 +47,7 @@ export default [
     components: [
       {
         customID: "creator-player",
-        label: "Tuliskan salah satu kreator level GD yang kamu ketahui!",
+        label: "Salah satu creator GD yang kamu ketahui",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 45,
@@ -61,7 +61,7 @@ export default [
     components: [
       {
         customID: "indonesia-creator-level",
-        label: "Tuliskan salah satu level _rated_ dari kreator Indonesia!",
+        label: "Salah satu rated level dari creator Indonesia",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
