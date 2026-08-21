@@ -6,7 +6,7 @@ export default [
     components: [
       {
         customID: "gd-username",
-        label: "Tuliskan nama pengguna (_username_) GD-mu!",
+        label: "Nama pengguna (_username_) GD-mu",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
@@ -20,7 +20,7 @@ export default [
     components: [
       {
         customID: "know-gmdi-more",
-        label: "Dari mana kamu tahu GMDI pertama kali?",
+        label: "Dari mana kamu tahu GMDI?",
         style: TextInputStyles.PARAGRAPH,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 512,
@@ -34,7 +34,7 @@ export default [
     components: [
       {
         customID: "robtop-demon",
-        label: "Sebutkan satu level Demon yang dibuat RobTop",
+        label: "Salah satu level Demon RobTop",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
@@ -47,7 +47,7 @@ export default [
     components: [
       {
         customID: "creator-player",
-        label: "Salah satu creator GD yang kamu ketahui",
+        label: "Salah satu kreator level GD",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 45,
@@ -61,7 +61,7 @@ export default [
     components: [
       {
         customID: "indonesia-creator-level",
-        label: "Salah satu rated level dari creator Indonesia",
+        label: "Salah satu level _rated_ dari Indo",
         style: TextInputStyles.SHORT,
         type: ComponentTypes.TEXT_INPUT,
         maxLength: 25,
