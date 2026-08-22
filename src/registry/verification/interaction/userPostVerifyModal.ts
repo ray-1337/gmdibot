@@ -22,7 +22,7 @@ export default async function(interaction: ModalSubmitInteraction) {
 
     await interaction.defer(64);
 
-    const gdUsername = interaction.data.components.getTextInput(questions[4].components[0].customID, true);
+    const gdUsername = interaction.data.components.getTextInput(questions[0].components[0].customID, true);
     if (!gdUsername?.length) {
       return interaction.createFollowup({ content: "Maaf, formulir GD username tidak terisi.", flags: 64 });
     };
@@ -73,7 +73,7 @@ export default async function(interaction: ModalSubmitInteraction) {
       });
     };
 
-    const croppedQuestions = questions.slice(0, 4);
+    const croppedQuestions = questions.slice(1);
 
     const finalizedQuestions: Record<string, string> = {};
 
