@@ -3,11 +3,11 @@ import ms from "ms";
 import { type UserVerificationChoice } from "./typings";
 
 export const requirements = {
-  stars: 500,
-  demons: 5,
+  stars: 50,
+  demons: 1,
   coins: {
-    secret: 20,
-    user: 50
+    secret: 10,
+    user: 20
   }
 };
 
